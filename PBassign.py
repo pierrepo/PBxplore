@@ -262,7 +262,7 @@ def PB_assign(PB, structure, comment):
     # get phi and psi angles from structure
     dihedrals = structure.get_all_dihedral()
     # write phi and psi angles
-    if options.phi_psi:
+    if options.phipsi:
         write_phi_psi(phi_psi_name, dihedrals)
 
     PB_seq = ""
@@ -326,53 +326,45 @@ angle_modulo_360_vect = numpy.vectorize(angle_modulo_360)
 # manage parameters
 #-------------------------------------------------------------------------------
 parser = OptionParser(usage="%prog -f file.pdb -d directory -o output_root_name")
-parser.add_option("-f", action="store", type="string", dest="pdb_name",
-help="name of the pdb file")
-parser.add_option("-d", action="store", type="string", dest="dir_name",
-help="name of directory that contains pdb files")
-parser.add_option("-o", action="store", type="string", dest="out_name",
+parser.add_option("-f", action="append", type="string", 
+help="name of pdb file or directory containing pdb files")
+parser.add_option("-o", action="store", type="string", 
 help="root name for results")
-parser.add_option("-p", action="store_true", default=False, dest="phi_psi",
+parser.add_option("--phipsi", action="store_true", default=False,
 help="[optional] print phi and psi angle")
 
-parser.add_option("--flat", action="store_true", default=False, dest="flat",
+parser.add_option("--flat", action="store_true", default=False,
 help="[optional] output with one sequence per line")
 
 # get all parameters
 (options, args) = parser.parse_args()
 
 # check options
-if (not options.pdb_name) and (not options.dir_name):
+if not options.f:
     parser.print_help()
-    parser.error("options -f or -d are mandatory")
+    parser.error("options -f is mandatory")
 
-if not options.out_name:
+if not options.o:
     parser.print_help()
     parser.error("option -o is mandatory")
-
-out_name = options.out_name
 
 #-------------------------------------------------------------------------------
 # check files
 #-------------------------------------------------------------------------------
 pdb_name_lst = []
 
-if options.pdb_name and not os.path.isfile(options.pdb_name):
-    sys.exit("%s does not appear to be a valid file" % (options.pdb_name))
+for name in options.f:
+    if os.path.isfile(name):
+        pdb_name_lst.append(name)
+    elif os.path.isdir(name):
+        pdb_name_lst += glob.glob(name + "/*.pdb")
+    elif (not os.path.isfile(name) or not os.path.isdir(name)):
+        print "%s does not appear to be a valid file or directory" % name
 
-if options.dir_name and not os.path.isdir(options.dir_name):
-    sys.exit("%s does not appear to be a valid directory" % (options.dir_name))
+print "%d PDB file(s) to process" % (len(pdb_name_lst))
+if not pdb_name_lst:
+    sys.exit("Nothing to do. Bye.")
 
-if options.pdb_name:
-    pdb_name_lst.append(options.pdb_name)
-    
-if options.dir_name:
-    # search all pdb files in directory
-    pdb_name_lst += glob.glob(options.dir_name + "/*.pdb")
-    # sort filenames alphabetically 
-    pdb_name_lst.sort()
-
-print "%d pdb files to process" % (len(pdb_name_lst))
 
 #-------------------------------------------------------------------------------
 # read PB definitions
@@ -383,25 +375,19 @@ print "read %d PB definition" % (len(PB_def))
 #-------------------------------------------------------------------------------
 # prepare fasta file for output
 #-------------------------------------------------------------------------------
-fasta_name = options.out_name + ".PB.fasta"
-if os.path.exists(fasta_name):
-    os.remove(fasta_name)
+fasta_name = options.o + ".PB.fasta"
 
 #-------------------------------------------------------------------------------
 # prepare phi psi file for output
 #-------------------------------------------------------------------------------
-if options.phi_psi:
-    phi_psi_name = options.out_name + ".phipsi"
-    if os.path.exists(phi_psi_name):
-        os.remove(phi_psi_name)
+if options.phipsi:
+    phi_psi_name = options.o + ".phipsi"
 
 #-------------------------------------------------------------------------------
 # prepare flat file for output
 #-------------------------------------------------------------------------------
 if options.flat:
-    flat_name = options.out_name + ".PB.flat"
-    if os.path.exists(flat_name):
-        os.remove(flat_name)
+    flat_name = options.o + ".PB.flat"
 
 
 #-------------------------------------------------------------------------------
