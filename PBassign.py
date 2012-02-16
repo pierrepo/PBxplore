@@ -374,7 +374,7 @@ for line in PB_DATA.split("\n"):
     if line and "#" not in line:
         items = line.split()
         pb_def[items[0]] = numpy.array([float(items[i]) for i in xrange(1, len(items))])
-print "read %d PB definition" % (len(pb_def))
+print "read PB definitions: %d PBs x %d angles " % (len(pb_def), len(pb_def["a"]))
 
 #-------------------------------------------------------------------------------
 # prepare fasta file for output
