@@ -14,7 +14,6 @@ and assigns protein blocs (PBs).
 from optparse import OptionParser
 import os
 import sys
-import copy
 import numpy 
 import math
 import glob
@@ -23,7 +22,7 @@ import glob
 # data
 #===============================================================================
 # Protein Blocks angle definition
-PBdata = """
+PB_DATA = """
 #PB psi(n-2) phi(n-1)  psi(n-1)   phi(n)   psi(n)   phi(n+1)  psi(n+1)  phi(n+2) 
 a    41.14      75.53     13.92   -99.80   131.88     -96.27    122.08    -99.68  
 b   108.24     -90.12    119.54   -92.21   -18.06    -128.93    147.04    -99.90  
@@ -52,6 +51,7 @@ FASTA_WIDTH = 60
 class PdbAtomCls:
     """class for atoms in PDB format"""
     def __init__(self):
+        """default constructor"""
         self.id = 0
         self.name = None
         self.resalt = ' '
@@ -68,6 +68,7 @@ class PdbAtomCls:
         self.charge =  '  '
         
     def read(self, line):
+        """read ATOM data from a PDB file line"""
         self.id = int(line[6:11].strip())
         self.name = line[12:16].strip()
         self.resname = line[17:20].strip()
@@ -78,12 +79,16 @@ class PdbAtomCls:
         self.z = float(line[46:54].strip()) 
         
     def __repr__(self):
-        return 'atom %4d %4s in %4d %3s' % (self.id, self.name, self.resid, self.resname)
+        """representation for atom"""
+        return 'atom %4d %4s in %4d %3s' \
+        % (self.id, self.name, self.resid, self.resname)
         
     def format(self):
+        """atom data formated as PDB"""
         return '%-6s%5d %4s%1s%3s %1s%4d%1s   %8.3f%8.3f%8.3f%6.2f%6.2f          %2s%2s' \
-        % ('ATOM  ', self.id, self.name, self.resalt,self.resname, self.chain, self.resid,\
-        self.resins, self.x, self.y, self.z, self.occupancy, self.tempfactor, self.element, self.charge)
+        % ('ATOM  ', self.id, self.name, self.resalt,self.resname, self.chain, 
+        self.resid, self.resins, self.x, self.y, self.z, 
+        self.occupancy, self.tempfactor, self.element, self.charge)
         
     def coord(self):
         return [self.x, self.y, self.z]
@@ -94,12 +99,14 @@ class PdbStructureCls:
     - computes dihedral angles
     """
     def __init__(self):
+        """default constructor for PDB structure"""
         self.chain = ""
         self.atoms = []
         self.comment = ""
         self.PB = ""
 
     def add_atom(self, atom):
+        """add atom to the structure"""
         # update chain name
         if not self.atoms:
             self.chain = atom.chain
@@ -109,11 +116,13 @@ class PdbStructureCls:
         self.atoms.append(atom)
 
     def clean(self):
+        """clean up chain, atoms and comment"""
         self.chain = ""
         self.atoms = []
         self.comment = ""
         
     def size(self):
+        """get number of atoms from a structure"""
         return len(self.atoms)
                
     def get_all_dihedral(self):
@@ -129,7 +138,7 @@ class PdbStructureCls:
                     backbone[resid] = {atom.name: atom}
         
         # get dihedrals 
-        phiPsi = {}
+        phi_psi_angles = {}
         for res in sorted(backbone.iterkeys()):
             # phi : C(i-1) - N(i) - CA(i) - C(i)
             try:
@@ -142,8 +151,8 @@ class PdbStructureCls:
             except:
                 psi = None
             #print res, phi, psi
-            phiPsi[res] = {"phi":phi, "psi":psi}
-        return phiPsi
+            phi_psi_angles[res] = {"phi":phi, "psi":psi}
+        return phi_psi_angles
                 
        
 #===============================================================================
@@ -175,7 +184,7 @@ def get_dihedral(atomA, atomB, atomC, atomD) :
     n2 /= numpy.linalg.norm(n2)
     
     # angle between normals
-    cosine = numpy.sum(n1 * n2) / (numpy.linalg.norm(n1) * numpy.linalg.norm(n2))
+    cosine = numpy.sum(n1*n2) / (numpy.linalg.norm(n1) * numpy.linalg.norm(n2))
     torsion = math.acos(cosine)
 
     # convert radion to degree
@@ -196,15 +205,6 @@ def get_dihedral(atomA, atomB, atomC, atomD) :
    
     return torsion
 
-#-------------------------------------------------------------------------------
-def PBload(data):
-    """load PB definition"""
-    PB = {}
-    for line in PBdata.split("\n"):
-        if line and "#" not in line:
-            items = line.split()
-            PB[items[0]] = numpy.array([float(items[i]) for i in xrange(1, len(items))])
-    return PB
 
 #-------------------------------------------------------------------------------
 def angle_modulo_360(angle):
@@ -223,14 +223,14 @@ def write_fasta(name, seq, comment):
     and write file
     """
     fasta_content  = ">"+comment+"\n"
-    fasta_content += "\n".join( [seq[i:i+FASTA_WIDTH] for i in xrange(0,len(seq),FASTA_WIDTH)] )
+    fasta_content += "\n".join( [seq[i:i+FASTA_WIDTH] for i in xrange(0, len(seq), FASTA_WIDTH)] )
     fasta_content += "\n"
     f_out = open(name, "a")
     f_out.write(fasta_content)
     f_out.close()
 
 #-------------------------------------------------------------------------------
-def write_phi_psi(name, torsion):
+def write_phipsi(name, torsion):
     """save phi and psi angles
     """
     f_out = open(name, "w")
@@ -256,16 +256,16 @@ def write_flat(name, seq):
     f_out.close()
 
 #-------------------------------------------------------------------------------
-def PB_assign(PB, structure, comment):
+def PB_assign(pb_ref, structure, comment):
     """assign Protein Blocks (PB) from phi and psi angles
     """
     # get phi and psi angles from structure
     dihedrals = structure.get_all_dihedral()
     # write phi and psi angles
     if options.phipsi:
-        write_phi_psi(phi_psi_name, dihedrals)
+        write_phipsi(phipsi_name, dihedrals)
 
-    PB_seq = ""
+    pb_seq = ""
     # iterate over all residues
     for res in sorted(dihedrals.iterkeys()):
         angles = []
@@ -282,34 +282,34 @@ def PB_assign(PB, structure, comment):
             # check for bad angles 
             # (error while calculating torsion: missing atoms)
             if None in angles:
-                PB_seq += "Z"
+                pb_seq += "Z"
                 continue 
            
         # cannot get required angles (Nter, Cter or missign residues)
         # -> cannot assign PB
         # jump to next residue
         except:
-            PB_seq += "Z"
+            pb_seq += "Z"
             continue
         
         # convert to array
         angles = numpy.array(angles)
 
         # compare to reference PB angles
-        RMSDAlst = {}
-        for block in PB:
-            diff = PB[block] - angles
+        rmsda_lst = {}
+        for block in pb_ref:
+            diff = pb_ref[block] - angles
             diff2 = angle_modulo_360_vect(diff)
-            RMSDA = numpy.sum(diff2**2)
-            RMSDAlst[RMSDA] = block
-        PB_seq += RMSDAlst[min(RMSDAlst)]
+            rmsda = numpy.sum(diff2**2)
+            rmsda_lst[rmsda] = block
+        pb_seq += rmsda_lst[min(rmsda_lst)]
 
     # write PBs in fasta file
-    write_fasta(fasta_name, PB_seq, comment)
+    write_fasta(fasta_name, pb_seq, comment)
     
     # write PBs in flat file
     if options.flat:
-        write_flat(flat_name, PB_seq)
+        write_flat(flat_name, pb_seq)
  
     print "PBs assigned for", comment 
              
@@ -369,8 +369,12 @@ if not pdb_name_lst:
 #-------------------------------------------------------------------------------
 # read PB definitions
 #-------------------------------------------------------------------------------
-PB_def = PBload(PBdata)
-print "read %d PB definition" % (len(PB_def))
+pb_def = {}
+for line in PB_DATA.split("\n"):
+    if line and "#" not in line:
+        items = line.split()
+        pb_def[items[0]] = numpy.array([float(items[i]) for i in xrange(1, len(items))])
+print "read %d PB definition" % (len(pb_def))
 
 #-------------------------------------------------------------------------------
 # prepare fasta file for output
@@ -381,7 +385,7 @@ fasta_name = options.o + ".PB.fasta"
 # prepare phi psi file for output
 #-------------------------------------------------------------------------------
 if options.phipsi:
-    phi_psi_name = options.o + ".phipsi"
+    phipsi_name = options.o + ".phipsi"
 
 #-------------------------------------------------------------------------------
 # prepare flat file for output
@@ -410,7 +414,7 @@ for pdb_name in pdb_name_lst:
             atom.read(line)
             # assign structure upon new chain
             if structure.size() != 0 and structure.chain != atom.chain:
-                PB_assign(PB_def, structure, comment)
+                PB_assign(pb_def, structure, comment)
                 structure.clean()
             # append structure with atom
             structure.add_atom(atom)
@@ -424,11 +428,11 @@ for pdb_name in pdb_name_lst:
                     comment += " | chain %s" % (atom.chain)
         # assign structure after end of model (or chain)
         if structure.size() != 0 and flag in ["TER", "ENDMDL"]:
-            PB_assign(PB_def, structure, comment)
+            PB_assign(pb_def, structure, comment)
             structure.clean()
     # assign last structure
     if structure.size() != 0:
-        PB_seq = PB_assign(PB_def, structure, comment)
+        PB_seq = PB_assign(pb_def, structure, comment)
 
     f_in.close()   
 print "wrote %s" % (fasta_name)
