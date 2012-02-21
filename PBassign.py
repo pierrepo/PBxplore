@@ -325,7 +325,7 @@ angle_modulo_360_vect = numpy.vectorize(angle_modulo_360)
 #-------------------------------------------------------------------------------
 # manage parameters
 #-------------------------------------------------------------------------------
-parser = OptionParser(usage="%prog -f file.pdb -d directory -o output_root_name")
+parser = OptionParser(usage="%prog -f file.pdb -o output_root_name")
 parser.add_option("-f", action="append", type="string", 
 help="name of pdb file or directory containing pdb files")
 parser.add_option("-o", action="store", type="string", 
@@ -385,7 +385,7 @@ fasta_name = options.o + ".PB.fasta"
 # prepare phi psi file for output
 #-------------------------------------------------------------------------------
 if options.phipsi:
-    phipsi_name = options.o + ".phipsi"
+    phipsi_name = options.o + ".PB.phipsi"
 
 #-------------------------------------------------------------------------------
 # prepare flat file for output
