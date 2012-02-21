@@ -254,6 +254,7 @@ def write_flat(name, seq):
     f_out = open(name, "a")
     f_out.write(seq + "\n")
     f_out.close()
+    print "wrote", name
 
 #-------------------------------------------------------------------------------
 def PB_assign(pb_ref, structure, comment):
