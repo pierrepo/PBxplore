@@ -55,7 +55,7 @@ def read_fasta(name):
 #-------------------------------------------------------------------------------
 # get options
 #-------------------------------------------------------------------------------
-parser = OptionParser(usage="%prog -f PB_1.PB.fasta [-f PB_2.PB.fasta] -o output_root_name")
+parser = OptionParser(usage="%prog -f file_1.PB.fasta [-f file_2.PB.fasta] -o output_root_name")
 parser.add_option("-f", action="append", type="string", 
 help="name(s) of the PB file (in fasta format)")
 parser.add_option("-o", action="store", type="string", 
