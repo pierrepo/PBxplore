@@ -2,7 +2,7 @@
 
 """
 PBstat.py reads protein blocks (PBs) sequence files in fasta format
-and compute statisiques (count, frequency and Neq).
+and compute statisiques (count and Neq).
 
 2012 - P. Poulain, A. G. de Brevern 
 """
@@ -21,7 +21,7 @@ import math
 # data
 #===============================================================================
 # 16 PBs + block "Z"
-PBdic = {"a":0, "b":1, "c":2,"d":3, "e":4, "f":5, "g":6, "h":7, "i":8, \
+PBdic = {"a":0, "b":1, "c":2, "d":3, "e":4, "f":5, "g":6, "h":7, "i":8,
 "j":9, "k":10, "l":11, "m":12, "n":13, "o":14, "p":15}
 PBdicSize = len(PBdic)
 
@@ -29,7 +29,7 @@ PBdicSize = len(PBdic)
 #===============================================================================
 # functions
 #===============================================================================
-def readFasta(name):
+def read_fasta(name):
     """read fasta file and output sequences in a list"""
     seqLst = []
     seq = ""
@@ -46,7 +46,7 @@ def readFasta(name):
     if seq:
         seqLst.append(seq)
     # outputs
-    print "read %d sequences in %s" %(len(seqLst), name)
+    print "read %d sequences in %s" % (len(seqLst), name)
     return seqLst
 #===============================================================================
 # MAIN - program starts here
@@ -56,108 +56,106 @@ def readFasta(name):
 # get options
 #-------------------------------------------------------------------------------
 parser = OptionParser(usage="%prog -f PB_1.PB [-f PB_2.PB] -o output_root_name")
-parser.add_option("-f", action="append", type="string", dest="PBNameLst", help="name(s) of the PB file (in fasta format)")
-parser.add_option("-o", action="store", type="string", dest="outName", help="root name for results")
+parser.add_option("-f", action="append", type="string", 
+help="name(s) of the PB file (in fasta format)")
+parser.add_option("-o", action="store", type="string", 
+help="root name for results")
 
 (options, args) = parser.parse_args()
 
 #-------------------------------------------------------------------------------
 # check options
 #-------------------------------------------------------------------------------
-if not options.PBNameLst:
+if not options.f:
     parser.print_help()
     parser.error("option -f is mandatory")
 
-if not options.outName:
+if not options.o:
     parser.print_help()
     parser.error("option -o is mandatory")
 
-
-PBNameLst = options.PBNameLst
-outName = options.outName
-
 #-------------------------------------------------------------------------------
-# check files
+# check input files
 #-------------------------------------------------------------------------------
-for name in PBNameLst:
+for name in options.f:
     if not os.path.isfile(name):
-        sys.exit("%s does not appear to be a valid file.\nBye" %(name))
+        sys.exit("%s does not appear to be a valid file.\nBye" % name)
     
 #-------------------------------------------------------------------------------
 # read PB files
 #-------------------------------------------------------------------------------
-PBseq = []
-for name in PBNameLst:
-    PBseq += readFasta(name)
+pb_seq = []
+for name in options.f:
+    pb_seq += read_fasta(name)
 
 #-------------------------------------------------------------------------------
 # check all sequences have the same size
 #-------------------------------------------------------------------------------
-PBseqSize = len(PBseq[0])
-for seq in PBseq:
-    if len(seq) != PBseqSize:
+pb_seq_size = len(pb_seq[0])
+for seq in pb_seq:
+    if len(seq) != pb_seq_size:
         sys.exit("cannot compute PB frequencies / different sequence lengths")
 
 #-------------------------------------------------------------------------------
 # count PB at each position of the sequence
 #-------------------------------------------------------------------------------
-PBseqNb = len(PBseq)
-PBcount = numpy.zeros((PBseqSize, PBdicSize))
+pb_seq_nb = len(pb_seq)
+pb_count = numpy.zeros((pb_seq_size, PBdicSize))
 
-for seq in PBseq:
+for seq in pb_seq:
     for idx, block in enumerate(seq):
         if block in PBdic:
-            PBcount[idx, PBdic[block]] += 1.0
+            pb_count[idx, PBdic[block]] += 1.0
 
 #        else:
-#            print "%s is not a valid protein block" %(block)
+#            print "%s is not a valid protein block" % block"
 #            print "skipping this sequence"
 #            break
 
 #-------------------------------------------------------------------------------
 # write PB counts
 #-------------------------------------------------------------------------------
-countName = outName + ".PB.count"
+count_file_name = options.o + ".PB.count"
 content = "    "
 # build header (PB names)
 for PB_name in sorted(PBdic):
-    content += "%6s" %(PB_name)
+    content += "%6s" % PB_name
 content += "\n"
 # build data table
-for residue_idx, residue_PB in enumerate(PBcount):
+for residue_idx, residue_PB in enumerate(pb_count):
     content += "%-5d" % (residue_idx + 1) + " ".join("%5d" % i for i in residue_PB) + "\n"
 # write data
-f_in = open(countName, "w")
-f_in.write(content)
-f_in.close()
-print "wrote %s" %(countName)
+count_file = open(count_file_name, "w")
+count_file.write(content)
+count_file.close()
+print "wrote %s" % count_file_name
 
 #-------------------------------------------------------------------------------
 # compute PB frequencies
 #-------------------------------------------------------------------------------
-PBfreq = PBcount / PBseqNb
+pb_freq = pb_count / pb_seq_nb
 
 #-------------------------------------------------------------------------------
 # compute Neq
 #-------------------------------------------------------------------------------
-Neq = []
-for pos in xrange(PBseqSize):
+neq = []
+for pos in xrange(pb_seq_size):
     H = 0.0
     for b in xrange(PBdicSize):
-        f = PBfreq[pos, b] 
+        f = pb_freq[pos, b] 
         if f != 0:
             H += f * math.log(f)
-    Neq.append( math.exp(-H))
+    neq.append( math.exp(-H))
 
 #-------------------------------------------------------------------------------
 # write Neq
 #-------------------------------------------------------------------------------
-NeqName = outName + ".PB.Neq"
-content = "%6s %8s \n" %("#resid", "Neq")
-for idx in xrange(len(Neq)):
-    content += "%-6d %8.2f \n" %(idx+1, Neq[idx])
-f_in = open(NeqName, "w")
-f_in.write(content)
-f_in.close()
-print "wrote %s" %(NeqName)
+neq_file_name = options.o + ".PB.Neq"
+content = "%6s %8s \n" % ("#resid", "Neq")
+for idx in xrange(len(neq)):
+    content += "%-6d %8.2f \n" % (idx+1, neq[idx])
+neq_file = open(neq_file_name, "w")
+neq_file.write(content)
+neq_file.close()
+print "wrote %s" % neq_file_name
 
