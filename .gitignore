@@ -1,3 +1,5 @@
-*.swp   # files currently opened by vi
-*.png   # image files
+# files currently opened by vi
+*.swp 
+ # image files 
+*.png 
 
