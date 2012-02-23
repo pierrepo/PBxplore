@@ -30,8 +30,8 @@ ynames = colnames(map)
 
 # get total number of counts
 total_count = sum(map[3,])
-# convert 0 to NA
-map[map==0] = NA
+# convert 0 to NA (to have a white background)
+#map[map==0] = NA
 # normalize by the total number of counts
 map = map / total_count
 
@@ -53,12 +53,44 @@ par(
     cex.lab=1.7,      # axis label width
     cex.axis=1.5      # axis width
 )
+
+# color gradient
+# color goes from light yeallow to red
 colorpal = rev(heat.colors(10))
+
+# new color gradient
+# color goes from dark blue to green/yellow to red
+grad = matrix(nrow=848, ncol=3)
+grad[1,1] = 20
+grad[1,2] = 20
+grad[1,3] = 232
+for(i in 2:212){
+grad[i,1] = grad[i-1,1]
+grad[i,2] = grad[i-1,2]+1
+grad[i,3] = grad[i-1,3]
+}
+for(i in 213:424){
+grad[i,1] = grad[i-1,1]
+grad[i,2] = grad[i-1,2]
+grad[i,3] = grad[i-1,3]-1
+}
+for(i in 425:636){
+grad[i,1] = grad[i-1,1]+1
+grad[i,2] = grad[i-1,2]
+grad[i,3] = grad[i-1,3]
+}
+for(i in 637:848){
+grad[i,1] = grad[i-1,1]
+grad[i,2] = grad[i-1,2]-1
+grad[i,3] = grad[i-1,3]
+}
+colorpal = rgb(grad[,1]/255,grad[,2]/255,grad[,3]/255)
+
 #====================================================================
 # plot
 #====================================================================
 
-image(as.matrix(map), xaxt="n", yaxt="n", xlab="Residue number", ylab="PB", col=colorpal)
+image(as.matrix(map), axes=FALSE, xlab="Residue number", ylab="PB", col=colorpal)
 box()
 axis(1, seq(0, 1, 1/(length(xnames)-1)), xnames)
 axis(2, seq(0, 1, 1/(length(ynames)-1)), ynames, font = 4)
