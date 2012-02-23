@@ -20,10 +20,10 @@ import math
 #===============================================================================
 # data
 #===============================================================================
-# 16 PBs + block "Z"
-PBdic = {"a":0, "b":1, "c":2, "d":3, "e":4, "f":5, "g":6, "h":7, "i":8,
+# 16 PBs
+PB_DIC = {"a":0, "b":1, "c":2, "d":3, "e":4, "f":5, "g":6, "h":7, "i":8,
 "j":9, "k":10, "l":11, "m":12, "n":13, "o":14, "p":15}
-PBdicSize = len(PBdic)
+PB_DIC_SIZE = len(PB_DIC)
 
 
 #===============================================================================
@@ -55,7 +55,7 @@ def read_fasta(name):
 #-------------------------------------------------------------------------------
 # get options
 #-------------------------------------------------------------------------------
-parser = OptionParser(usage="%prog -f PB_1.PB [-f PB_2.PB] -o output_root_name")
+parser = OptionParser(usage="%prog -f PB_1.PB.fasta [-f PB_2.PB.fasta] -o output_root_name")
 parser.add_option("-f", action="append", type="string", 
 help="name(s) of the PB file (in fasta format)")
 parser.add_option("-o", action="store", type="string", 
@@ -100,17 +100,15 @@ for seq in pb_seq:
 # count PB at each position of the sequence
 #-------------------------------------------------------------------------------
 pb_seq_nb = len(pb_seq)
-pb_count = numpy.zeros((pb_seq_size, PBdicSize))
+pb_count = numpy.zeros((pb_seq_size, PB_DIC_SIZE))
 
 for seq in pb_seq:
     for idx, block in enumerate(seq):
-        if block in PBdic:
-            pb_count[idx, PBdic[block]] += 1.0
-
-#        else:
-#            print "%s is not a valid protein block" % block"
-#            print "skipping this sequence"
-#            break
+        if block in PB_DIC:
+            pb_count[idx, PB_DIC[block]] += 1.0
+        elif block not in ["Z", "z"]:
+            sys.exit("%s is not a valid protein block (abcdefghijklmnop)" 
+            % block)
 
 #-------------------------------------------------------------------------------
 # write PB counts
@@ -118,12 +116,12 @@ for seq in pb_seq:
 count_file_name = options.o + ".PB.count"
 content = "    "
 # build header (PB names)
-for PB_name in sorted(PBdic):
+for PB_name in sorted(PB_DIC):
     content += "%6s" % PB_name
 content += "\n"
 # build data table
-for residue_idx, residue_PB in enumerate(pb_count):
-    content += "%-5d" % (residue_idx + 1) + " ".join("%5d" % i for i in residue_PB) + "\n"
+for residue_idx, residue_pb in enumerate(pb_count):
+    content += "%-5d" % (residue_idx + 1) + " ".join("%5d" % i for i in residue_pb) + "\n"
 # write data
 count_file = open(count_file_name, "w")
 count_file.write(content)
@@ -141,7 +139,7 @@ pb_freq = pb_count / pb_seq_nb
 neq = []
 for pos in xrange(pb_seq_size):
     H = 0.0
-    for b in xrange(PBdicSize):
+    for b in xrange(PB_DIC_SIZE):
         f = pb_freq[pos, b] 
         if f != 0:
             H += f * math.log(f)
