@@ -97,7 +97,7 @@ image(as.matrix(map), axes=FALSE, xlab="Residue number", ylab="PB", col=colorpal
 box()
 axis(1, seq(0, 1, 1/(length(xnames)-1)), xnames)
 axis(2, seq(0, 1, 1/(length(ynames)-1)), ynames, font = 4)
-mtext(paste(name, Sys.Date()), side = 3, line = 3)
+#mtext(paste(name, Sys.Date()), side = 3, line = 3)
 
 par(mar = c(5.1, 1.1, 4.1, 5.1))
 image(t(seq(1, 848)), col=colorpal, axes=FALSE)
