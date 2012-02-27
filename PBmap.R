@@ -40,7 +40,7 @@ map = map / total_count
 # graphical parameters
 #====================================================================
 name="PBmap.png"
-png(filename=name, width = log(length(xnames))*250, height = 800)
+png(filename=name, width = log(length(xnames))*500, height = 1000)
 par(
     # default margins are: 5.1 4.1 4.1 2.1
     # extend bottom margin for text (+5 line)
@@ -90,12 +90,20 @@ colorpal = rgb(grad[,1]/255,grad[,2]/255,grad[,3]/255)
 # plot
 #====================================================================
 
+layout(matrix(1:2, 1, 2), width=c(log(length(xnames))*3, 1))
+
+par(mar = c(5.1, 5.1, 4.1, 1.1))
 image(as.matrix(map), axes=FALSE, xlab="Residue number", ylab="PB", col=colorpal)
 box()
 axis(1, seq(0, 1, 1/(length(xnames)-1)), xnames)
 axis(2, seq(0, 1, 1/(length(ynames)-1)), ynames, font = 4)
-
 mtext(paste(name, Sys.Date()), side = 3, line = 3)
+
+par(mar = c(5.1, 1.1, 4.1, 5.1))
+image(t(seq(1, 848)), col=colorpal, axes=FALSE)
+axis(4, seq(0, 1, 0.2), seq(0, 1, 0.2))
+mtext("intensity", side = 4, line = 3, cex = 1.7, font = 2)
+box()
 
 cat(paste("wrote", name, "\n"))
 #====================================================================
