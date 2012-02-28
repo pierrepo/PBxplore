@@ -149,7 +149,7 @@ for pos in xrange(pb_seq_size):
 # write Neq
 #-------------------------------------------------------------------------------
 neq_file_name = options.o + ".PB.Neq"
-content = "%6s %8s \n" % ("#resid", "Neq")
+content = "%-6s %8s \n" % ("resid", "Neq")
 for idx in xrange(len(neq)):
     content += "%-6d %8.2f \n" % (idx+1, neq[idx])
 neq_file = open(neq_file_name, "w")
