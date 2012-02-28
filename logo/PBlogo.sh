@@ -20,9 +20,11 @@ then
     exit
 fi
 
+echo "Calling WebLogo with $1 to build PBlogo"
+
 # data
 outfile=${1%transfac}logo.pdf
-title=${1%.transfac}
+title=${1%.PB.transfac}
 
 # default weblogo
 weblogo \
@@ -59,5 +61,7 @@ weblogo \
 --datatype transfac \
 -s large -f $1 -o $outfile
 fi
+
+echo "wrote $outfile"
 
 #--composition "{'a':3.89,'b':4.41,'c':8.12,'d':18.85,'e':2.45,'f':6.68,'g':1.15,'h':2.40,'i':1.86,'j':0.83,'k':5.45,'l':5.46,'m':30.22,'n':1.99,'o':2.77,'p':3.47}" \
