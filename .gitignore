@@ -4,4 +4,6 @@
 *.png
 # result files in the current directory
 /*.PB.*
+# memo file
+zzREADME
 
