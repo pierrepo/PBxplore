@@ -47,7 +47,7 @@ par(
 #====================================================================
 plot(neq, type = 'l', 
     xlab = 'Residue number', ylab = 'Neq', 
-    xlim=c(lower, upper), ylim=c(1,max(neq[,2]+2)))
+    xlim=c(lower, upper), ylim=c(1,max(round(neq[,2]))+2))
 
 #====================================================================
 # close output file
