@@ -10,19 +10,19 @@ filename = args[1]
 lower = as.integer(args[2])
 upper = as.integer(args[3])
 
-data = read.table(filename, header = TRUE, row.names = 1)
+counts = read.table(filename, header = TRUE, row.names = 1)
 
-if (length(colnames(data)) != 16) {
+if (length(colnames(counts)) != 16) {
     cat("Bad format. 16 + 1 columns expected.\nBye bye\n")
     quit()
 }
 
 # lower / upper bound
-if (is.na(lower)) lower = min(as.numeric(rownames(data)))
-if (is.na(upper)) upper = max(as.numeric(rownames(data)))
+if (is.na(lower)) lower = min(as.numeric(rownames(counts)))
+if (is.na(upper)) upper = max(as.numeric(rownames(counts)))
 
 # select data range
-map = data[lower:upper,]
+map = counts[lower:upper,]
 
 # define row and col names
 xnames = rownames(map)
@@ -105,10 +105,11 @@ axis(4, seq(0, 1, 0.2), seq(0, 1, 0.2))
 mtext("intensity", side = 4, line = 3, cex = 1.7, font = 2)
 box()
 
-cat(paste("wrote", name, "\n"))
+
 #====================================================================
 # close output file
 #====================================================================
+cat(paste("wrote", name, "\n"))
 void = dev.off()
 # avoid the ouput of "null device"
 
