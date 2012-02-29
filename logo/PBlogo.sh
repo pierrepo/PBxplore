@@ -20,7 +20,7 @@ then
     exit
 fi
 
-echo "Calling WebLogo with $1 to build PBlogo"
+echo "calling WebLogo with $1 to build PBlogo"
 
 # data
 outfile=${1%transfac}logo.pdf
