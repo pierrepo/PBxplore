@@ -230,10 +230,10 @@ def write_fasta(name, seq, comment):
     f_out.close()
 
 #-------------------------------------------------------------------------------
-def write_phipsi(name, torsion):
+def write_phipsi(name, torsion, com):
     """save phi and psi angles
     """
-    f_out = open(name, "w")
+    f_out = open(name, "a")
     for res in sorted(torsion.iterkeys()):
         try:
             phi_str = "%8.2f" % torsion[res]["phi"]
@@ -243,9 +243,8 @@ def write_phipsi(name, torsion):
             psi_str = "%8.2f" % torsion[res]["psi"]
         except:
             psi_str = "    None"
-        f_out.write("%-d %s %s \n" % (res, phi_str, psi_str))
+        f_out.write("%s %6d %s %s \n" % (com, res, phi_str, psi_str))
     f_out.close()
-    print "wrote", name
 
 #-------------------------------------------------------------------------------
 def write_flat(name, seq):
@@ -254,7 +253,13 @@ def write_flat(name, seq):
     f_out = open(name, "a")
     f_out.write(seq + "\n")
     f_out.close()
-    print "wrote", name
+
+#-------------------------------------------------------------------------------
+def clean_file(name):
+    """clean existing file
+    """
+    if os.path.exists(name):
+        os.remove(name)
 
 #-------------------------------------------------------------------------------
 def PB_assign(pb_ref, structure, comment):
@@ -264,7 +269,7 @@ def PB_assign(pb_ref, structure, comment):
     dihedrals = structure.get_all_dihedral()
     # write phi and psi angles
     if options.phipsi:
-        write_phipsi(phipsi_name, dihedrals)
+        write_phipsi(phipsi_name, dihedrals, comment)
 
     pb_seq = ""
     # iterate over all residues
@@ -381,19 +386,21 @@ print "read PB definitions: %d PBs x %d angles " % (len(pb_def), len(pb_def["a"]
 # prepare fasta file for output
 #-------------------------------------------------------------------------------
 fasta_name = options.o + ".PB.fasta"
+clean_file(fasta_name)
 
 #-------------------------------------------------------------------------------
 # prepare phi psi file for output
 #-------------------------------------------------------------------------------
 if options.phipsi:
     phipsi_name = options.o + ".PB.phipsi"
-
+    clean_file(phipsi_name)
+ 
 #-------------------------------------------------------------------------------
 # prepare flat file for output
 #-------------------------------------------------------------------------------
 if options.flat:
     flat_name = options.o + ".PB.flat"
-
+    clean_file(flat_name)
 
 #-------------------------------------------------------------------------------
 # read PDB files
@@ -437,4 +444,8 @@ for pdb_name in pdb_name_lst:
 
     f_in.close()   
 print "wrote %s" % (fasta_name)
+if options.flat:
+    print "wrote %s" % (flat_name)
+if options.phipsi:
+    print "wrote %s" % (phipsi_name)
 
