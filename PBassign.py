@@ -11,7 +11,9 @@ and assigns protein blocs (PBs).
 #===============================================================================
 # load modules
 #===============================================================================
-from optparse import OptionParser
+import optparse 
+# optparse in deprecated since Python 2.7 and has been replaced by argparse
+# however many Python installations are steal using Python < 2.7
 import os
 import sys
 import numpy 
@@ -331,17 +333,27 @@ angle_modulo_360_vect = numpy.vectorize(angle_modulo_360)
 #-------------------------------------------------------------------------------
 # manage parameters
 #-------------------------------------------------------------------------------
-parser = OptionParser(usage="%prog -f file.pdb -o output_root_name")
-parser.add_option("-f", action="append", type="string", 
-help="name of pdb file or directory containing pdb files")
-parser.add_option("-o", action="store", type="string", 
-help="root name for results")
-parser.add_option("--phipsi", action="store_true", default=False,
-help="[optional] print phi and psi angle")
-
-parser.add_option("--flat", action="store_true", default=False,
-help="[optional] output with one sequence per line")
-
+parser = optparse.OptionParser(
+    usage="%prog [options] -f file.pdb [-f file2.pdb] -o output_root_name",
+    version="1.0")
+# mandatory arguments
+mandatory_opts = optparse.OptionGroup(
+    parser,
+    'Mandatory arguments')
+mandatory_opts.add_option("-f", action="append", type="string", 
+    help="name of pdb file or directory containing pdb files")
+mandatory_opts.add_option("-o", action="store", type="string", 
+    help="root name for results")
+parser.add_option_group(mandatory_opts)
+# optional arguments
+optional_opts = optparse.OptionGroup(
+    parser,
+    'Optional arguments')
+optional_opts.add_option("--phipsi", action="store_true", default=False,
+    help="print phi and psi angle")
+optional_opts.add_option("--flat", action="store_true", default=False,
+    help="output with one sequence per line")
+parser.add_option_group(optional_opts)
 # get all parameters
 (options, args) = parser.parse_args()
 

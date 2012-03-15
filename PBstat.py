@@ -11,7 +11,9 @@ and compute statisiques (count and Neq).
 #===============================================================================
 # load modules
 #===============================================================================
-from optparse import OptionParser
+import optparse 
+# optparse in deprecated since Python 2.7 and has been replaced by argparse
+# however many Python installations are steal using Python < 2.7
 import os
 import sys
 import numpy 
@@ -55,12 +57,20 @@ def read_fasta(name):
 #-------------------------------------------------------------------------------
 # get options
 #-------------------------------------------------------------------------------
-parser = OptionParser(usage="%prog -f file_1.PB.fasta [-f file_2.PB.fasta] -o output_root_name")
-parser.add_option("-f", action="append", type="string", 
+parser = optparse.OptionParser(
+    usage="%prog -f file_1.PB.fasta [-f file_2.PB.fasta] -o output_root_name",
+    version="1.0")
+# mandatory arguments
+mandatory_opts = optparse.OptionGroup(
+    parser,
+    'Mandatory arguments')
+mandatory_opts.add_option("-f", action="append", type="string", 
 help="name(s) of the PB file (in fasta format)")
-parser.add_option("-o", action="store", type="string", 
+mandatory_opts.add_option("-o", action="store", type="string", 
 help="root name for results")
+parser.add_option_group(mandatory_opts)
 
+# get all parameters
 (options, args) = parser.parse_args()
 
 #-------------------------------------------------------------------------------
