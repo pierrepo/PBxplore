@@ -92,11 +92,15 @@ colorpal = rgb(grad[,1]/255,grad[,2]/255,grad[,3]/255)
 
 layout(matrix(1:2, 1, 2), width=c(log(length(xnames))*3, 1))
 
-par(mar = c(5.1, 5.1, 4.1, 1.1))
-image(as.matrix(map), axes=FALSE, xlab="Residue number", ylab="PB", col=colorpal)
+par(mar = c(5.1, 7.1, 4.1, 1.1))
+image(as.matrix(map), axes=FALSE, xlab="Residue number", col=colorpal)
 box()
 axis(1, seq(0, 1, 1/(length(xnames)-1)), xnames)
 axis(2, seq(0, 1, 1/(length(ynames)-1)), ynames, font = 4)
+mtext('PB', side = 2, line = 5, cex=1.7, font=2)
+mtext(bquote(beta~'strand'), side = 2, line = 3, at = 3*1/15, cex=1.5)
+mtext('coil', side = 2, line = 3, at = 7*1/15, cex=1.5)
+mtext(bquote(alpha~'helix'), side = 2, line = 3, at = 12*1/15, cex=1.5)
 #mtext(paste(name, Sys.Date()), side = 3, line = 3)
 
 par(mar = c(5.1, 1.1, 4.1, 5.1))
