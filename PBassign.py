@@ -334,13 +334,13 @@ angle_modulo_360_vect = numpy.vectorize(angle_modulo_360)
 # manage parameters
 #-------------------------------------------------------------------------------
 parser = optparse.OptionParser(
-    usage="%prog [options] -f file.pdb [-f file2.pdb] -o output_root_name",
+    usage="%prog [options] -p file.pdb|dir [-p file2.pdb] -o output_root_name",
     version="1.0")
 # mandatory arguments
 mandatory_opts = optparse.OptionGroup(
     parser,
     'Mandatory arguments')
-mandatory_opts.add_option("-f", action="append", type="string", 
+mandatory_opts.add_option("-p", action="append", type="string", 
     help="name of pdb file or directory containing pdb files")
 mandatory_opts.add_option("-o", action="store", type="string", 
     help="root name for results")
@@ -358,9 +358,9 @@ parser.add_option_group(optional_opts)
 (options, args) = parser.parse_args()
 
 # check options
-if not options.f:
+if not options.p:
     parser.print_help()
-    parser.error("options -f is mandatory")
+    parser.error("options -p is mandatory")
 
 if not options.o:
     parser.print_help()
@@ -371,7 +371,7 @@ if not options.o:
 #-------------------------------------------------------------------------------
 pdb_name_lst = []
 
-for name in options.f:
+for name in options.p:
     if os.path.isfile(name):
         pdb_name_lst.append(name)
     elif os.path.isdir(name):
