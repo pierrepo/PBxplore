@@ -3,11 +3,10 @@
 # 2012 - P. Poulain, A. G. de Brevern
 
 function pause(){
-    read -s -n1 -p "Press any key to continue."
+    read -r -s -n1 -p "Press any key to continue."
     echo
-#read -r -n1 -p "Press any key to continue."
 # wait 5 sec from key pressed and then goes on
-#read -t5 -s -n1 -p "Press any key to continue."
+#read -t5 -r -s -n1 -p "Press any key to continue."
 
 }
 
