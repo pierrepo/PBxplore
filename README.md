@@ -2,8 +2,9 @@
 
 ![PBs](doc/img/PBs.jpg "PBs")
 
+**Figure 1.** Schematic representation of the sixteen protein blocks, labeled from *a* to *p* (Creative commons CC BY).
 
-# Download
+# Download
 
 # Requirements
 PBxplore requires at least Python 2.6, the [NumPy](http://numpy.scipy.org/ "NumPy") Python library and R.
@@ -11,9 +12,9 @@ PBxplore requires at least Python 2.6, the [NumPy](http://numpy.scipy.org/ "NumP
 # Documentation
 
 Further documentation is available :
+
 * [Introduction to Protein Blocks](doc/intro.PBs.md)
 * [Single structure analysis](doc/single.structure.analysis.md)
-
 
 
 # References
