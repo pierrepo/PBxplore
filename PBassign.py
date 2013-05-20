@@ -444,8 +444,10 @@ for pdb_name in pdb_name_lst:
                 comment = pdb_name 
                 if model:
                     comment += " | model %s" % (model)
+                    model = ""
                 if atom.chain:
                     comment += " | chain %s" % (atom.chain)
+                    atom.chain = ""
         # assign structure after end of model (or chain)
         if structure.size() != 0 and flag in ["TER", "ENDMDL"]:
             PB_assign(pb_def, structure, comment)
