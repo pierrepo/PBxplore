@@ -1,8 +1,8 @@
 #! /usr/bin/env python
 
 """
-PBstat.py reads protein blocks (PBs) sequence files in fasta format
-and compute statisiques (count and Neq).
+PBstat.py reads protein blocks (PBs) sequence files in fasta format,
+computes statistics (count and Neq) and optionally displays Neq.
 
 2012 - P. Poulain, A. G. de Brevern 
 """
@@ -18,6 +18,7 @@ import os
 import sys
 import numpy 
 import math
+import subprocess
 
 #===============================================================================
 # data
@@ -69,7 +70,19 @@ help="name(s) of the PB file (in fasta format)")
 mandatory_opts.add_option("-o", action="store", type="string", 
 help="root name for results")
 parser.add_option_group(mandatory_opts)
-
+# optional arguments
+optional_opts = optparse.OptionGroup(
+    parser,
+    'Optional arguments')
+optional_opts.add_option("--neq-lower", action="store", type="int",
+    dest = "neq_lower", help="lower bound for Neq display")
+optional_opts.add_option("--neq-upper", action="store", type="int",
+    dest = "neq_upper", help="upper bound for Neq display")
+optional_opts.add_option("--neq-shift", action="store", type="int",
+    dest = "neq_shift", help="shift to adjust residue number")
+optional_opts.add_option("--no-neq", action="store_true",
+    dest = "no_neq", help="disables Neq display")
+parser.add_option_group(optional_opts)
 # get all parameters
 (options, args) = parser.parse_args()
 
@@ -167,3 +180,97 @@ neq_file.write(content)
 neq_file.close()
 print "wrote %s" % neq_file_name
 
+#-------------------------------------------------------------------------------
+# display Neq (generates a png picture)
+#-------------------------------------------------------------------------------
+if options.no_neq:
+    print "no Neq display generated"
+    sys.exit(0)
+
+
+#-------------------------------------------------------------------------------
+# prepare data
+#-------------------------------------------------------------------------------
+res = range(1, len(neq)+1)
+
+if options.neq_lower:
+    lower = options.neq_lower
+else:
+    lower = min(res)
+    
+if options.neq_upper:
+    upper = options.neq_upper
+else:
+    upper = max(res)
+
+if options.neq_shift:
+    shift = options.neq_shift
+else:
+    shift = 0
+    
+# create numpy array for export
+# and select data range
+data = numpy.transpose([res, neq])
+data = data[lower-1:upper, :]
+
+#  convert array to string for further import in R
+numpy.set_printoptions(threshold=numpy.inf)
+str_data = numpy.array_str(data, max_line_width = 100000, precision = 4).translate(None, '[]')
+#  max_line_width : big enough to avoid unneeded newline
+#  precision : float with 4 digits
+
+#-------------------------------------------------------------------------------
+# build R script
+#-------------------------------------------------------------------------------
+
+R_script="""
+connector = textConnection("%s")
+data = read.table(connector, header = FALSE)
+lower = %d
+upper = %d
+shift = %d
+""" % (str_data, lower, upper, shift)
+
+#  graphical parameters
+R_script += """
+png(filename='%s', width = 1600, height = 1200)
+par(
+    # default margins are: 5.1 4.1 4.1 2.1
+    # extend bottom margin for text (+5 line)
+    mar = c(5.1, 5.1, 4.1, 2.1),
+    oma = c(2,0,0,0), # 2 lines for comments: 0 to 4
+    lwd=3,            # line width
+    bty = 'o',        # type of box around graphic
+    font.lab = 2,     # axis label font (bold)
+    font.axis = 2,    # axis font (bold)
+    cex.lab=2.5,      # axis label width
+    cex.axis=2.0      # axis width
+)
+""" % (options.o + ".PB.Neq.png")
+
+# plot data
+R_script += """
+plot(data, type= 'l', 
+    xlab = 'Residue number', ylab = 'Neq', 
+    xaxt="n", ylim=c(1,max(round(data[,2]))+2))
+axis(1, lower:upper, (lower:upper)+shift)
+"""
+
+#-------------------------------------------------------------------------------
+# execute R script
+#-------------------------------------------------------------------------------
+command="R --vanilla --slave"
+proc = subprocess.Popen(command, shell = True, 
+stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
+(out, err) = proc.communicate(R_script)
+if err:
+    print "ERROR:", err
+code = proc.wait()
+if code:
+    print "ERROR: exit code != 0"
+    print "exit code:", code
+else:
+    print "wrote %s" % options.o + ".PB.Neq.png"
+
+
+print out
