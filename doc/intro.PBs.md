@@ -1,6 +1,6 @@
 # Introduction to Protein Blocks
 
-Protein Blocks are structural prototypes defined by [de Brevern](http://www.dsimb.inserm.fr/~debrevern/index.php) *et al* in 2000 [1]. Their main interest is to modelize the 3-dimensional local structure of the protein backbone into a 1-dimension sequence. In principle, any conformation of any amino acid could be represented by one of the sixteen available Protein Blocks (see Figure 1).
+Protein Blocks (PBs) are structural prototypes defined by [de Brevern](http://www.dsimb.inserm.fr/~debrevern/index.php) *et al* in 2000 [1]. Their main interest is to modelize the 3-dimensional local structure of the protein backbone into a 1-dimension sequence. In principle, any conformation of any amino acid could be represented by one of the sixteen available Protein Blocks. PBs are labeled from a to p (see Figure 1): the PBs *m* and *d* can be roughly described as prototypes for alpha-helix and central beta-strand, respectively. PBs *a* to *c* primarily represent beta-strand N-caps and PBs *e* and *f*, beta-strand C-caps; PBs *a* to *j* are specific to coils, PBs *k* and *l* to alpha-helix N-caps, and PBs *n* to *p* to alpha-helix C-caps. 
 
 ![PBs](img/PBs.jpg "PBs")
 

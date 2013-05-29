@@ -1,6 +1,6 @@
 # Single structure analysis
 
-**PBassign.py** is used to assign the PB sequence from a protein structure.
+**PBassign.py** assigns a PB sequence to a protein structure.
 
     ./PBassign.py -p test/static/3ICH.pdb -o 3ICH
 
@@ -64,7 +64,7 @@ All PB assignments are written in the same output file. If a PDB file contains s
     ZZcddfklpcbfklmmmmmmmmnopafklgoiaklmmmmmmmmpacddddddehkllmmm
     mnnommmmmmmmmmmmmmnopacddddZZ
 
-One can also use the `-p` option to use a directory containing PDB files as an input:
+One can also use the `-p` option to provide a directory containing PDB files as an input:
 
     ./PBassign.py -p test/static/ -o test2
 
