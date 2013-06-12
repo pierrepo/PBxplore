@@ -15,6 +15,7 @@ Further documentation is available :
 
 * [Introduction to Protein Blocks](doc/intro.PBs.md)
 * [Single structure analysis](doc/single.structure.analysis.md)
+* [Multiple conformation analysis](doc/multiple.conformation.analysis.md)
 
 
 # References

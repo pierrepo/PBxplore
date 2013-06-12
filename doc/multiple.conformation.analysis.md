@@ -1,4 +1,4 @@
-# Multiple conformations analysis #
+# Multiple conformation analysis #
 
 The PBs assignments of several conformations of the same protein can be analyzed statistically. Such analysis is performed by the `PBstat.py` tool and is based on the PBs frequency at each position along the amino acid sequence and computes something similar to entropy called equivalent number of PBs (*Neq*). *Neq* est calculated as follows:
 
@@ -34,7 +34,7 @@ can be used several times. For instance:
 
 Statistics are computed based on the three PBs files (`md_traj_1.PB.fasta`, `md_traj_2.PB.fasta` and `md_traj_3.PB.fasta`) and then written in the same output files. The files `test1.PB.fasta`, `test2.PB.fasta` and `test3.PB.fasta` must described the very same protein (in different conformations);
 
-Note: unlike `PBassign.py`, `PBstat.py` cannot take a directory as an input. Individual fasta files have to be specified.
+Note: unlike `PBassign.py`, `PBstat.py` cannot take a directory as an input. Individual fasta files must to be specified.
 
 ## `-o` option
 defines root name (with no extension) for output files. 
@@ -69,4 +69,49 @@ The file named `*.PB.Neq` contains the *Neq* value along the protein sequence. O
     [snip]
 
 Note that the first column in `*.PB.Neq` and `*.PB.count` files provides a residue id that is not equivalent to the residue number in the PDB file, i. e. the first residue of the protein sequence *always* has id 1. 
+
+## `--no-neq` option
+
+By default, a png graph of the Neq versus the residu number is generated. This option disables such process
+
+
+## `--neq-lower`, `--neq-upper` and `--neq-shift` options
+
+These options allow to adjust the x-axis of the Neq graph. 
+
+`--neq-lower` and `--neq-upper` define the frame of residues for which Neq is displayed. Remember that residue id always starts at 1.
+
+`--neq-shift` allows to shift the display of residue number since in PBxplore residue id always starts at 1.
+
+Example without residue frame and shift:
+
+    ./PBstat.py -f ./test/multi/MD/md_traj.PB.fasta -o md_traj
+
+Output:
+
+    read 225 sequences in ./test/multi/MD/md_traj.PB.fasta
+    wrote md_traj.PB.count
+    wrote md_traj.PB.Neq
+    wrote md_traj.PB.Neq.png
+
+Neq graph:
+
+![Neq without frame and shift](img/md_traj.PB.Neq.1.jpg)
+
+
+Example with residue frame and shift:
+
+    ./PBstat.py -f ./test/multi/MD/md_traj.PB.fasta -o md_traj --neq-residue-lower=10 --neq-residue-upper=30 --neq-residue-shift=5
+
+Output:
+
+    read 225 sequences in ./test/multi/MD/md_traj.PB.fasta
+    wrote md_traj.PB.count
+    wrote md_traj.PB.Neq
+    wrote md_traj.PB.Neq.png
+
+Neq graph:
+
+![Neq with frame and shift](img/md_traj.PB.Neq.2.jpg)
+
 

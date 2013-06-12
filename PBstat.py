@@ -74,12 +74,12 @@ parser.add_option_group(mandatory_opts)
 optional_opts = optparse.OptionGroup(
     parser,
     'Optional arguments')
-optional_opts.add_option("--neq-lower", action="store", type="int",
-    dest = "neq_lower", help="lower bound for Neq display")
-optional_opts.add_option("--neq-upper", action="store", type="int",
-    dest = "neq_upper", help="upper bound for Neq display")
-optional_opts.add_option("--neq-shift", action="store", type="int",
-    dest = "neq_shift", help="shift to adjust residue number")
+optional_opts.add_option("--neq-residue-lower", action="store", type="int",
+    dest = "neq_residue_lower", help="lower bound for Neq display")
+optional_opts.add_option("--neq-residue-upper", action="store", type="int",
+    dest = "neq_residue_upper", help="upper bound for Neq display")
+optional_opts.add_option("--neq-residue-shift", action="store", type="int",
+    dest = "neq_residue_shift", help="shift to adjust residue number")
 optional_opts.add_option("--no-neq", action="store_true",
     dest = "no_neq", help="disables Neq display")
 parser.add_option_group(optional_opts)
@@ -193,18 +193,18 @@ if options.no_neq:
 #-------------------------------------------------------------------------------
 res = range(1, len(neq)+1)
 
-if options.neq_lower:
-    lower = options.neq_lower
+if options.neq_residue_lower:
+    lower = options.neq_residue_lower
 else:
     lower = min(res)
     
-if options.neq_upper:
-    upper = options.neq_upper
+if options.neq_residue_upper:
+    upper = options.neq_residue_upper
 else:
     upper = max(res)
 
-if options.neq_shift:
-    shift = options.neq_shift
+if options.neq_residue_shift:
+    shift = options.neq_residue_shift
 else:
     shift = 0
     
@@ -274,3 +274,4 @@ else:
 
 
 print out
+
