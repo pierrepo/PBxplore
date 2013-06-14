@@ -4,7 +4,7 @@
 
     ./PBassign.py -p test/static/3ICH.pdb -o 3ICH
 
-Output is
+Output:
 
     1 PDB file(s) to process
     read PB definitions: 16 PBs x 8 angles
@@ -12,7 +12,7 @@ Output is
     PBs assigned for test/static/3ICH.pdb | chain A
     wrote 3ICH.PB.fasta
 
-Content of `3ICH.PB.fasta` is:
+Content of `3ICH.PB.fasta`:
 
     >test/static/3ICH.pdb | chain A
     ZZccdfbdcdddddehjbdebjcdddddfklmmmlmmmmmmmmnopnopajeopacfbdc
@@ -21,7 +21,6 @@ Content of `3ICH.PB.fasta` is:
 
 Note that Protein Blocs assignment is only possible for proteins (as its name suggests). As a consequence, processed PDB files must contain protein structures **only** (please remove any other molecule). In addition, the PDB parser implemented here is pretty straightforward. Be sure your PDB files complies with the [ATOM field](http://www.wwpdb.org/documentation/format33/sect9.html#ATOM) of the [PDB format](http://www.wwpdb.org/documentation/format33/v3.3.html) and that the protein structure is coherent.
 
-PBassign.py can take several options:
 
 | PBassign.py options                                                                                        ||
 |:---------------------|--------------------------------------------------------------------------------------|
@@ -37,7 +36,7 @@ can be used several times. For instance:
 
     ./PBassign.py -p test/static/3ICH.pdb -p test/static/1BTA.pdb -p test/static/1AY7.pdb -o test1
 
-Output is:
+Output:
 
     3 PDB file(s) to process
     read PB definitions: 16 PBs x 8 angles 
@@ -100,7 +99,7 @@ generates an additionnal file with the [phi and psi angles](http://en.wikipedia.
 
     ./PBassign.py -p test/static/1BTA.pdb -o 1BTA --phipsi
 
-Output is:
+Output:
 
     1 PDB file(s) to process
     read PB definitions: 16 PBs x 8 angles 
@@ -109,7 +108,7 @@ Output is:
     wrote 1BTA.PB.fasta
     wrote 1BTA.PB.phipsi
 
-Content of `1BTA.PB.phipsi` is:
+Content of `1BTA.PB.phipsi`:
 
     test/static/1BTA.pdb | chain A      1     None  -171.66 
     test/static/1BTA.pdb | chain A      2  -133.80   153.74 
@@ -132,7 +131,7 @@ formats the PBs assignment with one sequence per line.
 
     ./PBassign.py -p test/static/1BTA.pdb -o 1BTA --flat
 
-Output is:
+Output:
 
     1 PDB file(s) to process
     read PB definitions: 16 PBs x 8 angles 
@@ -141,7 +140,7 @@ Output is:
     wrote 1BTA.PB.fasta
     wrote 1BTA.PB.flat
 
-Content of `1BTA.PB.flat` is:
+Content of `1BTA.PB.flat`:
 
     ZZdddfklonbfklmmmmmmmmnopafklnoiaklmmmmmnoopacddddddehkllmmmmngoilmmmmmmmmmmmmnopacdcddZZ
 

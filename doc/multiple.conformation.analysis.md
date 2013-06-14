@@ -17,8 +17,7 @@ Output:
     wrote md_traj.PB.Neq
     wrote md_traj.PB.Neq.png
 
-`PBstat.py` options are:
-
+| `PBstat.py` options                                                                             ||
 |-----------------------|--------------------------------------------------------------------------|
 | `-h` or `--help`      | shows help message                                                       |
 | `--version`           | shows program version                                                    |
