@@ -19,21 +19,23 @@ Output:
 
 `PBstat.py` options are:
 
-* `-h` or `--help` shows help message
-* `--version` shows program version
-* `-f` **(mandatory)** defines the name of the file that contains PBs sequences in fasta format
-* `-o` **(mandatory)** defines root name for results (do not specify any extension)
-* `--neq-residue-lower` defines lower bound for Neq display
-* `--neq-residue-upper` defines upper bound for Neq display
-* `--neq-residue-shift` shift to adjust residue number
-* `--no-neq` disables Neq display
+|-----------------------|--------------------------------------------------------------------------|
+| `-h` or `--help`      | shows help message                                                       |
+| `--version`           | shows program version                                                    |
+| `-f` **(mandatory)**  | defines the name of the file that contains PBs sequences in fasta format |
+| `-o` **(mandatory)**  | defines root name for results (do not specify any extension)             |
+| `--neq-residue-lower` | defines lower bound for Neq display                                      |
+| `--neq-residue-upper` | defines upper bound for Neq display                                      |
+| `--neq-residue-shift` | shift to adjust residue number                                           |
+| `--no-neq`            | disables Neq display                                                     |
+
 
 ## `-f` option
 can be used several times. For instance:
 
     ./PBstat.py -f test/multi/MD/md_traj_1.PB.fasta -f test/multi/MD/md_traj_2.PB.fasta -f test/multi/MD/md_traj_3.PB.fasta -o test_output
 
-Statistics are computed based on the three PBs files (`md_traj_1.PB.fasta`, `md_traj_2.PB.fasta` and `md_traj_3.PB.fasta`) and then written in the same output files. The files `test1.PB.fasta`, `test2.PB.fasta` and `test3.PB.fasta` must described the very same protein (in different conformations);
+Statistics are computed based on the three PBs files (`md_traj_1.PB.fasta`, `md_traj_2.PB.fasta` and `md_traj_3.PB.fasta`) and then written in the same output files. The files `test1.PB.fasta`, `test2.PB.fasta` and `test3.PB.fasta` must described the very same protein (in different conformations).
 
 Note: unlike `PBassign.py`, `PBstat.py` cannot take a directory as an input. Individual fasta files must to be specified.
 

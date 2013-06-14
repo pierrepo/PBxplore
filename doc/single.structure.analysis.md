@@ -23,12 +23,13 @@ Note that Protein Blocs assignment is only possible for proteins (as its name su
 
 PBassign.py can take several options:
 
-* `-h` or `--help` shows help message
-* `--version` shows program version
-* `-p` **(mandatory)** defines the name of the PDB file or the name of the directory containing PDB files
-* `-o` **(mandatory)** defines the root name for results (do not specify any extension)
-* `--phipsi` prints phi and psi angles
-* `--flat` outputs will be one sequence per line (not compatible with fasta format)
+|:---------------------|--------------------------------------------------------------------------------------|
+| `-h` or `--help`     | shows help message                                                                   |
+| `--version`          | shows program version                                                                |
+| `-p` **(mandatory)** | defines the name of the PDB file or the name of the directory containing PDB files   |
+| `-o` **(mandatory)** | defines the root name for results (do not specify any extension)                     |
+| `--phipsi`           | prints phi and psi angles                                                            |
+| `--flat`             | outputs will be one sequence per line (not compatible with fasta format)             |
 
 ## `-p` option
 can be used several times. For instance:
