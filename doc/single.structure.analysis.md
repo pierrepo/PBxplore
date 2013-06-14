@@ -23,6 +23,7 @@ Note that Protein Blocs assignment is only possible for proteins (as its name su
 
 PBassign.py can take several options:
 
+| PBassign.py options                                                                                        ||
 |:---------------------|--------------------------------------------------------------------------------------|
 | `-h` or `--help`     | shows help message                                                                   |
 | `--version`          | shows program version                                                                |
