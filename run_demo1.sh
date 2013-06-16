@@ -20,8 +20,8 @@ echo "#------------------------------------------------------------------------#
 pause
 
 # create and move into the demo directory
-mkdir demo_tmp
-cd demo_tmp
+mkdir demo1_tmp
+cd demo1_tmp
 cp ../demo1/*pdb ./
 
 echo "#------------------------------------------------------------------------#"
@@ -109,5 +109,6 @@ echo "|                                                                        |
 echo "#------------------------------------------------------------------------#"
 echo 
 echo "Look at *.PB.* files in the demo directory."
+pwd
 ls -lh 
 
