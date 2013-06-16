@@ -20,9 +20,9 @@ echo "#------------------------------------------------------------------------#
 pause
 
 # create and move into the demo directory
-mkdir demo
-cd demo
-cp ../test/static/*pdb ./
+mkdir demo_tmp
+cd demo_tmp
+cp ../demo1/*pdb ./
 
 echo "#------------------------------------------------------------------------#"
 echo "|                                                                        |"

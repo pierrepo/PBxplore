@@ -8,11 +8,11 @@ Where *fx* is the probability of PB *x*. *Neq* quantifies the average number of 
 
 Example:
 
-    ./PBstat.py -f ./test/multi/MD/md_traj.PB.fasta -o md_traj
+    ./PBstat.py -f ./demo2/md_traj.PB.fasta -o md_traj
 
 Output:
 
-    read 225 sequences in ./test/multi/MD/md_traj.PB.fasta
+    read 225 sequences in ./demo2/md_traj.PB.fasta
     wrote md_traj.PB.count
     wrote md_traj.PB.Neq
     wrote md_traj.PB.Neq.png
@@ -32,7 +32,7 @@ Output:
 ## `-f` option
 can be used several times. For instance:
 
-    ./PBstat.py -f test/multi/MD/md_traj_1.PB.fasta -f test/multi/MD/md_traj_2.PB.fasta -f test/multi/MD/md_traj_3.PB.fasta -o test_output
+    ./PBstat.py -f demo2/md_traj_1.PB.fasta -f demo2/md_traj_2.PB.fasta -f demo2/md_traj_3.PB.fasta -o test_output
 
 Statistics are computed based on the three PBs files (`md_traj_1.PB.fasta`, `md_traj_2.PB.fasta` and `md_traj_3.PB.fasta`) and then written in the same output files. The files `test1.PB.fasta`, `test2.PB.fasta` and `test3.PB.fasta` must described the very same protein (in different conformations).
 
@@ -86,11 +86,11 @@ These options allow to adjust the x-axis of the Neq graph.
 
 Example without residue frame and shift:
 
-    ./PBstat.py -f ./test/multi/MD/md_traj.PB.fasta -o md_traj
+    ./PBstat.py -f ./demo2/md_traj.PB.fasta -o md_traj
 
 Output:
 
-    read 225 sequences in ./test/multi/MD/md_traj.PB.fasta
+    read 225 sequences in ./demo2/md_traj.PB.fasta
     wrote md_traj.PB.count
     wrote md_traj.PB.Neq
     wrote md_traj.PB.Neq.png
@@ -102,11 +102,11 @@ Neq graph:
 
 Example with residue frame and shift:
 
-    ./PBstat.py -f ./test/multi/MD/md_traj.PB.fasta -o md_traj --neq-residue-lower=10 --neq-residue-upper=30 --neq-residue-shift=5
+    ./PBstat.py -f ./demo2/md_traj.PB.fasta -o md_traj --neq-residue-lower=10 --neq-residue-upper=30 --neq-residue-shift=5
 
 Output:
 
-    read 225 sequences in ./test/multi/MD/md_traj.PB.fasta
+    read 225 sequences in ./demo2/md_traj.PB.fasta
     wrote md_traj.PB.count
     wrote md_traj.PB.Neq
     wrote md_traj.PB.Neq.png
