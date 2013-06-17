@@ -2,12 +2,12 @@
 
 # 2012 - P. Poulain, A. G. de Brevern
 
+# exit script at first error
+set -e
+
 function pause(){
     read -r -s -n1 -p "Press any key to continue."
     echo
-# wait 5 sec from key pressed and then goes on
-#read -t5 -r -s -n1 -p "Press any key to continue."
-
 }
 
 

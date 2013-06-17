@@ -6,17 +6,22 @@
 
 # Download
 
+- [Get latest zip archive](https://github.com/pierrepo/PBxplore/archive/master.zip)
+- Clone repository: `git clone git@github.com:pierrepo/PBxplore.git` or `git clone https://github.com/pierrepo/PBxplore.git`
+
 # Requirements
+
 PBxplore requires at least Python 2.6, the [NumPy](http://numpy.scipy.org/ "NumPy") Python library and R.
 
 # Documentation
 
-Further documentation is available :
+Further documentation is available:
 
-* [Introduction to Protein Blocks](doc/intro.PBs.md)
-* [Single structure analysis](doc/single.structure.analysis.md)
-* [Multiple conformation analysis](doc/multiple.conformation.analysis.md)
+- [Introduction to Protein Blocks](doc/intro.PBs.md)
+- [Single structure analysis](doc/single.structure.analysis.md)
+- [Multiple conformation analysis](doc/multiple.conformation.analysis.md)
 
 
 # References
 [1] A. G. de Brevern, C. Etchebest and S. Hazout. Bayesian probabilistic approach for predicting backbone structures in terms of protein blocks. *Proteins* **41**: 271-288 (2000).
+
