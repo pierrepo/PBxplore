@@ -26,7 +26,7 @@ cp ../demo1/*pdb ./
 
 echo "#------------------------------------------------------------------------#"
 echo "|                                                                        |"
-echo "|  Protein Blocks assignation: static structures                         |"
+echo "|  Protein Blocks assignment: static structures                         |"
 echo "|                                                                        |"
 echo "#------------------------------------------------------------------------#"
 
@@ -54,7 +54,7 @@ pause
 echo  -e "\n"
 echo "#------------------------------------------------------------------------#"
 echo "|                                                                        |"
-echo "|  Protein Blocks assignation: static structures --phipsi option         |"
+echo "|  Protein Blocks assignment: static structures --phipsi option         |"
 echo "|                                                                        |"
 echo "#------------------------------------------------------------------------#"
 
@@ -69,7 +69,7 @@ pause
 echo  -e "\n"
 echo "#------------------------------------------------------------------------#"
 echo "|                                                                        |"
-echo "|  Protein Blocks assignation: static structures --flat option           |"
+echo "|  Protein Blocks assignment: static structures --flat option           |"
 echo "|                                                                        |"
 echo "#------------------------------------------------------------------------#"
 
@@ -84,7 +84,7 @@ pause
 echo  -e "\n"
 echo "#------------------------------------------------------------------------#"
 echo "|                                                                        |"
-echo "|  Protein Blocks assignation: several static structures                 |"
+echo "|  Protein Blocks assignment: several static structures                 |"
 echo "|                                                                        |"
 echo "#------------------------------------------------------------------------#"
 

@@ -15,6 +15,6 @@ For instance, the 3D structure of the barstar protein in Figure 2 is represented
 
 **Figure 2.** 3D representation of the barstar protein (PDB ID [1AY7](http://www.rcsb.org/pdb/explore/explore.do?pdbId=1AY7), chain B) (Creative commons CC BY)
 
-The conformations of the 89 residues are translated into a sequence of 89 protein blocks. Note that "Z" is a default name given to amino acid for which a protein block cannot be assigned. Indeed, the assignation procedure for a given residue requires the conformation of the two residues placed before and the two residues placed after the residue under consideration. Therefore, a protein block cannot be assigned to the two first (N-termini) and two last (C-termini) residues of a polypeptide chain.
+The conformations of the 89 residues are translated into a sequence of 89 protein blocks. Note that "Z" is a default name given to amino acid for which a protein block cannot be assigned. Indeed, the assignment procedure for a given residue requires the conformation of the two residues placed before and the two residues placed after the residue under consideration. Therefore, a protein block cannot be assigned to the two first (N-termini) and two last (C-termini) residues of a polypeptide chain.
 
 
