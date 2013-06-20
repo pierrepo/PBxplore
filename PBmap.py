@@ -198,7 +198,6 @@ box()
 void = dev.off()
 """
 
-print R_script
 #-------------------------------------------------------------------------------
 # execute R script
 #-------------------------------------------------------------------------------
@@ -212,5 +211,8 @@ code = proc.wait()
 if code:
     print "ERROR: exit code != 0"
     print "exit code:", code
+else:
+    print "wrote %s" % options.o + ".PB.map.png"
 
+print out
 

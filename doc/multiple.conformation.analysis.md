@@ -135,4 +135,21 @@ Neq graph:
 
 ![Neq with frame and shift](img/md_traj.PB.Neq.2.jpg)
 
+## Visualization of the relative distribution of PBs along the sequence
 
+`PBmap.py` creates a plot of the relative distribution of PBs along the sequence.
+
+Example:
+
+    ./PBmap.py -f ./demo2/md_traj.PB.count -o md_traj
+
+Output:
+
+    wrote md_traj.PB.map.png
+
+Plot:
+
+![PBs distribution](img/md_traj.PB.map.jpg)
+
+
+    
