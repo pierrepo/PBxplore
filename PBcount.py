@@ -132,7 +132,7 @@ for seq in pb_seq:
 shift = 0
 if options.residue_shift:
 	shift = options.residue_shift
-	print "first residue will be numbered %d" % shift
+	print "first residue will be numbered %d" % (shift + 1)
 
 count_file_name = options.o + ".PB.count"
 content = "    "

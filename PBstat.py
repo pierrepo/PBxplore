@@ -64,9 +64,9 @@ optional_opts.add_option("--neq", action="store_true",
 optional_opts.add_option("--logo", action="store_true", 
     dest = "logo", help = "generates logo representation of PBs frequency along protein sequence")
 optional_opts.add_option("--residue-min", action="store", type="int",
-    dest = "residue_min", help="lower bound residue frame")
+    dest = "residue_min", help="defines lower bound of residue frame")
 optional_opts.add_option("--residue-max", action="store", type="int",
-    dest = "residue_max", help="upper bound residue frame")
+    dest = "residue_max", help="defines upper bound of residue frame")
 parser.add_option_group(optional_opts)
 # get all parameters
 (options, args) = parser.parse_args()
