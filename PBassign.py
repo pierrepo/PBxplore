@@ -350,9 +350,9 @@ optional_opts = optparse.OptionGroup(
     parser,
     'Optional arguments')
 optional_opts.add_option("--phipsi", action="store_true", default=False,
-    help="print phi and psi angle")
+    help="writes phi and psi angle")
 optional_opts.add_option("--flat", action="store_true", default=False,
-    help="output with one sequence per line")
+    help="writes one PBs sequence per line")
 parser.add_option_group(optional_opts)
 # get all parameters
 (options, args) = parser.parse_args()

@@ -28,8 +28,8 @@ Note that Protein Blocs assignment is only possible for proteins (as its name su
 | `--version`          | shows program version                                                                |
 | `-p` **(mandatory)** | defines the name of the PDB file or the name of the directory containing PDB files   |
 | `-o` **(mandatory)** | defines the root name for results (do not specify any extension)                     |
-| `--phipsi`           | prints phi and psi angles                                                            |
-| `--flat`             | outputs will be one sequence per line (not compatible with fasta format)             |
+| `--phipsi`           | writes phi and psi angles                                                            |
+| `--flat`             | writes one PBs sequence per line                                                     |
 
 ## `-p` option
 can be used several times. For instance:
@@ -122,7 +122,7 @@ Content of `1BTA.PB.phipsi`:
     demo1/1BTA.pdb | chain A     10   -41.31   133.74 
     [snip]
 
-The first part of the line is the comment also found in the fasta file. The last thee columns are, from left to right, the residue number, the phi angle and the psi angle. The phi angle of the first residue and the psi angle of the last residue cannot be obtained.
+The first part of the line is the comment also found in the fasta file. The last thee columns are, from left to right, the residue number, the phi angle and the psi angle. The phi angle of the first residue and the psi angle of the last residue cannot be computed.
 
 
 ## `--flat` option
