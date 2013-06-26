@@ -26,7 +26,7 @@ cp ../demo2/* ./
 
 echo "#------------------------------------------------------------------------#"
 echo "|                                                                        |"
-echo "|  Protein Blocks assignment: many conformations of the same protein    |"
+echo "|  Protein Blocks assignment: many conformations of the same protein     |"
 echo "|                                                                        |"
 echo "#------------------------------------------------------------------------#"
 
@@ -44,39 +44,39 @@ echo "|                                                                        |
 echo "#------------------------------------------------------------------------#"
 
 echo  -e "\n"
-echo "../PBstat.py -f md_traj.PB.fasta -o md_traj"
+echo "../PBstat.py -f md_traj.PB.count -o md_traj"
 pause
-../PBstat.py -f md_traj.PB.fasta -o md_traj
+../PBstat.py -f md_traj.PB.count -o md_traj
 
 
 echo  -e "\n"
 echo "#------------------------------------------------------------------------#"
 echo "|                                                                        |"
-echo "|  Make statistics with several PB assignment fasta files ption         |"
+echo "|  Make statistics with several PB assignment fasta files options        |"
 echo "|                                                                        |"
 echo "#------------------------------------------------------------------------#"
 
 
 echo  -e "\n"
-echo "Test with several 'PB.fasta' files"
-echo "../PBstat.py -f md_traj_1.PB.fasta -f md_traj_2.PB.fasta -f md_traj_3.PB.fasta -o test_output"
+echo "Test with several 'PB.count' files"
+echo "../PBstat.py -f md_traj_1.PB.count -f md_traj_2.PB.count -f md_traj_3.PB.count -o test_output"
 pause
-../PBstat.py -f md_traj_1.PB.fasta -f md_traj_2.PB.fasta -f md_traj_3.PB.fasta -o test_output
+../PBstat.py -f md_traj_1.PB.count -f md_traj_2.PB.count -f md_traj_3.PB.count -o test_output
 
 
 echo  -e "\n"
 echo "#------------------------------------------------------------------------#"
 echo "|                                                                        |"
-echo "|  Making statitics: playin with Neq graphic                             |"
+echo "|  Making statitics: playing with Neq graphic                            |"
 echo "|                                                                        |"
 echo "#------------------------------------------------------------------------#"
 
 
 echo  -e "\n"
 echo "Test with --neq-residue-lower, --neq-residue-upper, and --neq-residue-shift options"
-echo "../PBstat.py -f md_traj.PB.fasta -o md_traj --neq-residue-lower=10 --neq-residue-upper=30 --neq-residue-shift=5"
+echo "../PBstat.py -f md_traj.PB.count -o md_traj --neq-residue-lower=10 --neq-residue-upper=30 --neq-residue-shift=5"
 pause
-../PBstat.py -f md_traj.PB.fasta -o md_traj --neq-residue-lower=10 --neq-residue-upper=30 --neq-residue-shift=5
+../PBstat.py -f md_traj.PB.count -o md_traj --neq-residue-lower=10 --neq-residue-upper=30 --neq-residue-shift=5
 
 
 echo  -e "\n"
