@@ -332,7 +332,7 @@ if options.logo:
 	#-------------------------------------------------------------------------------
 	debug = False
 	if debug:
-	    transfac_name = options.f.replace('.count', '.transfac')
+	    transfac_name = options.o.replace('.count', '.transfac')
 	    f_out = open(transfac_name, 'w')
 	    f_out.write(transfac_content)
 	    f_out.close()
@@ -340,7 +340,7 @@ if options.logo:
 
 	# call weblogo
 	#-------------------------------------------------------------------------------
-	logo_name = options.f.replace(".count", ".logo.pdf")
+	logo_name = options.o.replace(".count", ".logo.pdf")
 	if options.residue_min or options.residue_max:
 		logo_name = options.f.replace(".count", ".logo.%i-%i.pdf" % (residue_min, residue_max))
 
