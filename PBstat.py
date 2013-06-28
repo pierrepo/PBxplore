@@ -332,7 +332,7 @@ if options.logo:
 	#-------------------------------------------------------------------------------
 	debug = False
 	if debug:
-	    transfac_name = options.o.replace('.count', '.transfac')
+	    transfac_name = options.o + ".PB.transfac"
 	    f_out = open(transfac_name, 'w')
 	    f_out.write(transfac_content)
 	    f_out.close()
@@ -340,9 +340,9 @@ if options.logo:
 
 	# call weblogo
 	#-------------------------------------------------------------------------------
-	logo_name = options.o.replace(".count", ".logo.pdf")
+	logo_file_name = options.o + ".PB.logo.pdf"
 	if options.residue_min or options.residue_max:
-		logo_name = options.f.replace(".count", ".logo.%i-%i.pdf" % (residue_min, residue_max))
+		logo_file_name = options.o + ".PB.logo.%i-%i.pdf" % (residue_min, residue_max)
 
 	command = """weblogo \
 --format pdf \
@@ -360,7 +360,7 @@ if options.logo:
 -o %s \
 --lower %i \
 --upper %i 
-	""" % (options.f.replace(".PB.count", ""), logo_name, residue_min, residue_max)
+	""" % (options.f.replace(".PB.count", ""), logo_file_name, residue_min, residue_max)
 
 	proc = subprocess.Popen(command, shell = True,
 	stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
@@ -372,8 +372,6 @@ if options.logo:
 	    print "ERROR: exit code != 0"
 	    print "exit code:", code
 	else:
-	    print "wrote %s" % logo_name
+	    print "wrote %s" % logo_file_name
 	print out
-
-
 
