@@ -28,11 +28,11 @@ PB_NUMBER = 16
 # functions
 #===============================================================================
 def array_to_string(ar):
-	"""convert numpy array to string for further import in R"""
-	numpy.set_printoptions(threshold=numpy.inf)
-	#  max_line_width : big enough to avoid unneeded newline
-	#  precision : float with 4 digits
-	return numpy.array_str(ar, max_line_width = 100000, precision = 4).translate(None, '[]')
+    """convert numpy array to string for further import in R"""
+    numpy.set_printoptions(threshold=numpy.inf)
+    #  max_line_width : big enough to avoid unneeded newline
+    #  precision : float with 4 digits
+    return numpy.array_str(ar, max_line_width = 100000, precision = 4).translate(None, '[]')
 
 #===============================================================================
 # MAIN - program starts here
@@ -115,11 +115,11 @@ freq = freq[residue_min-1:residue_max, :]
 # since positions 1 and 2 have no PBs assignement
 sequence_number = sum(freq[2, :])
 if sequence_number == 0:
-	sys.exit("ERROR: counting 0 sequences!")
+    sys.exit("ERROR: counting 0 sequences!")
 
 # separate PBs frequencies from residue numbers
 residue_lst = list(freq[:, 0])
-	
+    
 # extract and normalize PBs frequencies 
 freq = freq[:, 1:] / float(sequence_number)
 
@@ -127,21 +127,26 @@ freq = freq[:, 1:] / float(sequence_number)
 # generates map of the distribution of PBs along protein sequence
 #-------------------------------------------------------------------------------
 if options.mapdist:
-	#  convert array to string for further import in R
-	freq_string = array_to_string(freq)
+    #  convert array to string for further import in R
+    freq_string = array_to_string(freq)
 
-	# build R script
-	#-------------------------------------------------------------------------------
-	# data
-	R_script="""
+    # build R script
+    #-------------------------------------------------------------------------------
+    # data
+    R_script="""
 connector = textConnection("%s")
 freq = read.table(connector, header = FALSE)
 xnames = %d:%d
 ynames = c('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p')
-	""" % (freq_string, residue_min, residue_max)
-	
-	#  graphical parameters
-	R_script += """
+    """ % (freq_string, residue_min, residue_max)
+
+    # define output file name
+    map_file_name = options.o + ".PB.map.png"
+    if options.residue_min or options.residue_max:
+        map_file_name = options.o + ".PB.map.%i-%i.png" % (residue_min, residue_max)
+
+    #  graphical parameters
+    R_script += """
 png(filename='%s', width = log(length(xnames))*500, height = 1000)
 par(
     # default margins are: 5.1 4.1 4.1 2.1
@@ -155,11 +160,11 @@ par(
     cex.lab=1.9,      # axis label width
     cex.axis=1.5      # axis width
 )
-	""" % (options.o + ".PB.map.png")
+    """ % (map_file_name)
 
-	# color gradient goes 
-	# from dark blue (freq = 0) to green/yellow to red (freq = 1)
-	R_script += """
+    # color gradient goes 
+    # from dark blue (freq = 0) to green/yellow to red (freq = 1)
+    R_script += """
 grad = matrix(nrow=848, ncol=3)
 grad[1,1] = 20
 grad[1,2] = 20
@@ -185,10 +190,10 @@ grad[i,2] = grad[i-1,2]-1
 grad[i,3] = grad[i-1,3]
 }
 colorpal = rgb(grad[,1]/255,grad[,2]/255,grad[,3]/255)
-	"""
+    """
 
-	# plot data map
-	R_script += """
+    # plot data map
+    R_script += """
 layout(matrix(1:2, 1, 2), width=c(log(length(xnames))*3, 1))
 
 par(mar = c(5.1, 7.1, 4.1, 1.1))
@@ -206,64 +211,69 @@ image(t(seq(1, 848)), col=colorpal, axes=FALSE)
 axis(4, seq(0, 1, 0.2), seq(0, 1, 0.2))
 mtext("intensity", side = 4, line = 3, cex = 1.7, font = 2)
 box()
-	"""
+    """
 
-	# execute R script
-	#-------------------------------------------------------------------------------
-	command="R --vanilla --slave"
-	proc = subprocess.Popen(command, shell = True, 
-	stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
-	(out, err) = proc.communicate(R_script)
-	if err:
-		print "ERROR:", err
-	code = proc.wait()
-	if code:
-		print "ERROR: exit code != 0"
-		print "exit code:", code
-	else:
-		print "wrote %s" % options.o + ".PB.map.png"
-	print out
+    # execute R script
+    #-------------------------------------------------------------------------------
+    command="R --vanilla --slave"
+    proc = subprocess.Popen(command, shell = True, 
+    stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
+    (out, err) = proc.communicate(R_script)
+    if err:
+        print "ERROR:", err
+    code = proc.wait()
+    if code:
+        print "ERROR: exit code != 0"
+        print "exit code:", code
+    else:
+        print "wrote %s" % map_file_name
+    print out
 
 #-------------------------------------------------------------------------------
 # computes Neq and generates neq plot along protein sequence
 #-------------------------------------------------------------------------------
 if options.neq:
-	# compute Neq
-	#-------------------------------------------------------------------------------
-	neq_array = numpy.zeros((len(residue_lst), 2))
-	neq_array[:, 0] = residue_lst
-	for idx in xrange(len(residue_lst)):
-	    H = 0.0
-	    for b in xrange(PB_NUMBER):
-	        f = freq[idx, b] 
-	        if f != 0:
-	            H += f * math.log(f)
-	    neq_array[idx, 1] = math.exp(-H)
-
-	# write Neq
-	#-------------------------------------------------------------------------------
-	neq_file_name = options.o + ".PB.Neq"
-	content = "%-6s %8s \n" % ("resid", "Neq")
-	for (res, neq) in neq_array:
-	    content += "%-6d %8.2f \n" % (res, neq)
-	neq_file = open(neq_file_name, "w")
-	neq_file.write(content)
-	neq_file.close()
-	print "wrote %s" % neq_file_name
+    # compute Neq
+    #-------------------------------------------------------------------------------
+    neq_array = numpy.zeros((len(residue_lst), 2))
+    neq_array[:, 0] = residue_lst
+    for idx in xrange(len(residue_lst)):
+        H = 0.0
+        for b in xrange(PB_NUMBER):
+            f = freq[idx, b] 
+            if f != 0:
+                H += f * math.log(f)
+        neq_array[idx, 1] = math.exp(-H)
     
-	#  convert array to string for further import in R
-	neq_array_string = array_to_string(neq_array)
+    # define output file name
+    #-------------------------------------------------------------------------------
+    neq_file_name = options.o + ".PB.Neq"
+    if options.residue_min or options.residue_max:
+        neq_file_name = options.o + ".PB.Neq.%i-%i" % (residue_min, residue_max)
+    
+    # write Neq
+    #-------------------------------------------------------------------------------
+    content = "%-6s %8s \n" % ("resid", "Neq")
+    for (res, neq) in neq_array:
+        content += "%-6d %8.2f \n" % (res, neq)
+    neq_file = open(neq_file_name, "w")
+    neq_file.write(content)
+    neq_file.close()
+    print "wrote %s" % neq_file_name
+    
+    #  convert array to string for further import in R
+    neq_array_string = array_to_string(neq_array)
 
-	# build R script
-	#-------------------------------------------------------------------------------
+    # build R script
+    #-------------------------------------------------------------------------------
 
-	R_script="""
+    R_script="""
 connector = textConnection("%s")
 neq = read.table(connector, header = FALSE)
-	""" % (neq_array_string)
+    """ % (neq_array_string)
 
-	#  graphical parameters
-	R_script += """
+    #  graphical parameters
+    R_script += """
 png(filename='%s', width = 1600, height = 1200)
 par(
 # default margins are: 5.1 4.1 4.1 2.1
@@ -277,74 +287,76 @@ font.axis = 2,    # axis font (bold)
 cex.lab=2.5,      # axis label width
 cex.axis=2.0      # axis width
 )
-	""" % (options.o + ".PB.Neq.png")
+    """ % (neq_file_name + ".png")
 
-	# plot data
-	R_script += """
+    # plot data
+    R_script += """
 plot(neq, type= 'l', 
 xlab = 'Residue number', ylab = 'Neq', 
 ylim=c(1,max(round(neq[,2]))+2))
-	"""
+    """
 
-	# execute R script
-	#-------------------------------------------------------------------------------
-	command="R --vanilla --slave"
-	proc = subprocess.Popen(command, shell = True, 
-	stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
-	(out, err) = proc.communicate(R_script)
-	if err:
-	    print "ERROR:", err
-	code = proc.wait()
-	if code:
-	    print "ERROR: exit code != 0"
-	    print "exit code:", code
-	else:
-	    print "wrote %s" % options.o + ".PB.Neq.png"
-	
-	print out
+    # execute R script
+    #-------------------------------------------------------------------------------
+    command="R --vanilla --slave"
+    proc = subprocess.Popen(command, shell = True, 
+    stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
+    (out, err) = proc.communicate(R_script)
+    if err:
+        print "ERROR:", err
+    code = proc.wait()
+    if code:
+        print "ERROR: exit code != 0"
+        print "exit code:", code
+    else:
+        print "wrote %s" % neq_file_name + ".png"
+    
+    print out
 
 #-------------------------------------------------------------------------------
 # generates logo representation of PBs frequency along protein sequence
 #-------------------------------------------------------------------------------
 if options.logo:
-	# read count file
-	#-------------------------------------------------------------------------------
-	f_in = open(options.f, 'r')
-	count_content = f_in.readlines()
-	f_in.close()
+    # read count file
+    #-------------------------------------------------------------------------------
+    f_in = open(options.f, 'r')
+    count_content = f_in.readlines()
+    f_in.close()
 
-	# convert a table of PB frequencies into transfac format asrequired by weblogo
-	# http://meme.sdsc.edu/meme/doc/transfac-format.html
-	#-------------------------------------------------------------------------------
-	residue_lst = []
-	transfac_content  = "ID %s\n" % options.f
-	transfac_content += "BF unknown\n"
-	transfac_content += "P0" + count_content[0][2:]
-	for line in count_content[1:]:
-	    item = line.split()
-	    residue = int(item[0])
-	    residue_lst.append(residue)
-	    transfac_content += "%05d" % residue + line[5:-1] +  "    X" + "\n"
-	transfac_content += "XX\n"
-	transfac_content += "//"
+    # convert a table of PB frequencies into transfac format asrequired by weblogo
+    # http://meme.sdsc.edu/meme/doc/transfac-format.html
+    #-------------------------------------------------------------------------------
+    residue_lst = []
+    transfac_content  = "ID %s\n" % options.f
+    transfac_content += "BF unknown\n"
+    transfac_content += "P0" + count_content[0][2:]
+    for line in count_content[1:]:
+        item = line.split()
+        residue = int(item[0])
+        residue_lst.append(residue)
+        transfac_content += "%05d" % residue + line[5:-1] +  "    X" + "\n"
+    transfac_content += "XX\n"
+    transfac_content += "//"
 
-	# write transfac file (debug only)
-	#-------------------------------------------------------------------------------
-	debug = False
-	if debug:
-	    transfac_name = options.o + ".PB.transfac"
-	    f_out = open(transfac_name, 'w')
-	    f_out.write(transfac_content)
-	    f_out.close()
-	    print "wrote %s" % (transfac_name)
+    # write transfac file (debug only)
+    #-------------------------------------------------------------------------------
+    debug = False
+    if debug:
+        transfac_name = options.o + ".PB.transfac"
+        f_out = open(transfac_name, 'w')
+        f_out.write(transfac_content)
+        f_out.close()
+        print "wrote %s" % (transfac_name)
 
-	# call weblogo
-	#-------------------------------------------------------------------------------
-	logo_file_name = options.o + ".PB.logo.pdf"
-	if options.residue_min or options.residue_max:
-		logo_file_name = options.o + ".PB.logo.%i-%i.pdf" % (residue_min, residue_max)
+    # define output file name
+    #-------------------------------------------------------------------------------
+    logo_file_name = options.o + ".PB.logo.pdf"
+    if options.residue_min or options.residue_max:
+        logo_file_name = options.o + ".PB.logo.%i-%i.pdf" % (residue_min, residue_max)
 
-	command = """weblogo \
+    # call weblogo
+    #-------------------------------------------------------------------------------
+    command = """weblogo \
 --format pdf \
 --errorbars NO \
 --fineprint "PBlogo" \
@@ -360,18 +372,18 @@ if options.logo:
 -o %s \
 --lower %i \
 --upper %i 
-	""" % (options.f.replace(".PB.count", ""), logo_file_name, residue_min, residue_max)
+    """ % (options.f.replace(".PB.count", ""), logo_file_name, residue_min, residue_max)
 
-	proc = subprocess.Popen(command, shell = True,
-	stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
-	(out, err) = proc.communicate(transfac_content)
-	if err:
-	    print "ERROR:", err
-	code = proc.wait()
-	if code:
-	    print "ERROR: exit code != 0"
-	    print "exit code:", code
-	else:
-	    print "wrote %s" % logo_file_name
-	print out
+    proc = subprocess.Popen(command, shell = True,
+    stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
+    (out, err) = proc.communicate(transfac_content)
+    if err:
+        print "ERROR:", err
+    code = proc.wait()
+    if code:
+        print "ERROR: exit code != 0"
+        print "exit code:", code
+    else:
+        print "wrote %s" % logo_file_name
+    print out
 
