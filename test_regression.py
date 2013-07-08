@@ -45,9 +45,9 @@ class TestPBAssign(TestCase):
         if not path.isdir(OUTDIR):
             os.mkdir(OUTDIR)
 
-    def test_simple_PDB_fasta(self):
+    def test_fasta(self):
         """
-        Run PBAssign on PDB files with a single model.
+        Run PBAssign on PDB files, and check the fasta output.
         """
         references = ["1BTA", "1AY7", "2LFU", "3ICH"]
         for pdbid in references:
