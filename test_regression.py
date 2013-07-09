@@ -62,6 +62,23 @@ class TestPBAssign(TestCase):
         _test_PBassign_options(references, ['{0}.PB.fasta', '{0}.PB.flat'],
                                ['--flat'])
 
+    def test_phipsi(self):
+        """
+        Run PBassign with the --phipsi option.
+        """
+        references = ["1BTA", "1AY7", "2LFU", "3ICH"]
+        _test_PBassign_options(references, ['{0}.PB.fasta', '{0}.PB.phipsi'],
+                               ['--phipsi'])
+
+    def test_flat_phipsi(self):
+        """
+        Run PBassign with the both the --flat and --phipsi options.
+        """
+        references = ["1BTA", "1AY7", "2LFU", "3ICH"]
+        _test_PBassign_options(references,
+                               ['{0}.PB.fasta', '{0}.PB.flat', '{0}.PB.phipsi'],
+                               ['--flat', '--phipsi'])
+
 
 def _same_file_content(file_a, file_b):
     """
