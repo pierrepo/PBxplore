@@ -1,6 +1,6 @@
->1AY7.pdb | chain A
+>test-resources/1AY7.pdb | chain A
 ZZbjadfklmcfklmmmmmmmmnnpaafbfkgopacehlnomaccddehjaccdddddeh
 klpnbjadcdddfbehiacddfegolaccdddfkZZ
->1AY7.pdb | chain B
+>test-resources/1AY7.pdb | chain B
 ZZcddfklpcbfklmmmmmmmmnopafklgoiaklmmmmmmmmpacddddddehkllmmm
 mnnommmmmmmmmmmmmmnopacddddZZ

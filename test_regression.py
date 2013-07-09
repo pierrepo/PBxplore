@@ -23,6 +23,7 @@ from __future__ import print_function
 from unittest import TestCase, main, expectedFailure
 from os import path
 from uuid import uuid1
+from functools import wraps
 import os
 import subprocess
 import shutil
@@ -32,6 +33,18 @@ REFDIR = "test-resources/"
 
 # Temporary outputs will be written in this directory
 OUTDIR = "test-outputs/"
+
+
+def _failure_test(method):
+    @wraps(method)
+    def wrapped(*args, **kwargs):
+        try:
+            method(*args, **kwargs)
+        except AssertionError:
+            pass
+        else:
+            raise AssertionError('Test should have failed.')
+    return wrapped
 
 
 class TestPBAssign(TestCase):
@@ -88,7 +101,7 @@ class TestPBAssign(TestCase):
                                ['{0}.PB.fasta', '{0}.PB.flat', '{0}.PB.phipsi'],
                                ['--flat', '--phipsi'], multiple='all')
 
-    @expectedFailure
+    @_failure_test
     def test_missing_output(self):
         """
         Test if the tests properly fail if an output is missing.
@@ -99,7 +112,7 @@ class TestPBAssign(TestCase):
                                 '{0}.missing'],
                                ['--flat', '--phipsi'])
 
-    @expectedFailure
+    @_failure_test
     def test_too_many_outputs(self):
         """
         Test if the tests properly fail if an output is not expected.
@@ -109,14 +122,14 @@ class TestPBAssign(TestCase):
                                ['{0}.PB.fasta', '{0}.PB.flat'],
                                ['--flat', '--phipsi'])
 
-    @expectedFailure
+    @_failure_test
     def test_different_outputs(self):
         """
         Test if the tests properly fail if an output content is different from
         expected.
         """
         references = ["test_fail"]
-        _test_PBassign_options(references, ['{0}.PB.fasta'])
+        _test_PBassign_options(references, ['{0}.PB.fasta'], [])
 
 def _same_file_content(file_a, file_b):
     """
@@ -126,30 +139,29 @@ def _same_file_content(file_a, file_b):
         # Compare content line by line
         for f1_line, f2_line in zip(f1, f2):
             if f1_line != f2_line:
+                print(file_a, file_b)
+                print(f1_line, f2_line, sep='//')
                 return False
         # Check if one file is longer than the other; it would result as one
         # file iterator not completely consumed
         for infile in (f1, f2):
-            try:
-                f1.readline()
-            except StopIteration:
-                # The iterator is consumed
-                pass
-            else:
+            if infile.readline() != '':
                 # The iterator is not consumed, it means that this file is
                 # longer than the other
+                print('File too long')
                 return False
     # If we reach this line, it means that we did not find any difference
     return True
 
 
-def _assert_identical_files(file_a, file_b, message=''):
+def _assert_identical_files(file_a, file_b):
     """
     Raise an Assert exception if the two files are not identical.
 
     Take file path as arguments.
     """
-    assert not _same_file_content(file_a, file_b), message
+    assert _same_file_content(file_a, file_b), '{0} and {1} are not identical'\
+                                               .format(file_a, file_b)
 
 
 def _run_prog(program, pdbid, options,
