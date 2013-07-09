@@ -20,7 +20,7 @@ is captured, and is displayed only if a test fails.
 # Use print as a function like in python 3
 from __future__ import print_function
 
-from unittest import TestCase, main
+from unittest import TestCase, main, expectedFailure
 from os import path
 from uuid import uuid1
 import os
@@ -88,6 +88,35 @@ class TestPBAssign(TestCase):
                                ['{0}.PB.fasta', '{0}.PB.flat', '{0}.PB.phipsi'],
                                ['--flat', '--phipsi'], multiple='all')
 
+    @expectedFailure
+    def test_missing_output(self):
+        """
+        Test if the tests properly fail if an output is missing.
+        """
+        references = ["1BTA"]
+        _test_PBassign_options(references,
+                               ['{0}.PB.fasta', '{0}.PB.flat', '{0}.PB.phipsi',
+                                '{0}.missing'],
+                               ['--flat', '--phipsi'])
+
+    @expectedFailure
+    def test_too_many_outputs(self):
+        """
+        Test if the tests properly fail if an output is not expected.
+        """
+        references = ["1BTA"]
+        _test_PBassign_options(references,
+                               ['{0}.PB.fasta', '{0}.PB.flat'],
+                               ['--flat', '--phipsi'])
+
+    @expectedFailure
+    def test_different_outputs(self):
+        """
+        Test if the tests properly fail if an output content is different from
+        expected.
+        """
+        references = ["test_fail"]
+        _test_PBassign_options(references, ['{0}.PB.fasta'])
 
 def _same_file_content(file_a, file_b):
     """
