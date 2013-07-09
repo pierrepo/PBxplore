@@ -54,6 +54,14 @@ class TestPBAssign(TestCase):
         references = ["1BTA", "1AY7", "2LFU", "3ICH"]
         _test_PBassign_options(references, ['{0}.PB.fasta'], [])
 
+    def test_flat(self):
+        """
+        Run PBassign with the --flat option.
+        """
+        references = ["1BTA", "1AY7", "2LFU", "3ICH"]
+        _test_PBassign_options(references, ['{0}.PB.fasta', '{0}.PB.flat'],
+                               ['--flat'])
+
 
 def _same_file_content(file_a, file_b):
     """
