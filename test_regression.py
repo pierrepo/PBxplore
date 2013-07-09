@@ -22,8 +22,10 @@ from __future__ import print_function
 
 from unittest import TestCase, main
 from os import path
+from uuid import uuid1
 import os
 import subprocess
+import shutil
 
 # Resources for the tests are stored in the following directory
 REFDIR = "test-resources/"
@@ -53,16 +55,10 @@ class TestPBAssign(TestCase):
         for pdbid in references:
             test_input = path.join(REFDIR, pdbid + '.pdb')
             out_basename = path.join(OUTDIR, pdbid)
-            test_output = path.join(OUTDIR, pdbid + '.PB.fasta')
             reference_output = path.join(REFDIR, pdbid + '.PB.fasta')
-            # We want to be sure the output does not already exists
-            if path.exists(test_output):
-                raise RuntimeError('{0} should not exists before the test '
-                                   'actually run'.format(test_output))
             # Run the program
-            run_list = ['./PBassign.py', '-p', test_input, '-o', out_basename]
-            print(' '.join(run_list))
-            subprocess.call(run_list, stdout=subprocess.PIPE)
+            status, out_run_dir = _run_prog('./PBassign.py', pdbid, [])
+            test_output = path.join(out_run_dir, pdbid + '.PB.fasta')
             
             # Test that the output is identical to the expected one
             _assert_identical_files(test_output, reference_output,
@@ -70,7 +66,7 @@ class TestPBAssign(TestCase):
                                             test_output, reference_output))
 
             # Clean the output
-            os.remove(test_output)
+            shutil.rmtree(out_run_dir)
 
 
 
@@ -106,7 +102,30 @@ def _assert_identical_files(file_a, file_b, message=''):
     Take file path as arguments.
     """
     assert not _same_file_content(file_a, file_b), message
-        
+
+
+def _run_prog(program, pdbid, options, indir=REFDIR, outdir=OUTDIR):
+    """
+    Run a PBxplore program on a PDBID with the given options.
+
+    options is expected to be a list that will be directly pass to subprocess,
+    it must not contain the input or output options.
+    """
+    if program not in ('./PBassign.py',):
+        raise NotImplementedError('_run_prog does not know how to run {0}'\
+                                  .format(program))
+    out_run_dir = path.join(OUTDIR, str(uuid1()))
+    test_input = path.join(REFDIR, pdbid + '.pdb')
+    out_basename = path.join(out_run_dir, pdbid)
+
+    os.mkdir(out_run_dir)
+
+    run_list = [program, '-p', test_input, '-o', out_basename] + options
+    print(' '.join(run_list))
+    status = subprocess.call(run_list, stdout=subprocess.PIPE)
+
+    return status, out_run_dir
+
 
 if __name__ == '__main__':
     main()
