@@ -8,6 +8,8 @@
 zzREADME
 # demo directory
 demo*_tmp/
+# test output directory
+test-outputs/
 # ignore python bytecode
 *.pyc
 
