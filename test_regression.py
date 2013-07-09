@@ -52,22 +52,7 @@ class TestPBAssign(TestCase):
         Run PBAssign on PDB files, and check the fasta output.
         """
         references = ["1BTA", "1AY7", "2LFU", "3ICH"]
-        for pdbid in references:
-            test_input = path.join(REFDIR, pdbid + '.pdb')
-            out_basename = path.join(OUTDIR, pdbid)
-            reference_output = path.join(REFDIR, pdbid + '.PB.fasta')
-            # Run the program
-            status, out_run_dir = _run_prog('./PBassign.py', pdbid, [])
-            test_output = path.join(out_run_dir, pdbid + '.PB.fasta')
-            
-            # Test that the output is identical to the expected one
-            _assert_identical_files(test_output, reference_output,
-                                    "{0} and {1} should be identical".format(
-                                            test_output, reference_output))
-
-            # Clean the output
-            shutil.rmtree(out_run_dir)
-
+        _test_PBassign_options(references, ['{0}.PB.fasta'], [])
 
 
 def _same_file_content(file_a, file_b):
@@ -125,6 +110,22 @@ def _run_prog(program, pdbid, options, indir=REFDIR, outdir=OUTDIR):
     status = subprocess.call(run_list, stdout=subprocess.PIPE)
 
     return status, out_run_dir
+
+
+def _test_PBassign_options(basenames, outfiles, options, expected_exit = 0):
+    for basename in basenames:
+        status, out_run_dir = _run_prog('./PBassign.py', basename, options)
+        assert status == expected_exit, \
+               'PBassign stoped with a {0} exit code'.format(status)
+        assert len(os.listdir(out_run_dir)) == len(outfiles),\
+                ('PBassign did not produced the right number of files: '
+                 '{0} files produced instead of {1}').format(
+                    len(os.listdir(out_run_dir)), len(outfiles))
+        for outfile in (template.format(basename) for template in outfiles):
+            test_file = path.join(out_run_dir, outfile)
+            ref_file = path.join(REFDIR, outfile)
+            _assert_identical_files(test_file, ref_file)
+        shutil.rmtree(out_run_dir)
 
 
 if __name__ == '__main__':
