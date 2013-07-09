@@ -65,9 +65,9 @@ class TestPBAssign(TestCase):
             subprocess.call(run_list, stdout=subprocess.PIPE)
             
             # Test that the output is identical to the expected one
-            self.assertFalse(_same_file_content(test_output, reference_output),
-                             "{0} and {1} should be identical".format(
-                                 test_output, reference_output))
+            _assert_identical_files(test_output, reference_output,
+                                    "{0} and {1} should be identical".format(
+                                            test_output, reference_output))
 
             # Clean the output
             os.remove(test_output)
@@ -98,6 +98,15 @@ def _same_file_content(file_a, file_b):
     # If we reach this line, it means that we did not find any difference
     return True
 
+
+def _assert_identical_files(file_a, file_b, message=''):
+    """
+    Raise an Assert exception if the two files are not identical.
+
+    Take file path as arguments.
+    """
+    assert not _same_file_content(file_a, file_b), message
+        
 
 if __name__ == '__main__':
     main()
