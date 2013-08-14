@@ -83,7 +83,7 @@ echo  -e "\n"
 echo "Test with --residue-min and --residue-max options"
 echo "../PBstat.py -f md_traj.PB.count -o md_traj --map --neq --logo --residue-min 10 --residue-max 30"
 pause
-../PBstat.py -f md_traj.PB.count -o md_traj --map --neq --logo --residue-max 10 --residue-min 30
+../PBstat.py -f md_traj.PB.count -o md_traj --map --neq --logo --residue-min 10 --residue-max 30
 
 
 echo  -e "\n"
