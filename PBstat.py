@@ -84,19 +84,28 @@ if not options.o:
 # load and check data
 #-------------------------------------------------------------------------------
 
-#  check file
+#-------------------------------------------------------------------------------
+#  check count file is readable
 if not os.path.isfile(options.f):
     sys.exit("ERROR: %s is not a valid file" % options.f)
 
+# load count file 
+# skip first row that contains PBs labels
 try:
     freq = numpy.loadtxt(options.f, dtype=int, skiprows=1)
 except:
     sys.exit("ERROR: wrong data format in %s" % options.f)
 
+# check format
 # 17 columns (residue number + 16 PBs) should be present
 if len(freq[0,:]) != (PB_NUMBER + 1):
     sys.exit("ERROR: wrong data format in %s" % options.f)
 
+# read residue numbers
+residue_lst = list(freq[:, 0])
+
+#-------------------------------------------------------------------------------
+# check / define residue min / max
 if options.residue_min:
     residue_min = options.residue_min
 else:
@@ -107,8 +116,31 @@ if options.residue_max:
 else:
     residue_max = max(freq[:,0])
 
+if residue_min < 0:
+    sys.exit("ERROR: residue_min must be >= 0")
+
+if residue_max < 0:
+    sys.exit("ERROR: residue_max must be >= 0")
+
+if residue_min >= residue_max:
+    sys.exit("ERROR: residue_min must be > residue_max")
+
+if residue_min not in residue_lst:
+    sys.exit("ERROR: residue_min does not belong to the residue range in %s" % options.f)
+
+if residue_max not in residue_lst:
+    sys.exit("ERROR: residue_max does not belong to the residue range in %s" % options.f)
+
+
+# get index of first residue
+try:
+    first_residue_index = int(freq[0, 0])
+except:
+    sys.exit("ERROR: cannot read index of first residue. Wrong data format in %s" % options.f)
+print "Index of first residue is: ", first_residue_index
+
 #  slice data to the required frame
-freq = freq[residue_min-1:residue_max, :]
+freq = freq[residue_min - first_residue_index : residue_max - first_residue_index + 1, : ]
 
 # determine number of sequences compiled
 # use the sum of all residue at position 3
@@ -117,9 +149,7 @@ sequence_number = sum(freq[2, :])
 if sequence_number == 0:
     sys.exit("ERROR: counting 0 sequences!")
 
-# separate PBs frequencies from residue numbers
-residue_lst = list(freq[:, 0])
-    
+# remove residue number    
 # extract and normalize PBs frequencies 
 freq = freq[:, 1:] / float(sequence_number)
 
