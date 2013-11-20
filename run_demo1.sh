@@ -32,14 +32,14 @@ echo "#------------------------------------------------------------------------#
 
 echo  -e "\n"
 echo "Test with 3ICH.pdb: RX structure, one chain"
-echo "../PBassign.py -f 3ICH.pdb -o 3ICH"
+echo "../PBassign.py -p 3ICH.pdb -o 3ICH"
 pause
 ../PBassign.py -p 3ICH.pdb -o 3ICH
 
 
 echo  -e "\n"
 echo "Test with 1AY7.pdb: RX structure, complex with two chains"
-echo "../PBassign.py -f 1AY7.pdb -o 1AY7"
+echo "../PBassign.py -p 1AY7.pdb -o 1AY7"
 pause
 ../PBassign.py -p 1AY7.pdb -o 1AY7
 
