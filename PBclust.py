@@ -174,12 +174,14 @@ diag_mini =  numpy.min([distance_mat[i, i] for i in xrange(len(pb_seq))])
 for i in xrange(len(pb_seq)):
     distance_mat[i, i] = diag_mini
 
-# convert similarity score to distance
-# dist = 1 - (score + min)/(max + min)
+# convert similarity score to distance between 0 and 1
+# dist = 1 means sequences are very different
+# dist = 0 means sequences are identical
+# dist = 1 - (score + abs(min)/(max - min)
 
 mini = numpy.min(distance_mat)
 maxi = numpy.max(distance_mat)
-distance_mat = 1 - (distance_mat - mini)/(maxi + mini)
+distance_mat = 1 - (distance_mat + abs(mini))/(maxi - mini)
 
 numpy.set_printoptions(threshold=numpy.inf, precision = 3, linewidth = 100000)
 output_mat_str = numpy.array_str(distance_mat).translate(None, '[]')
@@ -243,7 +245,7 @@ if code:
 else:
     print "R clustering: OK"
 
-print "#debug>"
+print "<debug>"
 print out
 print "</debug>"
 if len(out.split("\n")) != 3:
@@ -261,7 +263,7 @@ f = open(name, "w")
 for seq, cluster in zip(seq_id, cluster_id):
     f.write("SEQ_CLU  %s  %s \n" %(seq, cluster))
 for idx, med in enumerate(medoid_id):
-    f.write("CLU_MED  %s  %s \n" %(idx+1, med))
+    f.write("MED_CLU  %s  %s \n" %(idx+1, med))
 f.close()
 print "wrote", name
 
