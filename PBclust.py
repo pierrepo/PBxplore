@@ -142,7 +142,6 @@ pb_seq = numpy.array(pb_seq)
 for i in xrange(len(pb_seq)):
 	pb_seq[i, 0] =  "L" + str(i)
 	
-l=len(pb_seq) 
 
 #-------------------------------------------------------------------------------
 # load subtitution matrix
@@ -161,7 +160,7 @@ check_symetry(substitution_matrix)
 #-------------------------------------------------------------------------------
 # compute distance
 #-------------------------------------------------------------------------------
-distance_mat = numpy.empty((l, l), dtype='float')
+distance_mat = numpy.empty((len(pb_seq), len(pb_seq)), dtype='float')
 
 # get similarity score
 for i in xrange(len(pb_seq)):
@@ -182,15 +181,11 @@ mini = numpy.min(distance_mat)
 maxi = numpy.max(distance_mat)
 distance_mat = 1 - (distance_mat - mini)/(maxi + mini)
 
-output_mat = numpy.empty((l+1, l+1), dtype='object')
-output_mat[1:, 1:] = distance_mat
-output_mat[1:, 0] = pb_seq[:, 0]
-output_mat[0, 1:] = pb_seq[:, 0]
-output_mat[0, 0] = "    "
+numpy.set_printoptions(threshold=numpy.inf, precision = 3, linewidth = 100000)
+output_mat_str = numpy.array_str(distance_mat).translate(None, '[]')
 
-numpy.set_printoptions(threshold=numpy.inf)
-output_mat_str = numpy.array_str(output_mat, max_line_width = 100000, precision = 2).translate(None, '[]')
-print output_mat_str
+# add sequence labels
+output_mat_str = " ".join(pb_seq[:,0])+"\n"+output_mat_str
 
 # write distance matrix
 name = options.o + ".PB.dist"
@@ -207,7 +202,8 @@ print "wrote", name
 # data
 R_script="""
 connector = textConnection("%s")
-distances = read.table(connector)
+distances = read.table(connector, header = TRUE)
+rownames(distances) = colnames(distances)
 clusters = cutree(hclust(as.dist(distances)), k = %d)
 
 distances = as.matrix(distances)
