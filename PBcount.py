@@ -10,6 +10,7 @@ and computes PBs frequency along protein sequence
 #===============================================================================
 # load modules
 #===============================================================================
+import PBlib as PB
 import optparse 
 # optparse in deprecated since Python 2.7 and has been replaced by argparse
 # however many Python installations are steal using Python < 2.7
@@ -17,36 +18,6 @@ import os
 import sys
 import numpy 
 
-#===============================================================================
-# data
-#===============================================================================
-# 16 PBs
-PB_DIC = {"a":0, "b":1, "c":2, "d":3, "e":4, "f":5, "g":6, "h":7, "i":8,
-"j":9, "k":10, "l":11, "m":12, "n":13, "o":14, "p":15}
-
-
-#===============================================================================
-# functions
-#===============================================================================
-def read_fasta(name):
-    """read fasta file and output sequences in a list"""
-    seqLst = []
-    seq = ""
-    f_in = open(name, "r")
-    for line in f_in:
-        data = line.strip()
-        if data and ">" not in data:
-            seq += data
-        if seq and data and ">" == data[0]:
-            seqLst.append(seq)
-            seq = ""
-    f_in.close()
-    # save last sequence
-    if seq:
-        seqLst.append(seq)
-    # outputs
-    print "read %d sequences in %s" % (len(seqLst), name)
-    return seqLst
 
 #===============================================================================
 # MAIN - program starts here
@@ -103,7 +74,7 @@ for name in options.f:
 #-------------------------------------------------------------------------------
 pb_seq = []
 for name in options.f:
-    pb_seq += read_fasta(name)
+    pb_seq += PB.read_fasta(name)[1]
 
 #-------------------------------------------------------------------------------
 # check all sequences have the same size
@@ -116,12 +87,12 @@ for seq in pb_seq:
 #-------------------------------------------------------------------------------
 # count PBs at each position of the sequence
 #-------------------------------------------------------------------------------
-pb_count = numpy.zeros((pb_seq_size, len(PB_DIC)))
+pb_count = numpy.zeros((pb_seq_size, len(PB.NAMES)))
 
 for seq in pb_seq:
     for idx, block in enumerate(seq):
-        if block in PB_DIC:
-            pb_count[idx, PB_DIC[block]] += 1.0
+        if block in PB.NAMES:
+            pb_count[idx, PB.NAMES.index(block)] += 1.0
         elif block not in ["Z", "z"]:
             sys.exit("%s is not a valid protein block (abcdefghijklmnop)" 
             % block)
@@ -137,9 +108,7 @@ if options.residue_shift:
 count_file_name = options.o + ".PB.count"
 content = "    "
 # build header (PB names)
-for PB_name in sorted(PB_DIC):
-    content += "%6s" % PB_name
-content += "\n"
+content += "".join(["%6s" % name for name in PB.NAMES]) + "\n"
 # build data table
 for residue_idx, residue_pb in enumerate(pb_count):
     content += "%-5d" % (residue_idx + 1 + shift) + " ".join("%5d" % i for i in residue_pb) + "\n"
@@ -148,5 +117,4 @@ count_file = open(count_file_name, "w")
 count_file.write(content)
 count_file.close()
 print "wrote %s" % count_file_name
-
 

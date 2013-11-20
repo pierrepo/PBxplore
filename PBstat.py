@@ -10,6 +10,7 @@ and computes Neq, distribution of PBs or logo representation of PBs.
 #===============================================================================
 # load modules
 #===============================================================================
+import PBlib as PB
 import optparse 
 # optparse in deprecated since Python 2.7 and has been replaced by argparse
 # however many Python installations are steal using Python < 2.7
@@ -18,11 +19,6 @@ import sys
 import numpy 
 import math
 import subprocess
-
-#===============================================================================
-# data
-#===============================================================================
-PB_NUMBER = 16
 
 #===============================================================================
 # functions
@@ -98,7 +94,7 @@ except:
 
 # check format
 # 17 columns (residue number + 16 PBs) should be present
-if len(freq[0,:]) != (PB_NUMBER + 1):
+if len(freq[0,:]) != (PB.NUMBER + 1):
     sys.exit("ERROR: wrong data format in %s" % options.f)
 
 # read residue numbers
@@ -269,7 +265,7 @@ if options.neq:
     neq_array[:, 0] = residue_lst
     for idx in xrange(len(residue_lst)):
         H = 0.0
-        for b in xrange(PB_NUMBER):
+        for b in xrange(PB.NUMBER):
             f = freq[idx, b] 
             if f != 0:
                 H += f * math.log(f)

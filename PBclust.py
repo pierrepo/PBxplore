@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 """
-PBweight.py 
+PBclust.py 
 
 2013 - P. Poulain, A. G. de Brevern 
 """
@@ -9,6 +9,7 @@ PBweight.py
 #===============================================================================
 # load modules
 #===============================================================================
+import PBlib as PB
 import optparse
 # optparse in deprecated since Python 2.7 and has been replaced by argparse
 # however many Python installations are steal using Python < 2.7
@@ -17,12 +18,6 @@ import os
 import subprocess
 import numpy
 
-
-#===============================================================================
-# data
-#===============================================================================
-substitution_matrix_name = "PBs_substitution_matrix.dat"
-PB_DIC = {'a':0, 'b':1, 'c':2, 'd':3, 'e':4, 'f':5, 'g':6, 'h':7, 'i':8, 'j':9, 'k':10, 'l':11, 'm':12, 'n':13, 'o':14, 'p':15}
 #===============================================================================
 # functions
 #===============================================================================
@@ -44,32 +39,9 @@ def compute_score(seq1, seq2):
     seq1 = seq1.lower().replace("z", "")
     seq2 = seq2.lower().replace("z", "")
     for pb1, pb2 in zip(seq1, seq2):
-        score += substitution_matrix[PB_DIC[pb1]][PB_DIC[pb2]]
+        score += substitution_matrix[PB.NAMES.index(pb1)][PB.NAMES.index(pb2)]
     return score
 
-def read_fasta(name):
-    """read fasta file and output sequences in a list"""
-    sequence_lst = []
-    header = ""
-    sequence = ""
-    f_in = open(name, "r")
-    for line in f_in:
-        data = line.strip()
-        if data and ">" == data[0]:
-			header = data[1:]
-        if data and ">" not in data:
-            sequence += data
-        if sequence and data and ">" == data[0]:
-            sequence_lst.append([header, sequence])
-            header = ""
-            sequence = ""
-    f_in.close()
-    # save last sequence
-    if header and sequence:
-        sequence_lst.append([header, sequence])
-    # outputs
-    print "read %d sequences in %s" % (len(sequence_lst), name)
-    return sequence_lst
 
 #===============================================================================
 # main - program starts here
@@ -134,26 +106,30 @@ for name in options.f:
 # read PBs files
 #-------------------------------------------------------------------------------
 pb_seq = []
+header = []
+seq = []
+
 for name in options.f:
-    pb_seq += read_fasta(name)
+    header, seq = PB.read_fasta(name)
+    pb_seq += zip(header, seq)
 
 pb_seq = numpy.array(pb_seq)
 
+# change sequence names for test
 for i in xrange(len(pb_seq)):
-	pb_seq[i, 0] =  "L" + str(i)
-	
+	pb_seq[i, 0] =  "S" + str(i)
 
 #-------------------------------------------------------------------------------
 # load subtitution matrix
 #-------------------------------------------------------------------------------
 try:
-    substitution_matrix = numpy.loadtxt(substitution_matrix_name, dtype=int, skiprows=2)
+    substitution_matrix = numpy.loadtxt(PB.SUBSTITUTION_MATRIX_NAME, 
+                                        dtype=int, skiprows=2)
 except:
-    sys.exit("ERROR: cannot read %s" % substitution_matrix_name)
+    sys.exit("ERROR: cannot read %s" % PB.SUBSTITUTION_MATRIX_NAME)
 
 assert len(substitution_matrix) == 16, 'wrong substitution matrix size'
 assert len(substitution_matrix[0]) == 16, 'wrong substitution matrix size'
-
 check_symetry(substitution_matrix)
 
 
