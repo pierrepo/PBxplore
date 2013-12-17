@@ -21,25 +21,16 @@ import numpy
 #===============================================================================
 # functions
 #===============================================================================
-def check_symetry(mat):
-    """check if matrix is symetric"""
-    for i in xrange(len(mat)):
-        for j in xrange(len(mat[0])):
-            if mat[i][j] != mat[j][i]:
-                print i, j
-                print mat[i][j], mat[j][i]
-                sys.exit("ERROR: matrix is not symetric - idx %i and %i" % (i, j))
-    print "matrix is symetric"
-
-def compute_score(seq1, seq2):
+def compute_score_by_position(score_mat, seq1, seq2):
     """computes similarity score between two sequences"""
     assert len(seq1) == len(seq2), "sequences have different sizes\n%s\n%s" %(seq1, seq2)
-    score = 0
-    # remove Z (dummy PB)
-    seq1 = seq1.lower().replace("z", "")
-    seq2 = seq2.lower().replace("z", "")
+    score = []
     for pb1, pb2 in zip(seq1, seq2):
-        score += substitution_matrix[PB.NAMES.index(pb1)][PB.NAMES.index(pb2)]
+        # score is 0 for Z (dummy PB)
+        if "z" in [pb1.lower(), pb2.lower()]:
+            score.append(0)
+        else:
+            score.append( score_mat[PB.NAMES.index(pb1)][PB.NAMES.index(pb2)] )
     return score
 
 
@@ -70,6 +61,8 @@ optional_opts.add_option("--residue-shift", action="store", type="int",
     dest = "residue_shift", help="shift to adjust residue number")
 optional_opts.add_option("--clusters", action="store", type="int",
     dest = "clusters_nb", help="number of clusters wanted")  
+optional_opts.add_option("--compare", action="store_true", default=False,
+    dest = "compare", help="shift to adjust residue number")
 parser.add_option_group(optional_opts)
 # get all parameters
 (options, args) = parser.parse_args()
@@ -87,6 +80,10 @@ if not options.o:
 
 if options.residue_shift and options.residue_shift < 0:
 	parser.error("residue shift must be positive")
+if options.residue_shift:
+    residue_shift = options.residue_shift
+else:
+    residue_shift = 0
 
 if options.clusters_nb and options.clusters_nb <= 0:
     parser.error("number of clusters must be strictly positive")
@@ -105,15 +102,14 @@ for name in options.f:
 #-------------------------------------------------------------------------------
 # read PBs files
 #-------------------------------------------------------------------------------
-pb_seq = []
-header = []
-seq = []
-
+header_lst = []
+seq_lst = []
 for name in options.f:
-    header, seq = PB.read_fasta(name)
-    pb_seq += zip(header, seq)
+    header, seq =  PB.read_fasta(name)
+    header_lst += header
+    seq_lst += seq
 
-pb_seq = numpy.array(pb_seq)
+pb_seq = numpy.array( zip(header_lst, seq_lst) )
 
 # change sequence names for test
 for i in xrange(len(pb_seq)):
@@ -122,15 +118,45 @@ for i in xrange(len(pb_seq)):
 #-------------------------------------------------------------------------------
 # load subtitution matrix
 #-------------------------------------------------------------------------------
-try:
-    substitution_matrix = numpy.loadtxt(PB.SUBSTITUTION_MATRIX_NAME, 
-                                        dtype=int, skiprows=2)
-except:
-    sys.exit("ERROR: cannot read %s" % PB.SUBSTITUTION_MATRIX_NAME)
+substitution_mat = PB.load_substitution_matrix(PB.SUBSTITUTION_MATRIX_NAME)
+mini = numpy.min(substitution_mat)
+maxi = numpy.max(substitution_mat)
 
-assert len(substitution_matrix) == 16, 'wrong substitution matrix size'
-assert len(substitution_matrix[0]) == 16, 'wrong substitution matrix size'
-check_symetry(substitution_matrix)
+#-------------------------------------------------------------------------------
+# compare all sequences (--compare option)
+#-------------------------------------------------------------------------------
+if options.compare:
+    compare_file_name = options.o + ".PB.compare.fasta"
+    ref_name = pb_seq[0,0]
+    ref_seq = pb_seq[0,1]
+    mini = numpy.min(substitution_mat)
+    maxi = numpy.max(substitution_mat)
+    # normalize substitution matrix between 0 and 9
+    # 0 -> similar PBs
+    # 9 -> different PBs
+    substitution_mat_modified = (substitution_mat + abs(mini))/(maxi - mini)
+    substitution_mat_modified = 9 * (1 - substitution_mat_modified)
+    substitution_mat_modified = substitution_mat_modified.astype(int)
+    # set diagonal to 0
+    for idx in xrange(len(substitution_mat_modified)):
+        substitution_mat_modified[idx,idx] = 0
+    print substitution_mat_modified
+    print "Compare first sequence (%s) with others" % ref_name
+    for target in pb_seq[1:,]:
+        header = "%s vs %s" % (ref_name, target[0])
+        score_lst = compute_score_by_position(substitution_mat_modified, ref_seq, target[1] )
+        seq = "".join([str(s) for s in score_lst])
+        PB.write_fasta(compare_file_name, seq, header)
+    print "wrote %s" % compare_file_name
+    name = options.o + ".PB.compare.data"
+    f = open(name, "w")
+    for idx, score in enumerate(score_lst):
+        f.write( "%4d  %d\n" % (idx + 1 + residue_shift, score) )
+    f.close()
+    print "wrote %s" % (name)
+sys.exit(0)
+
+
 
 
 #-------------------------------------------------------------------------------
@@ -141,7 +167,7 @@ distance_mat = numpy.empty((len(pb_seq), len(pb_seq)), dtype='float')
 # get similarity score
 for i in xrange(len(pb_seq)):
 	for j in xrange(i, len(pb_seq)):
-		score = compute_score(pb_seq[i, 1], pb_seq[j, 1])
+		score = sum( compute_score(pb_seq[i, 1], pb_seq[j, 1]) )
 		distance_mat[i, j] = score
 		distance_mat[j, i] = score 
 
