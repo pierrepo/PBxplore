@@ -44,6 +44,8 @@ optional_opts = optparse.OptionGroup(
     'Optional arguments')
 optional_opts.add_option("--residue-shift", action="store", type="int",
     dest = "residue_shift", help="shift to adjust residue number")
+optional_opts.add_option("--first-frame", action="store", type="int",
+    dest = "first_frame", help="lower index of trajectory frame (default = 1)")
 parser.add_option_group(optional_opts)
 # get all parameters
 (options, args) = parser.parse_args()
@@ -60,7 +62,14 @@ if not options.o:
     parser.error("option -o is mandatory")
 
 if options.residue_shift and options.residue_shift < 0:
-	parser.error("residue shift must positive")
+	parser.error("residue shift must be positive")
+
+if not options.first_frame :
+    index_first_frame = 0
+elif options.first_frame <= 0:
+    parser.error("lower index of trajectory frame must be positive")
+else:
+    index_first_frame = options.first_frame-1
 
 #-------------------------------------------------------------------------------
 # check input files
