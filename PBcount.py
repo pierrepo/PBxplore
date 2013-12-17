@@ -73,8 +73,11 @@ for name in options.f:
 # read PBs files
 #-------------------------------------------------------------------------------
 pb_seq = []
+pb_name = []
 for name in options.f:
-    pb_seq += PB.read_fasta(name)[1]
+    header, seq = PB.read_fasta(name)
+    pb_name += header
+    pb_seq += seq
 
 #-------------------------------------------------------------------------------
 # check all sequences have the same size
