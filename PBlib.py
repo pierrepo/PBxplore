@@ -11,10 +11,15 @@ Python library to handle Protein Blocks
 # modules import
 #===============================================================================
 import os
+import sys
+import numpy
 
 #===============================================================================
 # data
 #===============================================================================
+# real module directory
+__location__ = os.path.realpath(
+               os.path.join(os.getcwd(), os.path.dirname(sys.argv[0])) )
 
 # Protein Blocks angle definitions
 DEFINITIONS = """
@@ -42,7 +47,8 @@ NAMES = ["a", "b", "c", "d", "e", "f", "g", "h",
            "i", "j", "k", "l", "m", "n", "o", "p"]
 NUMBER = len(NAMES)
 
-SUBSTITUTION_MATRIX_NAME = "PBs_substitution_matrix.dat"
+print __location__
+SUBSTITUTION_MATRIX_NAME = os.path.join(__location__, "PBs_substitution_matrix.dat")
 
 
 # line width for fasta format
@@ -64,15 +70,21 @@ def read_fasta(name):
     f_in = open(name, "r")
     for line in f_in:
         data = line.strip()
-        if data and ">" == data[0]:
-            header = data[1:]
-        if data and ">" not in data:
-            sequence += data
-        if sequence and data and ">" == data[0]:
+        # jump empty lines
+        if not data:
+            continue
+        # store header and sequence when a new header (i.e. sequence) is found
+        if sequence and header and data.startswith(">"):
             header_lst.append(header)
             sequence_lst.append(sequence)
             header = ""
             sequence = ""
+        # save header of sequence
+        if data.startswith(">"):
+            header = data[1:]
+        # save sequence
+        if ">" not in data:
+            sequence += data
     f_in.close()
     # save last sequence
     if header and sequence:
@@ -84,7 +96,27 @@ def read_fasta(name):
     print "read %d sequences in %s" % (len(sequence_lst), name)
     return header_lst, sequence_lst
 
+#-------------------------------------------------------------------------------
+def load_substitution_matrix(name):
+    """load PB substitution matrix
+    """
+    try:
+        # mat = numpy.loadtxt(name, dtype=int, skiprows=2)
+        mat = numpy.loadtxt(name, dtype=float, skiprows=2)
+    except:
+        sys.exit("ERROR: cannot read %s" % name)
+    assert len(mat) == 16, 'wrong substitution matrix size'
+    assert len(mat[0]) == 16, 'wrong substitution matrix size'
+    for i in xrange(len(mat)):
+        for j in xrange(len(mat[0])):
+            if mat[i][j] != mat[j][i]:
+                print i, j
+                print mat[i][j], mat[j][i]
+                sys.exit("ERROR: matrix is not symetric - idx %i and %i" % (i, j))
+    print "read substitution matrix"
+    return mat
 
+#-------------------------------------------------------------------------------
 def clean_file(name):
     """clean existing file
     """
