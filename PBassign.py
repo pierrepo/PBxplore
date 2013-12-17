@@ -21,8 +21,6 @@ import numpy
 import math
 import glob
 
-import MDAnalysis
-
 #===============================================================================
 # classes
 #===============================================================================
@@ -57,16 +55,16 @@ class PdbAtom:
         self.y = float(line[38:46].strip())
         self.z = float(line[46:54].strip()) 
 
-    def from_xtc(self, selection, index):
+    def from_xtc(self, atm):
         """fill atom data from a .xtc mdanalysis selections"""
-        self.id = selection.atoms[index].id
-        self.name = selection.atoms[index].name
-        self.resname = selection.atoms[index].resname
+        self.id = atm.id
+        self.name = atm.name
+        self.resname = atm.resname
         self.chain = ""
-        self.resid = selection.atoms[index].resid
-        self.x = selection.get_positions()[index][0]
-        self.y = selection.get_positions()[index][1]
-        self.z = selection.get_positions()[index][2]
+        self.resid = atm.resid
+        self.x = atm.pos[0]#.get_positions()[index][0]
+        self.y = atm.pos[1]#.get_positions()[index][1]
+        self.z = atm.pos[2]#.get_positions()[index][2]
 
     def __repr__(self):
         """representation for atom"""
@@ -447,6 +445,11 @@ if options.p:
         f_in.close()   
 else:
 
+    try:
+        import MDAnalysis
+    except:
+        sys.exit("Error: failed to import MDAnalysis")
+
     model = ""
     chain = ""
     comment = ""
@@ -458,9 +461,9 @@ else:
 
     for ts in universe.trajectory:
         selection = universe.selectAtoms("backbone")
-        for index in range(len(selection)):
+        for atm in selection:
             atom = PdbAtom()        
-            atom.from_xtc(selection, index)
+            atom.from_xtc(atm)
             # append structure with atom
             structure.add_atom(atom)
             # define structure comment
