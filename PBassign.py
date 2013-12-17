@@ -361,11 +361,9 @@ if options.p:
         sys.exit("Nothing to do. Bye.")
 else:   
     if not os.path.isfile(options.x):
-        print "%s does not appear to be a valid file" % options.x
-        sys.exit()
+        sys.exit("%s does not appear to be a valid file" % options.x)
     elif not os.path.isfile(options.g):
-        print "%s does not appear to be a valid file" % options.g
-        sys.exit()
+        sys.exit("%s does not appear to be a valid file" % options.g)
 #-------------------------------------------------------------------------------
 # read PB definitions
 #-------------------------------------------------------------------------------
