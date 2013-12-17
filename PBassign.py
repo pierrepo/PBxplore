@@ -21,6 +21,8 @@ import numpy
 import math
 import glob
 
+import MDAnalysis
+
 #===============================================================================
 # classes
 #===============================================================================
@@ -54,7 +56,18 @@ class PdbAtom:
         self.x = float(line[30:38].strip())
         self.y = float(line[38:46].strip())
         self.z = float(line[46:54].strip()) 
-        
+
+    def from_xtc(self, selection, index):
+        """fill atom data from a .xtc mdanalysis selections"""
+        self.id = selection.atoms[index].id
+        self.name = selection.atoms[index].name
+        self.resname = selection.atoms[index].resname
+        self.chain = ""
+        self.resid = selection.atoms[index].resid
+        self.x = selection.get_positions()[index][0]
+        self.y = selection.get_positions()[index][1]
+        self.z = selection.get_positions()[index][2]
+
     def __repr__(self):
         """representation for atom"""
         return 'atom %4d %4s in %4d %3s' \
@@ -159,7 +172,11 @@ def get_dihedral(atomA, atomB, atomC, atomD) :
     
     # angle between normals
     cosine = numpy.sum(n1*n2) / (numpy.linalg.norm(n1) * numpy.linalg.norm(n2))
-    torsion = math.acos(cosine)
+    try :
+        torsion = math.acos(cosine)
+    except:
+        cosine = int(cosine) #+0.0001
+        torsion = math.acos(cosine)
 
     # convert radion to degree
     torsion = torsion * 180.0 / math.pi 
@@ -287,7 +304,7 @@ angle_modulo_360_vect = numpy.vectorize(angle_modulo_360)
 # manage parameters
 #-------------------------------------------------------------------------------
 parser = optparse.OptionParser(
-    usage="%prog [options] -p file.pdb|dir [-p file2.pdb] -o output_root_name",
+    usage="%prog [options] -p file.pdb|dir [-p file2.pdb] -o output_root_name -g gro_file -x xtc_file",
     version="1.0")
 # mandatory arguments
 mandatory_opts = optparse.OptionGroup(
@@ -297,6 +314,10 @@ mandatory_opts.add_option("-p", action="append", type="string",
     help="name of pdb file or directory containing pdb files")
 mandatory_opts.add_option("-o", action="store", type="string", 
     help="root name for results")
+mandatory_opts.add_option("-x", action="store", type="string", 
+    help="name of xtc file")
+mandatory_opts.add_option("-g", action="store", type="string", 
+    help="name of gro file")
 parser.add_option_group(mandatory_opts)
 # optional arguments
 optional_opts = optparse.OptionGroup(
@@ -312,8 +333,12 @@ parser.add_option_group(optional_opts)
 
 # check options
 if not options.p:
-    parser.print_help()
-    parser.error("options -p is mandatory")
+    if not options.x:
+        parser.print_help()
+        parser.error("options -p or -x are mandatory")
+    elif not options.g:
+        parser.print_help()
+        parser.error("option -g is mandatory, with use of -x option")
 
 if not options.o:
     parser.print_help()
@@ -322,21 +347,27 @@ if not options.o:
 #-------------------------------------------------------------------------------
 # check files
 #-------------------------------------------------------------------------------
-pdb_name_lst = []
+if options.p:
+    pdb_name_lst = []
 
-for name in options.p:
-    if os.path.isfile(name):
-        pdb_name_lst.append(name)
-    elif os.path.isdir(name):
-        pdb_name_lst += glob.glob(name + "/*.pdb")
-    elif (not os.path.isfile(name) or not os.path.isdir(name)):
-        print "%s does not appear to be a valid file or directory" % name
+    for name in options.p:
+        if os.path.isfile(name):
+            pdb_name_lst.append(name)
+        elif os.path.isdir(name):
+            pdb_name_lst += glob.glob(name + "/*.pdb")
+        elif (not os.path.isfile(name) or not os.path.isdir(name)):
+            print "%s does not appear to be a valid file or directory" % name
 
-print "%d PDB file(s) to process" % (len(pdb_name_lst))
-if not pdb_name_lst:
-    sys.exit("Nothing to do. Bye.")
-
-
+    print "%d PDB file(s) to process" % (len(pdb_name_lst))
+    if not pdb_name_lst:
+        sys.exit("Nothing to do. Bye.")
+else:   
+    if not os.path.isfile(options.x):
+        print "%s does not appear to be a valid file" % options.x
+        sys.exit()
+    elif not os.path.isfile(options.g):
+        print "%s does not appear to be a valid file" % options.g
+        sys.exit()
 #-------------------------------------------------------------------------------
 # read PB definitions
 #-------------------------------------------------------------------------------
@@ -371,45 +402,76 @@ if options.flat:
 # read PDB files
 #-------------------------------------------------------------------------------
 structure = PdbStructure()
-model = ""
-chain = " "
-comment = ""
 
-for pdb_name in pdb_name_lst:
-    print pdb_name 
-    f_in = open(pdb_name, 'r')
-    for line in f_in:
-        flag = line[0:6].strip()
-        if flag == "MODEL":
-            model = line.split()[1]
-        if flag == "ATOM":
-            atom = PdbAtom()
-            atom.read(line)
-            # assign structure upon new chain
-            if structure.size() != 0 and structure.chain != atom.chain:
+
+if options.p:
+
+    model = ""
+    chain = " "
+    comment = ""
+
+    for pdb_name in pdb_name_lst:
+        print pdb_name 
+        f_in = open(pdb_name, 'r')
+        for line in f_in:
+            flag = line[0:6].strip()
+            if flag == "MODEL":
+                model = line.split()[1]
+            if flag == "ATOM":
+                atom = PdbAtom()
+                atom.read(line)
+                # assign structure upon new chain
+                if structure.size() != 0 and structure.chain != atom.chain:
+                    PB_assign(pb_def, structure, comment)
+                    structure.clean()
+                # append structure with atom
+                structure.add_atom(atom)
+                # define structure comment
+                # when the structure contains 1 atom
+                if structure.size() == 1:
+                    comment = pdb_name 
+                    if model:
+                        comment += " | model %s" % (model)
+                        model = ""
+                    if atom.chain:
+                        comment += " | chain %s" % (atom.chain)
+                        atom.chain = ""
+            # assign structure after end of model (or chain)
+            if structure.size() != 0 and flag in ["TER", "ENDMDL"]:
                 PB_assign(pb_def, structure, comment)
                 structure.clean()
+        # assign last structure
+        if structure.size() != 0:
+            PB_seq = PB_assign(pb_def, structure, comment)
+
+        f_in.close()   
+else:
+
+    model = ""
+    chain = ""
+    comment = ""
+
+    conf = options.g
+    traj = options.x
+
+    universe = MDAnalysis.Universe(conf, traj)
+
+    for ts in universe.trajectory:
+        selection = universe.selectAtoms("backbone")
+        for index in range(len(selection)):
+            atom = PdbAtom()        
+            atom.from_xtc(selection, index)
             # append structure with atom
             structure.add_atom(atom)
             # define structure comment
             # when the structure contains 1 atom
             if structure.size() == 1:
-                comment = pdb_name 
-                if model:
-                    comment += " | model %s" % (model)
-                    model = ""
-                if atom.chain:
-                    comment += " | chain %s" % (atom.chain)
-                    atom.chain = ""
-        # assign structure after end of model (or chain)
-        if structure.size() != 0 and flag in ["TER", "ENDMDL"]:
+                comment = "%s | frame %s" % (options.x, ts.frame)
+        # assign structure after end of frame
+        if structure.size() != 0 :
             PB_assign(pb_def, structure, comment)
             structure.clean()
-    # assign last structure
-    if structure.size() != 0:
-        PB_seq = PB_assign(pb_def, structure, comment)
 
-    f_in.close()   
 print "wrote %s" % (fasta_name)
 if options.flat:
     print "wrote %s" % (flat_name)
