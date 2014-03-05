@@ -77,6 +77,7 @@ def read_fasta(name):
         if sequence and header and data.startswith(">"):
             header_lst.append(header)
             sequence_lst.append(sequence)
+            # reset header and sequence
             header = ""
             sequence = ""
         # save header of sequence
@@ -87,8 +88,9 @@ def read_fasta(name):
             sequence += data
     f_in.close()
     # save last sequence
-    header_lst.append(header)
-    sequence_lst.append(sequence)
+    if header and sequence:
+        header_lst.append(header)
+        sequence_lst.append(sequence)
     # outputs
     assert len(header_lst) == len(sequence_lst), \
            "cannot read same number of headers and sequences"
