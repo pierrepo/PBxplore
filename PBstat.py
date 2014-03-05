@@ -141,12 +141,13 @@ freq = freq[residue_min - first_residue_index : residue_max - first_residue_inde
 # determine number of sequences compiled
 # use the sum of all residue at position 3
 # since positions 1 and 2 have no PBs assignement
-sequence_number = sum(freq[2, :])
+# and begin at 1 to not sum the index of the line (here is 3)
+sequence_number = sum(freq[2, 1:])
 if sequence_number == 0:
     sys.exit("ERROR: counting 0 sequences!")
 
 # remove residue number    
-# extract and normalize PBs frequencies 
+# extract and normalize PBs frequencies
 freq = freq[:, 1:] / float(sequence_number)
 
 #-------------------------------------------------------------------------------
