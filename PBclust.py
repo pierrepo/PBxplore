@@ -9,14 +9,16 @@ PBclust.py
 #===============================================================================
 # load modules
 #===============================================================================
-import PBlib as PB
-import optparse
-# optparse in deprecated since Python 2.7 and has been replaced by argparse
-# however many Python installations are steal using Python < 2.7
 import sys
 import os
 import subprocess
+import optparse
+# optparse in deprecated since Python 2.7 and has been replaced by argparse
+# however many Python installations are still using Python < 2.7
+
 import numpy
+
+import PBlib as PB
 
 #===============================================================================
 # functions
