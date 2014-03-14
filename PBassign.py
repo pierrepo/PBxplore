@@ -131,12 +131,18 @@ class PdbStructure:
         for res in sorted(backbone.iterkeys()):
             # phi : C(i-1) - N(i) - CA(i) - C(i)
             try:
-                phi = get_dihedral(backbone[res-1]["C"], backbone[res]["N"], backbone[res]["CA"], backbone[res]["C"])
+                phi = get_dihedral(backbone[res-1]["C" ].coord(), 
+                                   backbone[res  ]["N" ].coord(), 
+                                   backbone[res  ]["CA"].coord(), 
+                                   backbone[res  ]["C" ].coord())
             except:
                 phi = None
             # psi : N(i) - CA(i) - C(i) - N(i+1)
             try:
-                psi = get_dihedral(backbone[res]["N"], backbone[res]["CA"], backbone[res]["C"], backbone[res+1]["N"])
+                psi = get_dihedral(backbone[res  ]["N" ].coord(), 
+                                   backbone[res  ]["CA"].coord(), 
+                                   backbone[res  ]["C" ].coord(), 
+                                   backbone[res+1]["N" ].coord())
             except:
                 psi = None
             #print res, phi, psi
@@ -148,15 +154,16 @@ class PdbStructure:
 #===============================================================================
 def get_dihedral(atomA, atomB, atomC, atomD) :
     """compute dihedral angle between 4 atoms (A, B, C, D)
+    each atom is represented as a list of three coordinates [x, y, z]
     output is in degree in the range -180 / +180
     """
     
-    # get numpy objects
-    A = numpy.array(atomA.coord())
-    B = numpy.array(atomB.coord())
-    C = numpy.array(atomC.coord())
-    D = numpy.array(atomD.coord())
-    
+    # convert lists to Numpy objects
+    A = numpy.array(atomA)
+    B = numpy.array(atomB)
+    C = numpy.array(atomC)
+    D = numpy.array(atomD)
+ 
     # vectors
     AB = B - A 
     BC = C - B 
