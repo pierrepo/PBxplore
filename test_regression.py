@@ -8,7 +8,7 @@ sure the output is the expected one. The aim is to check that the programs are
 not broken during development.
 
 Be careful this script does not test that the output is right. It just test
-that the output is the expected one based on previous a previous version.
+that the output is the expected one based on a previous version.
 
 To run this test suite, you can either run this script without arguments or use
 the nose [1]_ package. The latter option gives a more readable output, as
