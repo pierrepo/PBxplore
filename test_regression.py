@@ -20,7 +20,7 @@ stdout is captured, and is displayed only if a test fails.
 # Use print as a function like in python 3
 from __future__ import print_function
 
-from unittest import TestCase, main
+import unittest
 from os import path
 from uuid import uuid1
 from functools import wraps
@@ -58,7 +58,7 @@ def _failure_test(method):
     return wrapped
 
 
-class TestPBAssign(TestCase):
+class TestPBAssign(unittest.TestCase):
     """
     Regression tests for PBAssign.py
     """
@@ -230,4 +230,4 @@ def _test_PBassign_options(basenames, outfiles, options,
 
 
 if __name__ == '__main__':
-    main()
+    unittest.main()
