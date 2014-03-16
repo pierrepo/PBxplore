@@ -36,6 +36,17 @@ OUTDIR = "test-outputs/"
 
 
 def _failure_test(method):
+    """
+    Decorate tests that are supposed to fail
+
+    Some tests asses that things that should go wrong actually go wrong. These
+    tests should fail. The _failure_test decorator reverse the assesment test
+    so if the decorated test sucess it is reported as failed.
+
+    This decorator differs to unittest.expectedFailure. The
+    unittest.expectedFailure aims at decorate tests that are supposed to sucess
+    but are known to failed.
+    """
     @wraps(method)
     def wrapped(*args, **kwargs):
         try:
