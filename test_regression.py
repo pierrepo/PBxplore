@@ -131,6 +131,22 @@ class TestPBAssign(TestCase):
         references = ["test_fail"]
         _test_PBassign_options(references, ['{0}.PB.fasta'], [])
 
+
+class TestPBCount(TestCase):
+    def setUp(self):
+        """
+        Run before each test.
+
+        Make sure that the output directory exists.
+        """
+        if not path.isdir(OUTDIR):
+            os.mkdir(OUTDIR)
+
+
+    def test_simple(self):
+        references = ["1BTA", "1AY7", "2LFU", "3ICH"]
+        _test_PBcount_options(references, '{0}_simple', [])
+
 def _same_file_content(file_a, file_b):
     """
     Return True if two files are identical. Take file path as arguments.
