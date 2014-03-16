@@ -7,12 +7,12 @@ This script run the various PBxplore programs with various argument, and makes
 sure the output is the expected one. The aim is to check that the programs are
 not broken during development.
 
-Be careful this script does not test that the output is right. It just test that
-the output is the expected one based on previous a previous version.
+Be careful this script does not test that the output is right. It just test
+that the output is the expected one based on previous a previous version.
 
 To run this test suite, you can either run this script without arguments or use
-the nose [1]_ package. The latter option gives a more readable output, as stdout
-is captured, and is displayed only if a test fails.
+the nose [1]_ package. The latter option gives a more readable output, as
+stdout is captured, and is displayed only if a test fails.
 
 .. [1] https://nose.readthedocs.org
 """
@@ -20,7 +20,7 @@ is captured, and is displayed only if a test fails.
 # Use print as a function like in python 3
 from __future__ import print_function
 
-from unittest import TestCase, main, expectedFailure
+from unittest import TestCase, main
 from os import path
 from uuid import uuid1
 from functools import wraps
@@ -131,6 +131,7 @@ class TestPBAssign(TestCase):
         references = ["test_fail"]
         _test_PBassign_options(references, ['{0}.PB.fasta'], [])
 
+
 def _same_file_content(file_a, file_b):
     """
     Return True if two files are identical. Take file path as arguments.
@@ -173,7 +174,7 @@ def _run_prog(program, pdbid, options,
     it must not contain the input or output options.
     """
     if program not in ('./PBassign.py',):
-        raise NotImplementedError('_run_prog does not know how to run {0}'\
+        raise NotImplementedError('_run_prog does not know how to run {0}'
                                   .format(program))
     out_run_dir = path.join(OUTDIR, str(uuid1()))
     if multiple is None:
@@ -196,7 +197,7 @@ def _run_prog(program, pdbid, options,
 
 
 def _test_PBassign_options(basenames, outfiles, options,
-                           multiple=None, expected_exit = 0):
+                           multiple=None, expected_exit=0):
     if not multiple is None:
         basenames = [basenames]
         out_name = multiple
