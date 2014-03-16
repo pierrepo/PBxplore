@@ -29,10 +29,10 @@ import subprocess
 import shutil
 
 # Resources for the tests are stored in the following directory
-REFDIR = "test-resources/"
+REFDIR = "test_data/"
 
 # Temporary outputs will be written in this directory
-OUTDIR = "test-outputs/"
+OUTDIR = "test_tmp/"
 
 
 def _failure_test(method):
