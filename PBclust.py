@@ -121,11 +121,10 @@ for i in xrange(len(pb_seq)):
 # load subtitution matrix
 #-------------------------------------------------------------------------------
 substitution_mat = PB.load_substitution_matrix(PB.SUBSTITUTION_MATRIX_NAME)
-mini = numpy.min(substitution_mat)
-maxi = numpy.max(substitution_mat)
 
 #-------------------------------------------------------------------------------
-# compare all sequences (--compare option)
+# --compare option
+# compare the first sequence (in the fasta file) versus all others
 #-------------------------------------------------------------------------------
 if options.compare:
     compare_file_name = options.o + ".PB.compare.fasta"
@@ -142,6 +141,7 @@ if options.compare:
     # set diagonal to 0
     for idx in xrange(len(substitution_mat_modified)):
         substitution_mat_modified[idx,idx] = 0
+    print "Normalized substitution matrix (between 0 and 9)"
     print substitution_mat_modified
     print "Compare first sequence (%s) with others" % ref_name
     for target in pb_seq[1:,]:
@@ -150,26 +150,23 @@ if options.compare:
         seq = "".join([str(s) for s in score_lst])
         PB.write_fasta(compare_file_name, seq, header)
     print "wrote %s" % compare_file_name
-    name = options.o + ".PB.compare.data"
-    f = open(name, "w")
-    for idx, score in enumerate(score_lst):
-        f.write( "%4d  %d\n" % (idx + 1 + residue_shift, score) )
-    f.close()
-    print "wrote %s" % (name)
-sys.exit(0)
-
-
-
+    # name = options.o + ".PB.compare.data"
+    # f = open(name, "w")
+    # for idx, score in enumerate(score_lst):
+    #     f.write( "%4d  %d\n" % (idx + 1 + residue_shift, score) )
+    # f.close()
+    # print "wrote %s" % (name)
+    sys.exit(0)
 
 #-------------------------------------------------------------------------------
-# compute distance
+# compute distance of all sequences against all
 #-------------------------------------------------------------------------------
 distance_mat = numpy.empty((len(pb_seq), len(pb_seq)), dtype='float')
 
 # get similarity score
 for i in xrange(len(pb_seq)):
 	for j in xrange(i, len(pb_seq)):
-		score = sum( compute_score(pb_seq[i, 1], pb_seq[j, 1]) )
+		score = sum( compute_score_by_position(substitution_mat, pb_seq[i, 1], pb_seq[j, 1]) )
 		distance_mat[i, j] = score
 		distance_mat[j, i] = score 
 
@@ -178,7 +175,7 @@ diag_mini =  numpy.min([distance_mat[i, i] for i in xrange(len(pb_seq))])
 for i in xrange(len(pb_seq)):
     distance_mat[i, i] = diag_mini
 
-# convert similarity score to distance between 0 and 1
+# convert similarity score to normalized distance between 0 and 1
 # dist = 1 means sequences are very different
 # dist = 0 means sequences are identical
 # dist = 1 - (score + abs(min)/(max - min)
@@ -270,7 +267,3 @@ for idx, med in enumerate(medoid_id):
     f.write("MED_CLU  %s  %s \n" %(idx+1, med))
 f.close()
 print "wrote", name
-
-
-
-
