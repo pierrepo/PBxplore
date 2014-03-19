@@ -150,6 +150,8 @@ def read_fasta(name):
     assert len(header_lst) == len(sequence_lst), \
            "cannot read same number of headers and sequences"
     print "read %d sequences in %s" % (len(sequence_lst), name)
+    if len(sequence_lst) == 0:
+        print "WARNING: %s seems empty of sequence" %(name)
     return header_lst, sequence_lst
 
 #-------------------------------------------------------------------------------

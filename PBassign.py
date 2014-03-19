@@ -85,8 +85,8 @@ class PdbAtom:
     
 
 class PdbStructure:
-    """class for a Protein Data Bank Structure
-    - computes dihedral angles
+    """
+    Class for a Protein Data Bank structure
     """
     def __init__(self):
         """default constructor for PDB structure"""
@@ -153,6 +153,18 @@ class PdbStructure:
 # functions
 #===============================================================================
 
+def read_pb_definitions(pb_angles_string):
+    """
+    Read angle definitions of PBs
+    """
+    pb_angles = {}
+    for line in pb_angles_string.split("\n"):
+        if line and "#" not in line:
+            items = line.split()
+            pb_angles[items[0]] = numpy.array([float(items[i]) for i in xrange(1, len(items))])
+    print "read PB definitions: %d PBs x %d angles " \
+          % (len(pb_angles), len(pb_angles["a"]))
+    return pb_angles
 
 #-------------------------------------------------------------------------------
 def angle_modulo_360(angle):
@@ -323,15 +335,13 @@ else:
         sys.exit("%s does not appear to be a valid file" % options.x)
     elif not os.path.isfile(options.g):
         sys.exit("%s does not appear to be a valid file" % options.g)
+
 #-------------------------------------------------------------------------------
 # read PB definitions
 #-------------------------------------------------------------------------------
-pb_def = {}
-for line in PB.DEFINITIONS.split("\n"):
-    if line and "#" not in line:
-        items = line.split()
-        pb_def[items[0]] = numpy.array([float(items[i]) for i in xrange(1, len(items))])
-print "read PB definitions: %d PBs x %d angles " % (len(pb_def), len(pb_def["a"]))
+pb_def = read_pb_definitions(PB.DEFINITIONS)
+
+
 
 #-------------------------------------------------------------------------------
 # prepare fasta file for output
