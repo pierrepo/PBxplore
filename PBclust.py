@@ -163,12 +163,15 @@ if options.compare:
 #-------------------------------------------------------------------------------
 distance_mat = numpy.empty((len(pb_seq), len(pb_seq)), dtype='float')
 
+print "Building distance matrix"
 # get similarity score
 for i in xrange(len(pb_seq)):
-	for j in xrange(i, len(pb_seq)):
-		score = sum( compute_score_by_position(substitution_mat, pb_seq[i, 1], pb_seq[j, 1]) )
-		distance_mat[i, j] = score
-		distance_mat[j, i] = score 
+    sys.stdout.write("\r%.f%%" % (float(i)/len(pb_seq)*100))
+    sys.stdout.flush()
+    for j in xrange(i, len(pb_seq)):
+        score = sum( compute_score_by_position(substitution_mat, pb_seq[i, 1], pb_seq[j, 1]) )
+        distance_mat[i, j] = score
+        distance_mat[j, i] = score 
 
 # set equal the diagonal
 diag_mini =  numpy.min([distance_mat[i, i] for i in xrange(len(pb_seq))])
@@ -264,6 +267,6 @@ f = open(name, "w")
 for seq, cluster in zip(seq_id, cluster_id):
     f.write("SEQ_CLU  %s  %s \n" %(seq, cluster))
 for idx, med in enumerate(medoid_id):
-    f.write("MED_CLU  %s  %s \n" %(idx+1, med))
+    f.write("MED_CLU  %s  %s \n" %(med, idx+1))
 f.close()
 print "wrote", name
