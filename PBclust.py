@@ -113,10 +113,6 @@ for name in options.f:
 
 pb_seq = numpy.array( zip(header_lst, seq_lst) )
 
-# change sequence names for test
-for i in xrange(len(pb_seq)):
-	pb_seq[i, 0] =  "S" + str(i)
-
 #-------------------------------------------------------------------------------
 # load subtitution matrix
 #-------------------------------------------------------------------------------
@@ -157,6 +153,13 @@ if options.compare:
     # f.close()
     # print "wrote %s" % (name)
     sys.exit(0)
+
+# change sequence name for a better input in R
+seq_names = {}
+for i in xrange(len(pb_seq)):
+    new_name = "seq%d" % i
+    seq_names[new_name] = pb_seq[i, 0]
+    pb_seq[i, 0] = new_name
 
 #-------------------------------------------------------------------------------
 # compute distance of all sequences against all
@@ -208,10 +211,11 @@ print "wrote", name
 # data
 R_script="""
 connector = textConnection("%s")
+
 distances = read.table(connector, header = TRUE)
 rownames(distances) = colnames(distances)
-clusters = cutree(hclust(as.dist(distances)), k = %d)
 
+clusters = cutree(hclust(as.dist(distances)), k = %d)
 distances = as.matrix(distances)
 
 # function to find medoid in cluster i
@@ -249,12 +253,10 @@ if code:
 else:
     print "R clustering: OK"
 
-print "<debug>"
-print out
-print "</debug>"
+# only 3 lines of output are expected
 if len(out.split("\n")) != 3:
     sys.exit("ERROR: wrong R ouput")
-    
+
 seq_id, cluster_id, medoid_id = out.split("\n")
 seq_id = seq_id.split()[1:]
 cluster_id = cluster_id.split()[1:]
@@ -265,8 +267,8 @@ print "%d clusters" % (len(medoid_id))
 name = options.o + ".PB.clust"
 f = open(name, "w")
 for seq, cluster in zip(seq_id, cluster_id):
-    f.write("SEQ_CLU  %s  %s \n" %(seq, cluster))
+    f.write('SEQ_CLU  "%s"  %s \n' %(seq_names[seq], cluster))
 for idx, med in enumerate(medoid_id):
-    f.write("MED_CLU  %s  %s \n" %(med, idx+1))
+    f.write('MED_CLU  "%s"  %d \n' %(seq_names[med], idx+1))
 f.close()
 print "wrote", name
