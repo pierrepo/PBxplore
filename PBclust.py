@@ -64,7 +64,7 @@ optional_opts.add_option("--residue-shift", action="store", type="int",
 optional_opts.add_option("--clusters", action="store", type="int",
     dest = "clusters_nb", help="number of clusters wanted")  
 optional_opts.add_option("--compare", action="store_true", default=False,
-    dest = "compare", help="shift to adjust residue number")
+    dest = "compare", help="compare the first sequence versus all others")
 parser.add_option_group(optional_opts)
 # get all parameters
 (options, args) = parser.parse_args()
@@ -169,12 +169,13 @@ distance_mat = numpy.empty((len(pb_seq), len(pb_seq)), dtype='float')
 print "Building distance matrix"
 # get similarity score
 for i in xrange(len(pb_seq)):
-    sys.stdout.write("\r%.f%%" % (float(i)/len(pb_seq)*100))
+    sys.stdout.write("\r%.f%%" % (float(i+1)/len(pb_seq)*100))
     sys.stdout.flush()
     for j in xrange(i, len(pb_seq)):
         score = sum( compute_score_by_position(substitution_mat, pb_seq[i, 1], pb_seq[j, 1]) )
         distance_mat[i, j] = score
         distance_mat[j, i] = score 
+print ""
 
 # set equal the diagonal
 diag_mini =  numpy.min([distance_mat[i, i] for i in xrange(len(pb_seq))])
@@ -262,7 +263,13 @@ seq_id = seq_id.split()[1:]
 cluster_id = cluster_id.split()[1:]
 medoid_id = medoid_id.split()[1:]
 
-print "%d clusters" % (len(medoid_id))
+# count number of sequences in clusters
+cluster_count = {}
+for idx in cluster_id:
+    cluster_count[idx] = cluster_count.get(idx, 0) + 1
+for idx in sorted(cluster_count):
+    print "cluster %3s: %5d sequences (%3d%%)" %(idx, cluster_count[idx], 1.0*cluster_count[idx]/len(seq_lst)*100)
+
 
 name = options.o + ".PB.clust"
 f = open(name, "w")

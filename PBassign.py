@@ -284,9 +284,9 @@ mandatory_opts.add_option("-p", action="append", type="string",
 mandatory_opts.add_option("-o", action="store", type="string", 
     help="root name for results")
 mandatory_opts.add_option("-x", action="store", type="string", 
-    help="name of xtc file")
+    help="name of xtc file (Gromacs)")
 mandatory_opts.add_option("-g", action="store", type="string", 
-    help="name of gro file")
+    help="name of gro file (Gromacs)")
 parser.add_option_group(mandatory_opts)
 # optional arguments
 optional_opts = optparse.OptionGroup(

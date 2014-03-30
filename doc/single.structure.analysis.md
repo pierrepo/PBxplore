@@ -21,15 +21,21 @@ Content of `3ICH.PB.fasta`:
 
 Note that Protein Blocs assignment is only possible for proteins (as its name suggests). As a consequence, processed PDB files must contain protein structures **only** (please remove any other molecule). In addition, the PDB parser implemented here is pretty straightforward. Be sure your PDB files complies with the [ATOM field](http://www.wwpdb.org/documentation/format33/sect9.html#ATOM) of the [PDB format](http://www.wwpdb.org/documentation/format33/v3.3.html) and that the protein structure is coherent.
 
+    Usage: PBassign.py [options] -p file.pdb|dir [-p file2.pdb] -o output_root_name -g gro_file -x xtc_file
 
-| PBassign.py options                                                                                        ||
-|:---------------------|--------------------------------------------------------------------------------------|
-| `-h` or `--help`     | shows help message                                                                   |
-| `--version`          | shows program version                                                                |
-| `-p` **(mandatory)** | defines the name of the PDB file or the name of the directory containing PDB files   |
-| `-o` **(mandatory)** | defines the root name for results (do not specify any extension)                     |
-| `--phipsi`           | writes phi and psi angles                                                            |
-| `--flat`             | writes one PBs sequence per line                                                     |
+    Options:
+      --version   show program's version number and exit
+      -h, --help  show this help message and exit
+
+      Mandatory arguments:
+        -p P      name of pdb file or directory containing pdb files
+        -o O      root name for results
+        -x X      name of xtc file (Gromacs)
+        -g G      name of gro file (Gromacs)
+
+      Optional arguments:
+        --phipsi  writes phi and psi angle
+        --flat    writes one PBs sequence per line
 
 ## `-p` option
 can be used several times. For instance:

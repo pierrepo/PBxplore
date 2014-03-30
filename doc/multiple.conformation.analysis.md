@@ -250,52 +250,143 @@ Logo representation of PBs frequency:
 
 Once converted to PB sequences, conformations of a same protein structure car be clustered base on PB similarities with `PBclust.py`. Example: 
 
-    ./PBclust.py -f demo2/md_traj_1.PB.fasta -o md_traj_1
+    ./PBclust.py -f demo2/beta3_IEGF12.PB.fasta -o beta3_IEGF12
 
 Output:
 
-    read 89 sequences in demo2/md_traj_1.PB.fasta
-    matrix is symetric
-    wrote md_traj_1.PB.dist
+    read 190 sequences in demo2/beta3_IEGF12.PB.fasta
+    read substitution matrix
+    Building distance matrix
+    100%
+    wrote beta3_IEGF12.PB.dist
     R clustering: OK
-    5 clusters
-    wrote md_traj_1.PB.clust
+    cluster   1:     9 sequences (  4%)
+    cluster   2:    16 sequences (  8%)
+    cluster   3:    48 sequences ( 25%)
+    cluster   4:    52 sequences ( 27%)
+    cluster   5:    65 sequences ( 34%)
+    wrote beta3_IEGF12.PB.clust
 
-Content of `md_traj_1.PB.dist` (matrix distance between PB sequences):
+Cluster 5 is the biggest cluster with 34% of conformations.
+
+
+`beta3_IEGF12.PB.dist` contains the matrix distance between all PB sequences.
 
 
 Content of `md_traj_1.PB.clust` (clustering results):
 
-    SEQ_CLU  L0  1 
-    SEQ_CLU  L1  1 
-    SEQ_CLU  L2  1 
+    SEQ_CLU  "beta3_IEGF12.pdb | model 0"  1 
+    SEQ_CLU  "beta3_IEGF12.pdb | model 1"  1 
+    SEQ_CLU  "beta3_IEGF12.pdb | model 2"  1 
     [snip]
     ...
     [snip]
-    SEQ_CLU  L51  3 
-    SEQ_CLU  L52  3 
-    SEQ_CLU  L53  4 
-    SEQ_CLU  L54  4 
-    SEQ_CLU  L55  4 
+    SEQ_CLU  "beta3_IEGF12.pdb | model 26"  2 
+    SEQ_CLU  "beta3_IEGF12.pdb | model 27"  3 
+    SEQ_CLU  "beta3_IEGF12.pdb | model 28"  3 
     [snip]
     ...
     [snip]
-    SEQ_CLU  L86  5 
-    SEQ_CLU  L87  5 
-    SEQ_CLU  L88  5 
-    MED_CLU  1  L9 
-    MED_CLU  2  L34 
-    MED_CLU  3  L43 
-    MED_CLU  4  L62 
-    MED_CLU  5  L79 
+    SEQ_CLU  "beta3_IEGF12.pdb | model 188"  5 
+    SEQ_CLU  "beta3_IEGF12.pdb | model 189"  5 
+    MED_CLU  "beta3_IEGF12.pdb | model 6"  1 
+    MED_CLU  "beta3_IEGF12.pdb | model 18"  2 
+    MED_CLU  "beta3_IEGF12.pdb | model 48"  3 
+    MED_CLU  "beta3_IEGF12.pdb | model 98"  4 
+    MED_CLU  "beta3_IEGF12.pdb | model 157"  5 
 
 
-| `PBclust.py` options                                                                                             ||
-|-----------------------|------------------------------------------------------------------------------------------|
-| `-h` or `--help`      | shows help message                                                                       |  
-| `--version`           | shows program version                                                                    |
-| `-f` **(mandatory)**  | defines the name of the file that contains PBs frequency (count)                         |
-| `-o` **(mandatory)**  | defines root name for results (do not specify any extension)                             |
-| `--residue-shift`     | shifts residue numbers                                                                   |
-| `--clusters`          | number of clusters wanted (5 by default)                                                 |
+### Usage
 
+    Usage: PBclust.py -f file.PB.fasta [options] -o output_root_name
+
+    Options:
+      --version             show program's version number and exit
+      -h, --help            show this help message and exit
+
+      Mandatory arguments:
+        -f F                name(s) of the PBs file (in fasta format)
+        -o O                root name for results
+
+      Optional arguments:
+        --residue-shift=RESIDUE_SHIFT
+                            shift to adjust residue number
+        --clusters=CLUSTERS_NB
+                            number of clusters wanted
+        --compare           compare the first sequence versus all others
+
+
+
+### `--clusers` option
+
+defines the number of wnated clusters (5 is the default)
+
+Example:
+
+    ./PBclust.py -f demo2/beta3_IEGF12.PB.fasta -o beta3_IEGF12 --clusters 3
+
+Output:
+
+    read 190 sequences in demo2/beta3_IEGF12.PB.fasta
+    read substitution matrix
+    Building distance matrix
+    100%
+    wrote beta3_IEGF12.PB.dist
+    R clustering: OK
+    cluster   1:    25 sequences ( 13%)
+    cluster   2:    48 sequences ( 25%)
+    cluster   3:   117 sequences ( 61%)
+    wrote beta3_IEGF12.PB.clust
+
+### `--compare` option
+
+compares, position by position, the first sequence found in the fasta file against all others. The substitution matric between PBs is converted to a score between O (identical) and 9 (different).
+
+Example:
+
+    ./PBclust.py -f demo2/beta3_IEGF12.PB.fasta -o beta3_IEGF12 --compare
+
+Output:
+
+    read 190 sequences in demo2/beta3_IEGF12.PB.fasta
+    read substitution matrix
+    Normalized substitution matrix (between 0 and 9)
+    [[0 3 2 3 4 3 3 4 2 3 5 3 5 4 3 3]
+     [3 0 3 3 3 4 3 2 2 3 3 2 5 3 3 2]
+     [2 3 0 3 4 3 2 4 3 4 5 5 5 4 3 2]
+     [3 3 3 0 2 3 4 4 3 3 5 5 9 6 5 4]
+     [4 3 4 2 0 2 2 2 4 3 3 4 7 4 5 5]
+     [3 4 3 3 2 0 3 3 4 2 3 3 5 5 4 5]
+     [3 3 2 4 2 3 0 3 3 3 4 3 3 2 2 1]
+     [4 2 4 4 2 3 3 0 3 1 2 3 5 4 2 4]
+     [2 2 3 3 4 4 3 3 0 2 2 2 5 3 3 2]
+     [3 3 4 3 3 2 3 1 2 0 2 2 4 4 3 3]
+     [5 3 5 5 3 3 4 2 2 2 0 3 3 3 4 4]
+     [3 2 5 5 4 3 3 3 2 2 3 0 3 2 2 4]
+     [5 5 5 9 7 5 3 5 5 4 3 3 0 2 3 3]
+     [4 3 4 6 4 5 2 4 3 4 3 2 2 0 2 2]
+     [3 3 3 5 5 4 2 2 3 3 4 2 3 2 0 2]
+     [3 2 2 4 5 5 1 4 2 3 4 4 3 2 2 0]]
+    Compare first sequence (beta3_IEGF12.pdb | model 0) with others
+    wrote beta3_IEGF12.PB.compare.fasta
+
+Content of `beta3_IEGF12.PB.compare.fasta`:
+
+    >beta3_IEGF12.pdb | model 0 vs beta3_IEGF12.pdb | model 1
+    000000200000000020000000000000000000000000200030000300003204
+    20240030012200000000000000200
+    >beta3_IEGF12.pdb | model 0 vs beta3_IEGF12.pdb | model 2
+    000000200000020000000003200000000000000000200000300300000004
+    20040430013200000330000000200
+    [snip]
+    ...
+    [snip]
+    >beta3_IEGF12.pdb | model 0 vs beta3_IEGF12.pdb | model 187
+    003355030000033432330000000000000000000333200030000300000004
+    20230000012203333035030000200
+    >beta3_IEGF12.pdb | model 0 vs beta3_IEGF12.pdb | model 188
+    003355030000023432330000000000000000000333200030303000000004
+    20230000012203333035030000200
+    >beta3_IEGF12.pdb | model 0 vs beta3_IEGF12.pdb | model 189
+    003355030030023432000000000000004000000333200030304000000004
+    20230000012203333035030000200

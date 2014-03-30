@@ -11,7 +11,7 @@
 
 # Requirements
 
-PBxplore requires at least Python 2.6, the [NumPy](http://numpy.scipy.org/ "NumPy") Python library and R.
+PBxplore requires at least Python 2.6, the [NumPy](http://numpy.scipy.org/ "NumPy") Python library, the R software and optionnaly the MDAnalysis Python library.
 
 # Documentation
 
