@@ -191,7 +191,7 @@ par(
     """ % (map_file_name)
 
     # color gradient goes 
-    # from dark blue (freq = 0) to green/yellow to red (freq = 1)
+    # from dark blue (freq = 0) to green/yellow (freq ~ 0.5) to red (freq = 1)
     R_script += """
 grad = matrix(nrow=848, ncol=3)
 grad[1,1] = 20
@@ -225,7 +225,7 @@ colorpal = rgb(grad[,1]/255,grad[,2]/255,grad[,3]/255)
 layout(matrix(1:2, 1, 2), width=c(log(length(xnames))*3, 1))
 
 par(mar = c(5.1, 7.1, 4.1, 1.1))
-image(as.matrix(freq), axes=FALSE, xlab="Residue number", col=colorpal)
+image(as.matrix(freq), axes=FALSE, xlab="Residue number", col=colorpal, zlim = c(0, 1))
 box()
 axis(1, seq(0, 1, 1/(length(xnames)-1)), xnames)
 axis(2, seq(0, 1, 1/(length(ynames)-1)), ynames, font = 4)
