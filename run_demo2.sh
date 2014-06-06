@@ -36,6 +36,12 @@ echo "../PBassign.py -p md_traj.pdb -o md_traj"
 pause
 ../PBassign.py -p md_traj.pdb -o md_traj
 
+echo  -e "\n"
+echo "Test with the 201 conformations from molecular dynamic of the Barstar protein"
+echo "../PBassign.py -x md_traj_4.xtc -g md_traj_4.gro -o md_traj_4"
+pause
+../PBassign.py -x md_traj_4.xtc -g md_traj_4.gro -o md_traj_4
+
 
 echo "#---------------------------------------------------------------------------#"
 echo "|                                                                           |"

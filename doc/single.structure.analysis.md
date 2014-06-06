@@ -99,6 +99,29 @@ One can also use the `-p` option to provide a directory containing PDB files as 
     PBs assigned for demo1/1BTA.pdb | chain A
     wrote test2.PB.fasta
 
+## `-x` and `-g` options
+These options require the installation of python library MDAnalysis (https://code.google.com/p/mdanalysis/wiki/Install).
+
+Instead using the `-p` option, the protein structures could come from a molecular dynamic simulation file from Gromacs.
+For this, you have to specify a '.xtc' file with the `-x` option and a '.gro' file with the `-g` option.
+
+    	./PBassign.py -x demo2/md_traj_4.xtc -g demo2/md_traj_4.gro -o md_traj_4
+
+Output:
+
+	read PB definitions: 16 PBs x 8 angles 
+	PBs assigned for demo2/md.xtc | frame 1
+	PBs assigned for demo2/md.xtc | frame 2
+	PBs assigned for demo2/md.xtc | frame 3
+	PBs assigned for demo2/md.xtc | frame 4
+	...
+	PBs assigned for demo2/md.xtc | frame 198
+	PBs assigned for demo2/md.xtc | frame 199
+	PBs assigned for demo2/md.xtc | frame 200
+	PBs assigned for demo2/md.xtc | frame 201
+	wrote md_traj_4.PB.fasta
+
+
 ## `--phipsi` option
 
 generates an additionnal file with the [phi and psi angles](http://en.wikipedia.org/wiki/Dihedral_angle#Dihedral_angles_of_biological_molecules) for each residue.
