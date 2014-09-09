@@ -31,7 +31,7 @@ import PBlib as PB
 parser = argparse.ArgumentParser(
     description = 'Compute PB frequency along protein sequence.')
 
-# arguments
+# mandatory arguments
 parser.add_argument("-f", action="append", required = True,
     help="name(s) of the PBs file (in fasta format)")
 parser.add_argument("-o", action="store", required = True,
