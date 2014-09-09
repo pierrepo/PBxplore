@@ -1,8 +1,8 @@
 #! /usr/bin/env python
+# -*- coding: utf-8 -*-
 
 """
-PBassign.py read Protein Data Bank (PDB) structures
-and assigns protein blocs (PBs).
+Read PDB structures and assigns protein blocs (PBs).
 
 2013 - P. Poulain, A. G. de Brevern 
 """

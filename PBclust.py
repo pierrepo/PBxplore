@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-PBclust.py 
+Cluster protein structures based on their PB sequences. 
 
 2013 - P. Poulain, A. G. de Brevern 
 """

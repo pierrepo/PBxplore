@@ -4,7 +4,7 @@
 """
 Unit tests for PBxplore.
 
-Tests functions from different programs
+Tests functions from different programs.
 
 2014 - P. Poulain
 """

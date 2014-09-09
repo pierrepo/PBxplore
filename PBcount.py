@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-PBcount.py reads protein blocks (PBs) sequence files in fasta format
-and computes PBs frequency along protein sequence
+Compute PB frequency along protein sequence.
 
 2013 - P. Poulain, A. G. de Brevern 
 """

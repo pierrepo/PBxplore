@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """
-PBstat.py reads PBs frequency along the protein sequence
-and computes Neq, distribution of PBs or logo representation of PBs.
+Statistical analysis and graphical representations of PBs.
+
+Computes Neq, PBs distribution and logo representation of PBs.
 
 2013 - P. Poulain, A. G. de Brevern 
 """

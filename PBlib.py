@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 
 """
-PBlib.py 
-
 Python library to handle Protein Blocks
 
 2013 - P. Poulain, A. G. de Brevern 
