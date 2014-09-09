@@ -7,22 +7,28 @@ Python library to handle Protein Blocks
 2013 - P. Poulain, A. G. de Brevern 
 """
 #===============================================================================
-# modules import
+# Modules
 #===============================================================================
+## standard modules
 import os
 import sys
 import math
 
+## third-party modules
 import numpy
 
 #===============================================================================
-# data
+# Data
 #===============================================================================
 # real module directory
 __location__ = os.path.realpath(
                os.path.join(os.getcwd(), os.path.dirname(sys.argv[0])) )
 
-# Protein Blocks angle definitions
+# Protein Blocks angles definitions
+# taken from A. G. de Brevern, C. Etchebest and S. Hazout. 
+# "Bayesian probabilistic approach for predicting backbone structures 
+# in terms of protein blocks"
+# Proteins, 41: 271-288 (2000)
 DEFINITIONS = """
 #PB psi(n-2) phi(n-1)  psi(n-1)   phi(n)   psi(n)   phi(n+1)  psi(n+1)  phi(n+2) 
 a    41.14      75.53     13.92   -99.80   131.88     -96.27    122.08    -99.68  
@@ -57,7 +63,7 @@ FASTA_WIDTH = 60
 
 
 #===============================================================================
-# functions
+# Functions
 #===============================================================================
 def get_dihedral(atomA, atomB, atomC, atomD):
     """
