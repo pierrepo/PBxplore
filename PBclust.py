@@ -8,21 +8,22 @@ Cluster protein structures based on their PB sequences.
 """
 
 #===============================================================================
-# load modules
+# Modules
 #===============================================================================
+## standard modules
 import sys
 import os
 import subprocess
-import optparse
-# optparse in deprecated since Python 2.7 and has been replaced by argparse
-# however many Python installations are still using Python < 2.7
+import argparse
 
+## third-party module
 import numpy
 
+## local module
 import PBlib as PB
 
 #===============================================================================
-# functions
+# Functions
 #===============================================================================
 def compute_score_by_position(score_mat, seq1, seq2):
     """computes similarity score between two sequences"""
@@ -42,45 +43,31 @@ def compute_score_by_position(score_mat, seq1, seq2):
 #===============================================================================
 
 #-------------------------------------------------------------------------------
-# get options
+# get arguments
 #-------------------------------------------------------------------------------
-parser = optparse.OptionParser(
-    usage="%prog -f file.PB.fasta [options] -o output_root_name",
-    version="1.0")
+parser = argparse.ArgumentParser(
+    description="Cluster protein structures based on their PB sequences.")
+
 # mandatory arguments
-mandatory_opts = optparse.OptionGroup(
-    parser,
-    'Mandatory arguments')
-mandatory_opts.add_option("-f", action="append", type="string", 
-help="name(s) of the PBs file (in fasta format)")
-mandatory_opts.add_option("-o", action="store", type="string", 
-help="root name for results")
-parser.add_option_group(mandatory_opts)
+parser.add_argument("-f", action="append", required=True, 
+    help="name(s) of the PBs file (in fasta format)")
+parser.add_argument("-o", action="store", required=True,
+    help="name for results")
+
 # optional arguments
-optional_opts = optparse.OptionGroup(
-    parser,
-    'Optional arguments')
-optional_opts.add_option("--residue-shift", action="store", type="int",
-    dest = "residue_shift", help="shift to adjust residue number")
-optional_opts.add_option("--clusters", action="store", type="int",
-    dest = "clusters_nb", help="number of clusters wanted")  
-optional_opts.add_option("--compare", action="store_true", default=False,
-    dest = "compare", help="compare the first sequence versus all others")
-parser.add_option_group(optional_opts)
+parser.add_argument("--residue-shift", action="store", type=int,
+    dest="residue_shift", help="shift to adjust residue number")
+parser.add_argument("--clusters", action="store", type=int,
+    dest="clusters_nb", help="number of wanted clusters")  
+parser.add_argument("--compare", action="store_true", default=False,
+    dest="compare", help="compare the first sequence versus all others")
+
 # get all parameters
-(options, args) = parser.parse_args()
+options = parser.parse_args()
 
 #-------------------------------------------------------------------------------
 # check options
 #-------------------------------------------------------------------------------
-if not options.f:
-    parser.print_help()
-    parser.error("option -f is mandatory")
-
-if not options.o:
-    parser.print_help()
-    parser.error("option -o is mandatory")
-
 if options.residue_shift and options.residue_shift < 0:
 	parser.error("residue shift must be positive")
 if options.residue_shift:
@@ -100,7 +87,7 @@ if not options.clusters_nb:
 #-------------------------------------------------------------------------------
 for name in options.f:
     if not os.path.isfile(name):
-        sys.exit("%s does not appear to be a valid file.\nBye" % name)
+        sys.exit( "{0}: not a valid file. Bye".format(name) )
 
 #-------------------------------------------------------------------------------
 # read PBs files
@@ -138,15 +125,15 @@ if options.compare:
     # set diagonal to 0
     for idx in xrange(len(substitution_mat_modified)):
         substitution_mat_modified[idx,idx] = 0
-    print "Normalized substitution matrix (between 0 and 9)"
+    print( "Normalized substitution matrix (between 0 and 9)" )
     print substitution_mat_modified
-    print "Compare first sequence (%s) with others" % ref_name
+    print( "Compare first sequence ({0}) with others".format(ref_name) )
     for target in pb_seq[1:,]:
         header = "%s vs %s" % (ref_name, target[0])
         score_lst = compute_score_by_position(substitution_mat_modified, ref_seq, target[1] )
         seq = "".join([str(s) for s in score_lst])
         PB.write_fasta(compare_file_name, seq, header)
-    print "wrote %s" % compare_file_name
+    print( "wrote {0}".format(compare_file_name) )
     # name = options.o + ".PB.compare.data"
     # f = open(name, "w")
     # for idx, score in enumerate(score_lst):
@@ -167,7 +154,7 @@ for i in xrange(len(pb_seq)):
 #-------------------------------------------------------------------------------
 distance_mat = numpy.empty((len(pb_seq), len(pb_seq)), dtype='float')
 
-print "Building distance matrix"
+print( "Building distance matrix" )
 # get similarity score
 for i in xrange(len(pb_seq)):
     sys.stdout.write("\r%.f%%" % (float(i+1)/len(pb_seq)*100))
@@ -176,7 +163,7 @@ for i in xrange(len(pb_seq)):
         score = sum( compute_score_by_position(substitution_mat, pb_seq[i, 1], pb_seq[j, 1]) )
         distance_mat[i, j] = score
         distance_mat[j, i] = score 
-print ""
+print( "" )
 
 # set equal the diagonal
 diag_mini =  numpy.min([distance_mat[i, i] for i in xrange(len(pb_seq))])
@@ -203,7 +190,7 @@ name = options.o + ".PB.dist"
 f = open(name, "w")
 f.write(output_mat_str)
 f.close()
-print "wrote", name
+print( "wrote {0}".format(name) )
 
 # build R script
 #-------------------------------------------------------------------------------
@@ -247,13 +234,13 @@ proc = subprocess.Popen(command, shell = True,
 stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
 (out, err) = proc.communicate(R_script)
 if err:
-    print "ERROR:", err
+    print( "ERROR: {0}".format(err) )
 code = proc.wait()
 if code:
-    print "ERROR: exit code != 0"
-    print "exit code:", code
+    print( "ERROR: exit code != 0" )
+    print( "exit code: {0}".format(code) )
 else:
-    print "R clustering: OK"
+    print( "R clustering: OK" )
 
 # only 3 lines of output are expected
 if len(out.split("\n")) != 3:
@@ -279,4 +266,4 @@ for seq, cluster in zip(seq_id, cluster_id):
 for idx, med in enumerate(medoid_id):
     f.write('MED_CLU  "%s"  %d \n' %(seq_names[med], idx+1))
 f.close()
-print "wrote", name
+print( "wrote {0}".format(name) )
