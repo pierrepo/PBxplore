@@ -8,16 +8,17 @@ Compute PB frequency along protein sequence.
 """
 
 #===============================================================================
-# load modules
+# Modules
 #===============================================================================
+## standard modules
 import os
 import sys
-import optparse 
-# optparse in deprecated since Python 2.7 and has been replaced by argparse
-# however many Python installations are still using Python < 2.7
+import argparse
 
+# third-party module
 import numpy 
 
+# local module
 import PBlib as PB
 
 #===============================================================================
@@ -27,41 +28,28 @@ import PBlib as PB
 #-------------------------------------------------------------------------------
 # get options
 #-------------------------------------------------------------------------------
-parser = optparse.OptionParser(
-    usage="%prog -f file_1.PB.fasta [options] -o output_root_name",
-    version="1.0")
-# mandatory arguments
-mandatory_opts = optparse.OptionGroup(
-    parser,
-    'Mandatory arguments')
-mandatory_opts.add_option("-f", action="append", type="string", 
-help="name(s) of the PBs file (in fasta format)")
-mandatory_opts.add_option("-o", action="store", type="string", 
-help="root name for results")
-parser.add_option_group(mandatory_opts)
+parser = argparse.ArgumentParser(
+    description = 'Compute PB frequency along protein sequence.')
+
+# arguments
+parser.add_argument("-f", action="append", required = True,
+    help="name(s) of the PBs file (in fasta format)")
+parser.add_argument("-o", action="store", required = True,
+    help="name for results")
+
+
 # optional arguments
-optional_opts = optparse.OptionGroup(
-    parser,
-    'Optional arguments')
-optional_opts.add_option("--residue-shift", action="store", type="int",
+parser.add_argument("--residue-shift", action="store", type=int,
     dest = "residue_shift", help="shift to adjust residue number")
-optional_opts.add_option("--first-frame", action="store", type="int",
+parser.add_argument("--first-frame", action="store", type=int,
     dest = "first_frame", help="lower index of trajectory frame (default = 1)")
-parser.add_option_group(optional_opts)
-# get all parameters
-(options, args) = parser.parse_args()
+
+# get all arguments
+options = parser.parse_args()
 
 #-------------------------------------------------------------------------------
 # check options
 #-------------------------------------------------------------------------------
-if not options.f:
-    parser.print_help()
-    parser.error("option -f is mandatory")
-
-if not options.o:
-    parser.print_help()
-    parser.error("option -o is mandatory")
-
 if options.residue_shift and options.residue_shift < 0:
 	parser.error("residue shift must be positive")
 
@@ -77,7 +65,7 @@ else:
 #-------------------------------------------------------------------------------
 for name in options.f:
     if not os.path.isfile(name):
-        sys.exit("%s does not appear to be a valid file.\nBye" % name)
+        sys.exit( "{0}: not a valid file. Bye.".format(name) )
     
 #-------------------------------------------------------------------------------
 # read PBs files
@@ -107,8 +95,8 @@ for seq in pb_seq:
         if block in PB.NAMES:
             pb_count[idx, PB.NAMES.index(block)] += 1.0
         elif block not in ["Z", "z"]:
-            sys.exit("%s is not a valid protein block (abcdefghijklmnop)" 
-            % block)
+            msg = "{0} is not a valid protein block (abcdefghijklmnop)".format
+            sys.exit( msg(block) )
 
 #-------------------------------------------------------------------------------
 # write PBs count file
@@ -116,7 +104,7 @@ for seq in pb_seq:
 shift = 0
 if options.residue_shift:
 	shift = options.residue_shift
-	print "first residue will be numbered %d" % (shift + 1)
+	print( "first residue will be numbered {0}".format(shift + 1) )
 
 count_file_name = options.o + ".PB.count"
 content = "    "
@@ -129,5 +117,5 @@ for residue_idx, residue_pb in enumerate(pb_count):
 count_file = open(count_file_name, "w")
 count_file.write(content)
 count_file.close()
-print "wrote %s" % count_file_name
+print( "wrote {0}".format(count_file_name) )
 
