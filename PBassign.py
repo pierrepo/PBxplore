@@ -2,29 +2,31 @@
 # -*- coding: utf-8 -*-
 
 """
-Read PDB structures and assigns protein blocs (PBs).
+Read PDB structures and assign protein blocs (PBs).
 
 2013 - P. Poulain, A. G. de Brevern 
 """
 
 
 #===============================================================================
-# load modules
+# Modules
 #===============================================================================
+## standard modules
 import os
 import sys
 import math
 import glob
-import optparse 
-# optparse in deprecated since Python 2.7 and has been replaced by argparse
-# however many Python installations are still using Python < 2.7
+import argparse 
 
+# third-party module
 import numpy 
 
+# local module
 import PBlib as PB
 
+
 #===============================================================================
-# classes
+# Classes
 #===============================================================================
 
 class PdbAtom:
@@ -149,6 +151,7 @@ class PdbStructure:
             phi_psi_angles[res] = {"phi":phi, "psi":psi}
         return phi_psi_angles
 
+
 #===============================================================================
 # functions
 #===============================================================================
@@ -272,76 +275,70 @@ angle_modulo_360_vect = numpy.vectorize(angle_modulo_360)
 #-------------------------------------------------------------------------------
 # manage parameters
 #-------------------------------------------------------------------------------
-parser = optparse.OptionParser(
-    usage="%prog [options] -p file.pdb|dir [-p file2.pdb] -o output_root_name -g gro_file -x xtc_file",
-    version="1.0")
-# mandatory arguments
-mandatory_opts = optparse.OptionGroup(
-    parser,
-    'Mandatory arguments')
-mandatory_opts.add_option("-p", action="append", type="string", 
-    help="name of pdb file or directory containing pdb files")
-mandatory_opts.add_option("-o", action="store", type="string", 
-    help="root name for results")
-mandatory_opts.add_option("-x", action="store", type="string", 
+parser = argparse.ArgumentParser(
+    description = 'Read PDB structures and assign protein blocs (PBs).')
+
+# arguments
+parser.add_argument("-p", action="append",
+    help="name of a pdb file or name of a directory containing pdb files")
+parser.add_argument("-o", action="store", required = True,
+    help="name for results")
+
+# arguments for MDanalysis
+group = parser.add_argument_group(
+    title='other options [if MDanalysis module is available]')
+group.add_argument("-x", action="store", 
     help="name of xtc file (Gromacs)")
-mandatory_opts.add_option("-g", action="store", type="string", 
+group.add_argument("-g", action="store", 
     help="name of gro file (Gromacs)")
-parser.add_option_group(mandatory_opts)
+
 # optional arguments
-optional_opts = optparse.OptionGroup(
-    parser,
-    'Optional arguments')
-optional_opts.add_option("--phipsi", action="store_true", default=False,
+parser.add_argument("--phipsi", action="store_true", default=False,
     help="writes phi and psi angle")
-optional_opts.add_option("--flat", action="store_true", default=False,
+parser.add_argument("--flat", action="store_true", default=False,
     help="writes one PBs sequence per line")
-parser.add_option_group(optional_opts)
-# get all parameters
-(options, args) = parser.parse_args()
+parser.add_argument('-v', '--version', action='version', version='%(prog)s 1.0')
+
+# get all arguments
+options = parser.parse_args()
 
 # check options
 if not options.p:
     if not options.x:
         parser.print_help()
-        parser.error("options -p or -x are mandatory")
+        parser.error("use at least option -p or -x")
     elif not options.g:
         parser.print_help()
-        parser.error("option -g is mandatory, with use of -x option")
+        parser.error("option -g is mandatory, with use of option -x")
 
-if not options.o:
-    parser.print_help()
-    parser.error("option -o is mandatory")
 
 #-------------------------------------------------------------------------------
 # check files
 #-------------------------------------------------------------------------------
+pdb_name_lst = []
 if options.p:
-    pdb_name_lst = []
-
     for name in options.p:
         if os.path.isfile(name):
             pdb_name_lst.append(name)
         elif os.path.isdir(name):
-            pdb_name_lst += glob.glob(name + "/*.pdb")
+            pdb_name_lst += glob.glob(name + os.pathsep + "*.pdb")
         elif (not os.path.isfile(name) or not os.path.isdir(name)):
-            print "%s does not appear to be a valid file or directory" % name
-
-    print "%d PDB file(s) to process" % (len(pdb_name_lst))
-    if not pdb_name_lst:
+            print("{0}: not a valid file or directory".format(name))
+    
+    if pdb_name_lst:
+        print("{0} PDB file(s) to process".format( len(pdb_name_lst) ))
+    else:
         sys.exit("Nothing to do. Bye.")
 else:   
     if not os.path.isfile(options.x):
-        sys.exit("%s does not appear to be a valid file" % options.x)
+        sys.exit("{0}: not a valid file".format(options.x))
     elif not os.path.isfile(options.g):
-        sys.exit("%s does not appear to be a valid file" % options.g)
+        sys.exit("{0}: not a valid file".format(options.g))
 
 #-------------------------------------------------------------------------------
 # read PB definitions
 #-------------------------------------------------------------------------------
 pb_def = read_pb_definitions(PB.DEFINITIONS)
-
-
 
 #-------------------------------------------------------------------------------
 # prepare fasta file for output
@@ -368,7 +365,7 @@ if options.flat:
 #-------------------------------------------------------------------------------
 structure = PdbStructure()
 
-
+# PB assignement of PDB structures
 if options.p:
 
     model = ""
@@ -410,8 +407,9 @@ if options.p:
             PB_seq = PB_assign(pb_def, structure, comment)
 
         f_in.close()   
-else:
 
+# PB assignement of a Gromacs trajectory
+if not options.p:
     try:
         import MDAnalysis
     except:
@@ -442,9 +440,9 @@ else:
             PB_assign(pb_def, structure, comment)
             structure.clean()
 
-print "wrote %s" % (fasta_name)
+print( "wrote {0}".format(fasta_name) )
 if options.flat:
-    print "wrote %s" % (flat_name)
+    print( "wrote {0}".format(flat_name) )
 if options.phipsi:
-    print "wrote %s" % (phipsi_name)
+    print( "wrote {0}".format(phipsi_name) )
 
