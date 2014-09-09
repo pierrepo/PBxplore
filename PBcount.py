@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+# -*- coding: utf-8 -*-
 
 """
 PBcount.py reads protein blocks (PBs) sequence files in fasta format
