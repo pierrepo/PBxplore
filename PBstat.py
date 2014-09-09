@@ -4,30 +4,34 @@
 """
 Statistical analysis and graphical representations of PBs.
 
-Computes Neq, PBs distribution and logo representation of PBs.
+Compute Neq, PBs distribution and draw logo representation of PBs.
 
 2013 - P. Poulain, A. G. de Brevern 
 """
 
 #===============================================================================
-# load modules
+# Modules
 #===============================================================================
+## standard modules
 import os
 import sys
 import math
 import subprocess
-import optparse 
-# optparse in deprecated since Python 2.7 and has been replaced by argparse
-# however many Python installations are still using Python < 2.7
+import argparse
+
+## third-party module
 import numpy 
 
+## local module
 import PBlib as PB
 
 #===============================================================================
-# functions
+# Functions
 #===============================================================================
 def array_to_string(ar):
-    """convert numpy array to string for further import in R"""
+    """
+    Convert numpy array to string for further import in R
+    """
     numpy.set_printoptions(threshold=numpy.inf)
     #  max_line_width : big enough to avoid unneeded newline
     #  precision : float with 4 digits
@@ -40,44 +44,29 @@ def array_to_string(ar):
 #-------------------------------------------------------------------------------
 # manage parameters
 #-------------------------------------------------------------------------------
-parser = optparse.OptionParser(
-    usage="%prog -f file.PB.count [options] -o output_root_name",
-    version="1.0")
+parser = argparse.ArgumentParser(
+    description = "Statistical analysis and graphical representations of PBs.")
+
 # mandatory arguments
-mandatory_opts = optparse.OptionGroup(
-    parser,
-    'Mandatory arguments')
-mandatory_opts.add_option("-f", action="store", type="string",
+parser.add_argument("-f", action="store", required=True,
     help="name of file that contains PBs frequency (count)")
-mandatory_opts.add_option("-o", action="store", type="string",
-    help="root name for results")
-parser.add_option_group(mandatory_opts)
+parser.add_argument("-o", action="store", required=True,
+    help="name for results")
+
 # optional arguments
-optional_opts = optparse.OptionGroup(
-    parser,
-    'Optional arguments')
-optional_opts.add_option("--map", action="store_true", 
-    dest = "mapdist", help = "generates map of the distribution of PBs along protein sequence")
-optional_opts.add_option("--neq", action="store_true", 
-    dest = "neq", help = "computes Neq and generates neq plot along protein sequence")
-optional_opts.add_option("--logo", action="store_true", 
-    dest = "logo", help = "generates logo representation of PBs frequency along protein sequence")
-optional_opts.add_option("--residue-min", action="store", type="int",
-    dest = "residue_min", help="defines lower bound of residue frame")
-optional_opts.add_option("--residue-max", action="store", type="int",
-    dest = "residue_max", help="defines upper bound of residue frame")
-parser.add_option_group(optional_opts)
+parser.add_argument("--map", action="store_true", default=False, dest="mapdist",
+    help="generate map of the distribution of PBs along protein sequence")
+parser.add_argument("--neq", action="store_true", default=False, dest="neq", 
+    help="compute Neq and generate Neq plot along protein sequence")
+parser.add_argument("--logo", action="store_true", default=False, dest="logo", 
+    help="generate logo representation of PBs frequency along protein sequence")
+parser.add_argument("--residue-min", action="store", type=int,
+    dest="residue_min", help="defines lower bound of residue frame")
+parser.add_argument("--residue-max", action="store", type=int,
+    dest="residue_max", help="defines upper bound of residue frame")
+
 # get all parameters
-(options, args) = parser.parse_args()
-
-#  check options
-if not options.f:
-    parser.print_help()
-    parser.error("option -f in mandatory")
-
-if not options.o:
-    parser.print_help()
-    parser.error("option -o is mandatory")
+options = parser.parse_args()
 
 #-------------------------------------------------------------------------------
 # load and check data
@@ -86,19 +75,19 @@ if not options.o:
 #-------------------------------------------------------------------------------
 #  check count file is readable
 if not os.path.isfile(options.f):
-    sys.exit("ERROR: %s is not a valid file" % options.f)
+    sys.exit( "ERROR: {0}: not a valid file".format(options.f) )
 
 # load count file 
 # skip first row that contains PBs labels
 try:
     freq = numpy.loadtxt(options.f, dtype=int, skiprows=1)
 except:
-    sys.exit("ERROR: wrong data format in %s" % options.f)
+    sys.exit( "ERROR: {0}: wrong data format".format(options.f) )
 
 # check format
 # 17 columns (residue number + 16 PBs) should be present
 if len(freq[0,:]) != (PB.NUMBER + 1):
-    sys.exit("ERROR: wrong data format in %s" % options.f)
+    sys.exit( "ERROR: {0}: wrong data format".format(options.f) )
 
 # read residue numbers
 residue_lst = list(freq[:, 0])
@@ -125,18 +114,21 @@ if residue_min >= residue_max:
     sys.exit("ERROR: residue_min must be > residue_max")
 
 if residue_min not in residue_lst:
-    sys.exit("ERROR: residue_min does not belong to the residue range in %s" % options.f)
+    sys.exit( "ERROR: residue_min does not belong to the residue range \
+    in {0}".format(options.f) )
 
 if residue_max not in residue_lst:
-    sys.exit("ERROR: residue_max does not belong to the residue range in %s" % options.f)
+    sys.exit( "ERROR: residue_max does not belong to the residue range \
+    in {0}".format(options.f) )    
 
 
 # get index of first residue
 try:
     first_residue_index = int(freq[0, 0])
 except:
-    sys.exit("ERROR: cannot read index of first residue. Wrong data format in %s" % options.f)
-print "Index of first residue is: ", first_residue_index
+    sys.exit( "ERROR: cannot read index of first residue. \
+    Wrong data format in {0}".format(options.f) )
+print( "Index of first residue is: {0}".format(first_residue_index) )
 
 #  slice data to the required frame
 freq = freq[residue_min - first_residue_index : residue_max - first_residue_index + 1, : ]
@@ -250,13 +242,13 @@ box()
     stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
     (out, err) = proc.communicate(R_script)
     if err:
-        print "ERROR:", err
+        print( "ERROR: {0}".format(err) )
     code = proc.wait()
     if code:
-        print "ERROR: exit code != 0"
-        print "exit code:", code
+        print( "ERROR: exit code != 0" )
+        print( "exit code: {0}".format(code) )
     else:
-        print "wrote %s" % map_file_name
+        print( "wrote {0}".format(map_file_name) )
     print out
 
 #-------------------------------------------------------------------------------
@@ -289,7 +281,7 @@ if options.neq:
     neq_file = open(neq_file_name, "w")
     neq_file.write(content)
     neq_file.close()
-    print "wrote %s" % neq_file_name
+    print( "wrote {0}".format(neq_file_name) )
     
     #  convert array to string for further import in R
     neq_array_string = array_to_string(neq_array)
@@ -333,15 +325,15 @@ ylim=c(1,max(round(neq[,2]))+2))
     stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
     (out, err) = proc.communicate(R_script)
     if err:
-        print "ERROR:", err
+        print( "ERROR: {0}".format(err) )
     code = proc.wait()
     if code:
-        print "ERROR: exit code != 0"
-        print "exit code:", code
+        print( "ERROR: exit code != 0" )
+        print( "exit code: {0}".format(code) )
     else:
-        print "wrote %s" % neq_file_name + ".png"
+        print( "wrote {0}.png".format(neq_file_name) )
     
-    print out
+    print( out )
 
 #-------------------------------------------------------------------------------
 # generates logo representation of PBs frequency along protein sequence
@@ -376,7 +368,7 @@ if options.logo:
         f_out = open(transfac_name, 'w')
         f_out.write(transfac_content)
         f_out.close()
-        print "wrote %s" % (transfac_name)
+        print( "wrote {0}".format(transfac_name) )
 
     # define output file name
     #-------------------------------------------------------------------------------
@@ -402,18 +394,19 @@ if options.logo:
 -o %s \
 --lower %i \
 --upper %i 
-    """ % (options.f.replace(".PB.count", ""), logo_file_name, residue_min, residue_max)
+    """ % (options.f.replace(".PB.count", ""), logo_file_name, 
+    residue_min, residue_max)
 
     proc = subprocess.Popen(command, shell = True,
     stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
     (out, err) = proc.communicate(transfac_content)
     if err:
-        print "ERROR:", err
+        print( "ERROR: {0}".format(err) )
     code = proc.wait()
     if code:
-        print "ERROR: exit code != 0"
-        print "exit code:", code
+        print( "ERROR: exit code != 0" )
+        print( "exit code: {0}".format(code) )
     else:
-        print "wrote %s" % logo_file_name
-    print out
+        print( "wrote {0}".format(logo_file_name) )
+    print( out )
 
