@@ -4,7 +4,7 @@
 PBassign.py read Protein Data Bank (PDB) structures
 and assigns protein blocs (PBs).
 
-2012 - P. Poulain, A. G. de Brevern 
+2013 - P. Poulain, A. G. de Brevern 
 """
 
 
