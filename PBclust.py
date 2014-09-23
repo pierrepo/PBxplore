@@ -199,32 +199,32 @@ print( "wrote {0}".format(name) )
 # http://www.biostars.org/p/11987/
 # data
 R_script="""
-connector = textConnection("%s")
+connector = textConnection("{matrix}")
 
 distances = read.table(connector, header = TRUE)
 rownames(distances) = colnames(distances)
 
-clusters = cutree(hclust(as.dist(distances)), k = %d)
+clusters = cutree(hclust(as.dist(distances), method = "ward"), k = {clusters})
 distances = as.matrix(distances)
 
 # function to find medoid in cluster i
-clust.medoid = function(i, distmat, clusters) {
+clust.medoid = function(i, distmat, clusters) {{
     ind = (clusters == i)
 
-    if(length(distmat[ind, ind]) == 1){
+    if(length(distmat[ind, ind]) == 1){{
         names(clusters[ind])
-    } else {
+    }} else {{
         names(which.min(rowSums( distmat[ind, ind] )))
         # c(min(rowMeans( distmat[ind, ind] )))
-    }
-}
+    }}
+}}
 
 medoids = sapply(unique(clusters), clust.medoid, distances, clusters)
 
 cat("seq_id", names(clusters), "\n")
 cat("cluster_id", clusters, "\n")
 cat("medoid_id", medoids)
-""" % (output_mat_str, options.clusters_nb)
+""".format( matrix=output_mat_str, clusters=options.clusters_nb )
 
 
 # execute R script
