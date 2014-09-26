@@ -1,4 +1,4 @@
-**PBxplore** is a suite of tools dedicated to Protein Block analysis. Protein Blocks are structural prototypes defined by [de Brevern](http://www.dsimb.inserm.fr/~debrevern/index.php) *et al* [1]. Their main interest is to modelize the 3-dimensional local structure of the protein backbone into a 1-dimension sequence. In principle, any conformation of any amino acid could be represented by one of the sixteen available Protein Blocks (see Figure 1).
+**PBxplore** is a suite of tools dedicated to Protein Block analysis. Protein Blocks are structural prototypes defined by [de Brevern](http://www.dsimb.inserm.fr/~debrevern/index.php) *et al* [1]. The 3-dimensional local structure of a protein backbone can be modelized as an 1-dimensional sequence of PBs. In principle, any conformation of any amino acid could be represented by one of the sixteen available Protein Blocks (see Figure 1).
 
 ![PBs](doc/img/PBs.jpg "PBs")
 

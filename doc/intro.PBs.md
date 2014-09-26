@@ -1,6 +1,6 @@
 # Introduction to Protein Blocks
 
-Protein Blocks (PBs) are structural prototypes defined by [de Brevern](http://www.dsimb.inserm.fr/~debrevern/index.php) *et al* in 2000 [^1]. Their main interest is to modelize the 3-dimensional local structure of the protein backbone into a 1-dimension sequence. In principle, any conformation of any amino acid could be represented by one of the sixteen available Protein Blocks. PBs are labeled from a to p (see Figure 1): the PBs *m* and *d* can be roughly described as prototypes for alpha-helix and central beta-strand, respectively. PBs *a* to *c* primarily represent beta-strand N-caps and PBs *e* and *f*, beta-strand C-caps; PBs *a* to *j* are specific to coils, PBs *k* and *l* to alpha-helix N-caps, and PBs *n* to *p* to alpha-helix C-caps. 
+Protein Blocks (PBs) are structural prototypes defined by [de Brevern](http://www.dsimb.inserm.fr/~debrevern/index.php) *et al* in 2000 [^1]. The 3-dimensional local structure of a protein backbone can be modelized as an 1-dimensional sequence of PBs. In principle, any conformation of any amino acid could be represented by one of the sixteen available Protein Blocks. PBs are labeled from a to p (see Figure 1): the PBs *m* and *d* can be roughly described as prototypes for alpha-helix and central beta-strand, respectively. PBs *a* to *c* primarily represent beta-strand N-caps and PBs *e* and *f*, beta-strand C-caps; PBs *a* to *j* are specific to coils, PBs *k* and *l* to alpha-helix N-caps, and PBs *n* to *p* to alpha-helix C-caps. 
 
 ![**Figure 1.** Schematic representation of the sixteen protein blocks, labeled from *a* to *p* (Creative commons CC BY).](img/PBs.jpg "PBs")
 
@@ -12,9 +12,7 @@ For instance, the 3D structure of the barstar protein represented in Figure 2
 
 can be translated in a 1D-sequence of Protein Blocks:
 
->    ZZdddfklpcbfklmmmmmmmmnopafklgoiaklmmmmmmmmpacddddddehkllmmmmnnomm
->    mmmmmmmmmmmmnopacddddZZ
-
+>    ZZdddfklpcbfklmmmmmmmmnopafklgoiaklmmmmmmmmpacddddddehkllmmmmnnommmmmmmmmmmmmmnopacddddZZ
 
 
 The conformations of the 89 residues of the barstar are translated into a sequence of 89 protein blocks. Note that "Z" corresponds to amino acids for which a protein block cannot be assigned. As a matter of fact, the assignment of a given residue *n* requires is based on the conformations of residues *n-1*, *n-1*, *n*, *n+1* and *n+2*. Therefore, a protein block cannot be assigned to the two first (N-termini) and two last (C-termini) residues of a polypeptide chain.
