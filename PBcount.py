@@ -39,8 +39,8 @@ parser.add_argument("-o", action="store", required = True,
 
 
 # optional arguments
-parser.add_argument("--residue-shift", action="store", type=int,
-    dest = "residue_shift", help="shift to adjust residue number")
+parser.add_argument("--first-residue", action="store", type=int,
+    dest = "first_residue", help="define first residue number (1 by default)")
 parser.add_argument("--first-frame", action="store", type=int,
     dest = "first_frame", help="lower index of trajectory frame (default = 1)")
 
@@ -50,8 +50,8 @@ options = parser.parse_args()
 #-------------------------------------------------------------------------------
 # check options
 #-------------------------------------------------------------------------------
-if options.residue_shift and options.residue_shift < 0:
-	parser.error("residue shift must be positive")
+if options.first_residue and options.first_residue < 1:
+	parser.error("first residue must be >= 1")
 
 if not options.first_frame :
     index_first_frame = 0
@@ -101,10 +101,10 @@ for seq in pb_seq:
 #-------------------------------------------------------------------------------
 # write PBs count file
 #-------------------------------------------------------------------------------
-shift = 0
-if options.residue_shift:
-	shift = options.residue_shift
-	print( "first residue will be numbered {0}".format(shift + 1) )
+first = 1
+if options.first_residue:
+	first = options.first_residue
+	print( "first residue will be numbered {0}".format(first) )
 
 count_file_name = options.o + ".PB.count"
 content = "    "
@@ -112,7 +112,7 @@ content = "    "
 content += "".join(["%6s" % name for name in PB.NAMES]) + "\n"
 # build data table
 for residue_idx, residue_pb in enumerate(pb_count):
-    content += "%-5d" % (residue_idx + 1 + shift) + " ".join("%5d" % i for i in residue_pb) + "\n"
+    content += "%-5d" % (residue_idx + first) + " ".join("%5d" % i for i in residue_pb) + "\n"
 # write data
 count_file = open(count_file_name, "w")
 count_file.write(content)
