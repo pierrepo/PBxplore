@@ -27,6 +27,18 @@ import numpy
 ## local module
 import PBlib as PB
 
+#===============================================================================
+# Python2/Python3 compatibility
+#===============================================================================
+
+# The range function in python 3 behaves as the range function in python 2
+# and returns a generator rather than a list. To produce a list in python 3,
+# one should use list(range). Here we change range to behave the same in
+# python 2 and in python 3. In both cases, range will return a generator.
+try:
+    range = xrange
+except NameError:
+    pass
 
 #===============================================================================
 # Classes
@@ -167,7 +179,7 @@ def read_pb_definitions(pb_angles_string):
     for line in pb_angles_string.split("\n"):
         if line and "#" not in line:
             items = line.split()
-            pb_angles[items[0]] = numpy.array([float(items[i]) for i in xrange(1, len(items))])
+            pb_angles[items[0]] = numpy.array([float(items[i]) for i in range(1, len(items))])
     print("read PB definitions: %d PBs x %d angles " \
           % (len(pb_angles), len(pb_angles["a"])))
     return pb_angles

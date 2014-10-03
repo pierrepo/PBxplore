@@ -26,6 +26,19 @@ import numpy
 import PBlib as PB
 
 #===============================================================================
+# Python2/Python3 compatibility
+#===============================================================================
+
+# The range function in python 3 behaves as the range function in python 2
+# and returns a generator rather than a list. To produce a list in python 3,
+# one should use list(range). Here we change range to behave the same in
+# python 2 and in python 3. In both cases, range will return a generator.
+try:
+    range = xrange
+except NameError:
+    pass
+
+#===============================================================================
 # Functions
 #===============================================================================
 def compute_score_by_position(score_mat, seq1, seq2):
@@ -126,7 +139,7 @@ if options.compare:
     substitution_mat_modified = 9 * (1 - substitution_mat_modified)
     substitution_mat_modified = substitution_mat_modified.astype(int)
     # set diagonal to 0
-    for idx in xrange(len(substitution_mat_modified)):
+    for idx in range(len(substitution_mat_modified)):
         substitution_mat_modified[idx,idx] = 0
     print( "Normalized substitution matrix (between 0 and 9)" )
     print(substitution_mat_modified)
@@ -147,7 +160,7 @@ if options.compare:
 
 # change sequence name for a better input in R
 seq_names = {}
-for i in xrange(len(pb_seq)):
+for i in range(len(pb_seq)):
     new_name = "seq%d" % i
     seq_names[new_name] = pb_seq[i, 0]
     pb_seq[i, 0] = new_name
@@ -159,18 +172,18 @@ distance_mat = numpy.empty((len(pb_seq), len(pb_seq)), dtype='float')
 
 print( "Building distance matrix" )
 # get similarity score
-for i in xrange(len(pb_seq)):
+for i in range(len(pb_seq)):
     sys.stdout.write("\r%.f%%" % (float(i+1)/len(pb_seq)*100))
     sys.stdout.flush()
-    for j in xrange(i, len(pb_seq)):
+    for j in range(i, len(pb_seq)):
         score = sum( compute_score_by_position(substitution_mat, pb_seq[i, 1], pb_seq[j, 1]) )
         distance_mat[i, j] = score
         distance_mat[j, i] = score 
 print( "" )
 
 # set equal the diagonal
-diag_mini =  numpy.min([distance_mat[i, i] for i in xrange(len(pb_seq))])
-for i in xrange(len(pb_seq)):
+diag_mini =  numpy.min([distance_mat[i, i] for i in range(len(pb_seq))])
+for i in range(len(pb_seq)):
     distance_mat[i, i] = diag_mini
 
 # convert similarity score to normalized distance between 0 and 1
