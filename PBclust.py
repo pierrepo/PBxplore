@@ -10,6 +10,9 @@ Cluster protein structures based on their PB sequences.
 #===============================================================================
 # Modules
 #===============================================================================
+## Use print as a function for python 3 compatibility
+from __future__ import print_function
+
 ## standard modules
 import sys
 import os
@@ -126,7 +129,7 @@ if options.compare:
     for idx in xrange(len(substitution_mat_modified)):
         substitution_mat_modified[idx,idx] = 0
     print( "Normalized substitution matrix (between 0 and 9)" )
-    print substitution_mat_modified
+    print(substitution_mat_modified)
     print( "Compare first sequence ({0}) with others".format(ref_name) )
     for target in pb_seq[1:,]:
         header = "%s vs %s" % (ref_name, target[0])
@@ -256,7 +259,7 @@ cluster_count = {}
 for idx in cluster_id:
     cluster_count[idx] = cluster_count.get(idx, 0) + 1
 for idx in sorted(cluster_count):
-    print "cluster %3s: %5d sequences (%3d%%)" %(idx, cluster_count[idx], 1.0*cluster_count[idx]/len(seq_lst)*100)
+    print("cluster %3s: %5d sequences (%3d%%)" %(idx, cluster_count[idx], 1.0*cluster_count[idx]/len(seq_lst)*100))
 
 
 name = options.o + ".PB.clust"

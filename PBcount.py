@@ -10,6 +10,9 @@ Compute PB frequency along protein sequence.
 #===============================================================================
 # Modules
 #===============================================================================
+## Use print as a function for python 3 compatibility
+from __future__ import print_function
+
 ## standard modules
 import os
 import sys

@@ -9,6 +9,9 @@ Python library to handle Protein Blocks
 #===============================================================================
 # Modules
 #===============================================================================
+## Use print as a function for python 3 compatibility
+from __future__ import print_function
+
 ## standard modules
 import os
 import sys
@@ -54,7 +57,7 @@ NAMES = ["a", "b", "c", "d", "e", "f", "g", "h",
            "i", "j", "k", "l", "m", "n", "o", "p"]
 NUMBER = len(NAMES)
 
-print __location__
+print(__location__)
 SUBSTITUTION_MATRIX_NAME = os.path.join(__location__, "PBs_substitution_matrix.dat")
 
 
@@ -154,9 +157,9 @@ def read_fasta(name):
     # outputs
     assert len(header_lst) == len(sequence_lst), \
            "cannot read same number of headers and sequences"
-    print "read %d sequences in %s" % (len(sequence_lst), name)
+    print("read %d sequences in %s" % (len(sequence_lst), name))
     if len(sequence_lst) == 0:
-        print "WARNING: %s seems empty of sequence" %(name)
+        print("WARNING: %s seems empty of sequence" %(name))
     return header_lst, sequence_lst
 
 #-------------------------------------------------------------------------------
@@ -174,10 +177,10 @@ def load_substitution_matrix(name):
     for i in xrange(len(mat)):
         for j in xrange(len(mat[0])):
             if mat[i][j] != mat[j][i]:
-                print i, j
-                print mat[i][j], mat[j][i]
+                print(i, j)
+                print(mat[i][j], mat[j][i])
                 sys.exit("ERROR: matrix is not symetric - idx %i and %i" % (i, j))
-    print "read substitution matrix"
+    print("read substitution matrix")
     return mat
 
 #-------------------------------------------------------------------------------

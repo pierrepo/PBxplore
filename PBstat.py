@@ -12,6 +12,9 @@ Compute Neq, PBs distribution and draw logo representation of PBs.
 #===============================================================================
 # Modules
 #===============================================================================
+## Use print as a function for python 3 compatibility
+from __future__ import print_function
+
 ## standard modules
 import os
 import sys
@@ -249,7 +252,7 @@ box()
         print( "exit code: {0}".format(code) )
     else:
         print( "wrote {0}".format(map_file_name) )
-    print out
+    print(out)
 
 #-------------------------------------------------------------------------------
 # computes Neq and generates neq plot along protein sequence
