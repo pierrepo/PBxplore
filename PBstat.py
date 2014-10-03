@@ -238,21 +238,31 @@ mtext("intensity", side = 4, line = 3, cex = 1.7, font = 2)
 box()
     """
 
-    # execute R script
-    #-------------------------------------------------------------------------------
-    command="R --vanilla --slave"
-    proc = subprocess.Popen(command, shell = True, 
-    stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
-    (out, err) = proc.communicate(R_script)
-    if err:
-        print( "ERROR: {0}".format(err) )
-    code = proc.wait()
-    if code:
-        print( "ERROR: exit code != 0" )
-        print( "exit code: {0}".format(code) )
-    else:
-        print( "wrote {0}".format(map_file_name) )
-    print out
+
+import matplotlib.pyplot as plt
+freq = numpy.loadtxt(options.f, dtype=int, skiprows=1)
+xticks = freq[:, 0][::50]
+yticks = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p')
+
+freq = freq[:, 1:]/ float(sequence_number)
+
+fig = plt.figure(figsize=(8, 6))
+ax = fig.add_axes([0.1, 0.1, 0.6, 0.8])
+
+img = ax.imshow(numpy.transpose(freq[: , :]), interpolation='none', vmin=0, vmax=1, origin='lower', aspect='auto')
+
+ax.set_xticks(xticks - 1)
+ax.set_xticklabels(xticks)
+ax.set_yticks(range(len(yticks)))
+ax.set_yticklabels(yticks, style='italic', weight='bold')
+colorbar_ax = fig.add_axes([0.75, 0.1, 0.03, 0.8])
+fig.colorbar(img, cax=colorbar_ax)
+fig.text(0.05, 4.0/16, r"$\beta$-strand", rotation = 90, size = 'smaller', va = 'center', transform=ax.transAxes)
+fig.text(0.05, 8.0/16*0.8, r"coil", rotation = 90, size = 'smaller', va = 'center')
+fig.text(0.05, 13.0/16, r"$\alpha$-helix", rotation = 90, size = 'smaller', va = 'center', transform=ax.transAxes)
+fig.text(0.02, 0.5, "PBs", rotation = 90, weight='bold', size = 'larger', transform=ax.transAxes)
+#fig.show()
+fig.savefig(options.o)
 
 #-------------------------------------------------------------------------------
 # computes Neq and generates neq plot along protein sequence
