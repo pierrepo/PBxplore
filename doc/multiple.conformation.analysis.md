@@ -202,7 +202,7 @@ Graph:
 
 ### `--logo` option
 
-generates logo representation of PBs frequency along protein sequence. This option requires Weblogo to be installed.
+generates logo representation of PBs frequency along protein sequence. This option requires Weblogo [1] to be installed.
 
 Example:
 
@@ -390,3 +390,9 @@ Content of `beta3_IEGF12.PB.compare.fasta`:
     >beta3_IEGF12.pdb | model 0 vs beta3_IEGF12.pdb | model 189
     003355030030023432000000000000004000000333200030304000000004
     20230000012203333035030000200
+
+
+# References
+
+[1] G. E. Crooks, G. Hon, J.-M. Chandonia, and S. E. Brenner. WebLogo: A Sequence Logo Generator. *Genome Research* **14**: 1188–90 (2004)
+doi:10.1101/gr.849004 http://weblogo.threeplusone.com/

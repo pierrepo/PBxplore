@@ -141,6 +141,9 @@ sequence_number = sum(freq[2, 1:])
 if sequence_number == 0:
     sys.exit("ERROR: counting 0 sequences!")
 
+# update residue numbers
+residue_lst = list(freq[:, 0])
+
 # remove residue number    
 # extract and normalize PBs frequencies
 freq = freq[:, 1:] / float(sequence_number)
@@ -223,7 +226,7 @@ image(as.matrix(freq), axes=FALSE, xlab="Residue number", col=colorpal, zlim = c
 box()
 axis(1, seq(0, 1, 1/(length(xnames)-1)), xnames)
 axis(2, seq(0, 1, 1/(length(ynames)-1)), ynames, font = 4)
-mtext('PB', side = 2, line = 5, cex=1.9, font=2)
+mtext('PBs', side = 2, line = 5, cex=1.9, font=2)
 mtext(bquote(beta~'strand'), side = 2, line = 3, at = 3*1/15, cex=1.5)
 mtext('coil', side = 2, line = 3, at = 7*1/15, cex=1.5)
 mtext(bquote(alpha~'helix'), side = 2, line = 3, at = 12*1/15, cex=1.5)
@@ -337,6 +340,12 @@ ylim=c(1,max(round(neq[,2]))+2))
 
 #-------------------------------------------------------------------------------
 # generates logo representation of PBs frequency along protein sequence
+#
+# G. E. Crooks, G. Hon, J.-M. Chandonia, and S. E. Brenner. 
+# 'WebLogo: A Sequence Logo Generator.'
+# Genome Research 14:1188–90 (2004)
+# doi:10.1101/gr.849004.
+# http://weblogo.threeplusone.com/
 #-------------------------------------------------------------------------------
 if options.logo:
     # read count file
@@ -345,7 +354,7 @@ if options.logo:
     count_content = f_in.readlines()
     f_in.close()
 
-    # convert a table of PB frequencies into transfac format asrequired by weblogo
+    # convert a table of PB frequencies into transfac format as required by weblogo
     # http://meme.sdsc.edu/meme/doc/transfac-format.html
     #-------------------------------------------------------------------------------
     residue_lst = []
