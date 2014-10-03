@@ -145,7 +145,7 @@ class PdbStructure:
         
         # get dihedrals 
         phi_psi_angles = {}
-        for res in sorted(backbone.iterkeys()):
+        for res in sorted(backbone):
             # phi : C(i-1) - N(i) - CA(i) - C(i)
             try:
                 phi = PB.get_dihedral(backbone[res-1]["C" ].coord(), 
@@ -200,7 +200,7 @@ def write_phipsi(name, torsion, com):
     """save phi and psi angles
     """
     f_out = open(name, "a")
-    for res in sorted(torsion.iterkeys()):
+    for res in sorted(torsion):
         try:
             phi_str = "%8.2f" % torsion[res]["phi"]
         except:
@@ -232,7 +232,7 @@ def PB_assign(pb_ref, structure, comment):
 
     pb_seq = ""
     # iterate over all residues
-    for res in sorted(dihedrals.iterkeys()):
+    for res in sorted(dihedrals):
         angles = []
         # try to get all eight angles required for PB assignement
         try:
