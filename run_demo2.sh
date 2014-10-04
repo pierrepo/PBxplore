@@ -65,10 +65,10 @@ pause
 
 
 echo  -e "\n"
-echo "with one input file and the --residue-shift option"
-echo "../PBcount.py -f md_traj.PB.fasta -o md_traj2 --residue-shift 20"
+echo "with one input file and the --first-residue option"
+echo "../PBcount.py -f md_traj.PB.fasta -o md_traj2 --first-residue 21"
 pause
-../PBcount.py -f md_traj.PB.fasta -o md_traj2 --residue-shift 20
+../PBcount.py -f md_traj.PB.fasta -o md_traj2 --first-residue 21
 
 
 echo  -e "\n"
