@@ -10,6 +10,9 @@ Compute PB frequency along protein sequence.
 #===============================================================================
 # Modules
 #===============================================================================
+## Use print as a function for python 3 compatibility
+from __future__ import print_function
+
 ## standard modules
 import os
 import sys
@@ -20,6 +23,19 @@ import numpy
 
 ## local module
 import PBlib as PB
+
+#===============================================================================
+# Python2/Python3 compatibility
+#===============================================================================
+
+# The range function in python 3 behaves as the range function in python 2
+# and returns a generator rather than a list. To produce a list in python 3,
+# one should use list(range). Here we change range to behave the same in
+# python 2 and in python 3. In both cases, range will return a generator.
+try:
+    range = xrange
+except NameError:
+    pass
 
 #===============================================================================
 # MAIN - program starts here

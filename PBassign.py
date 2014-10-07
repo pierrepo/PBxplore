@@ -11,6 +11,9 @@ Read PDB structures and assign protein blocs (PBs).
 #===============================================================================
 # Modules
 #===============================================================================
+## Use print as a function for python 3 compatibility
+from __future__ import print_function
+
 ## standard modules
 import os
 import sys
@@ -24,6 +27,18 @@ import numpy
 ## local module
 import PBlib as PB
 
+#===============================================================================
+# Python2/Python3 compatibility
+#===============================================================================
+
+# The range function in python 3 behaves as the range function in python 2
+# and returns a generator rather than a list. To produce a list in python 3,
+# one should use list(range). Here we change range to behave the same in
+# python 2 and in python 3. In both cases, range will return a generator.
+try:
+    range = xrange
+except NameError:
+    pass
 
 #===============================================================================
 # Classes
@@ -102,7 +117,7 @@ class PdbStructure:
         if not self.atoms:
             self.chain = atom.chain
         elif self.chain != atom.chain:
-            print "WARNING: several chains in the same structure"
+            print("WARNING: several chains in the same structure")
         # add atom to structure
         self.atoms.append(atom)
 
@@ -130,7 +145,7 @@ class PdbStructure:
         
         # get dihedrals 
         phi_psi_angles = {}
-        for res in sorted(backbone.iterkeys()):
+        for res in sorted(backbone):
             # phi : C(i-1) - N(i) - CA(i) - C(i)
             try:
                 phi = PB.get_dihedral(backbone[res-1]["C" ].coord(), 
@@ -164,9 +179,9 @@ def read_pb_definitions(pb_angles_string):
     for line in pb_angles_string.split("\n"):
         if line and "#" not in line:
             items = line.split()
-            pb_angles[items[0]] = numpy.array([float(items[i]) for i in xrange(1, len(items))])
-    print "read PB definitions: %d PBs x %d angles " \
-          % (len(pb_angles), len(pb_angles["a"]))
+            pb_angles[items[0]] = numpy.array([float(items[i]) for i in range(1, len(items))])
+    print("read PB definitions: %d PBs x %d angles " \
+          % (len(pb_angles), len(pb_angles["a"])))
     return pb_angles
 
 #-------------------------------------------------------------------------------
@@ -185,7 +200,7 @@ def write_phipsi(name, torsion, com):
     """save phi and psi angles
     """
     f_out = open(name, "a")
-    for res in sorted(torsion.iterkeys()):
+    for res in sorted(torsion):
         try:
             phi_str = "%8.2f" % torsion[res]["phi"]
         except:
@@ -217,7 +232,7 @@ def PB_assign(pb_ref, structure, comment):
 
     pb_seq = ""
     # iterate over all residues
-    for res in sorted(dihedrals.iterkeys()):
+    for res in sorted(dihedrals):
         angles = []
         # try to get all eight angles required for PB assignement
         try:
@@ -261,7 +276,7 @@ def PB_assign(pb_ref, structure, comment):
     if options.flat:
         write_flat(flat_name, pb_seq)
  
-    print "PBs assigned for", comment 
+    print("PBs assigned for", comment)
              
 #-------------------------------------------------------------------------------
 # vertorize function
@@ -373,7 +388,7 @@ if options.p:
     comment = ""
 
     for pdb_name in pdb_name_lst:
-        print pdb_name 
+        print(pdb_name)
         f_in = open(pdb_name, 'r')
         for line in f_in:
             flag = line[0:6].strip()

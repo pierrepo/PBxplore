@@ -9,6 +9,9 @@ Python library to handle Protein Blocks
 #===============================================================================
 # Modules
 #===============================================================================
+## Use print as a function for python 3 compatibility
+from __future__ import print_function
+
 ## standard modules
 import os
 import sys
@@ -16,6 +19,19 @@ import math
 
 ## third-party modules
 import numpy
+
+#===============================================================================
+# Python2/Python3 compatibility
+#===============================================================================
+
+# The range function in python 3 behaves as the range function in python 2
+# and returns a generator rather than a list. To produce a list in python 3,
+# one should use list(range). Here we change range to behave the same in
+# python 2 and in python 3. In both cases, range will return a generator.
+try:
+    range = xrange
+except NameError:
+    pass
 
 #===============================================================================
 # Data
@@ -54,7 +70,7 @@ NAMES = ["a", "b", "c", "d", "e", "f", "g", "h",
            "i", "j", "k", "l", "m", "n", "o", "p"]
 NUMBER = len(NAMES)
 
-print __location__
+print(__location__)
 SUBSTITUTION_MATRIX_NAME = os.path.join(__location__, "PBs_substitution_matrix.dat")
 
 
@@ -154,9 +170,9 @@ def read_fasta(name):
     # outputs
     assert len(header_lst) == len(sequence_lst), \
            "cannot read same number of headers and sequences"
-    print "read %d sequences in %s" % (len(sequence_lst), name)
+    print("read %d sequences in %s" % (len(sequence_lst), name))
     if len(sequence_lst) == 0:
-        print "WARNING: %s seems empty of sequence" %(name)
+        print("WARNING: %s seems empty of sequence" %(name))
     return header_lst, sequence_lst
 
 #-------------------------------------------------------------------------------
@@ -171,13 +187,13 @@ def load_substitution_matrix(name):
         sys.exit("ERROR: cannot read %s" % name)
     assert len(mat) == 16, 'wrong substitution matrix size'
     assert len(mat[0]) == 16, 'wrong substitution matrix size'
-    for i in xrange(len(mat)):
-        for j in xrange(len(mat[0])):
+    for i in range(len(mat)):
+        for j in range(len(mat[0])):
             if mat[i][j] != mat[j][i]:
-                print i, j
-                print mat[i][j], mat[j][i]
+                print(i, j)
+                print(mat[i][j], mat[j][i])
                 sys.exit("ERROR: matrix is not symetric - idx %i and %i" % (i, j))
-    print "read substitution matrix"
+    print("read substitution matrix")
     return mat
 
 #-------------------------------------------------------------------------------
@@ -195,7 +211,7 @@ def write_fasta(name, seq, comment):
     and write file
     """
     fasta_content  = ">"+comment+"\n"
-    fasta_content += "\n".join( [seq[i:i+FASTA_WIDTH] for i in xrange(0, len(seq), FASTA_WIDTH)] )
+    fasta_content += "\n".join( [seq[i:i+FASTA_WIDTH] for i in range(0, len(seq), FASTA_WIDTH)] )
     fasta_content += "\n"
     f_out = open(name, "a")
     f_out.write(fasta_content)

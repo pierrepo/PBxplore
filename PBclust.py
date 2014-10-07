@@ -10,6 +10,9 @@ Cluster protein structures based on their PB sequences.
 #===============================================================================
 # Modules
 #===============================================================================
+## Use print as a function for python 3 compatibility
+from __future__ import print_function
+
 ## standard modules
 import sys
 import os
@@ -21,6 +24,19 @@ import numpy
 
 ## local module
 import PBlib as PB
+
+#===============================================================================
+# Python2/Python3 compatibility
+#===============================================================================
+
+# The range function in python 3 behaves as the range function in python 2
+# and returns a generator rather than a list. To produce a list in python 3,
+# one should use list(range). Here we change range to behave the same in
+# python 2 and in python 3. In both cases, range will return a generator.
+try:
+    range = xrange
+except NameError:
+    pass
 
 #===============================================================================
 # Functions
@@ -123,10 +139,10 @@ if options.compare:
     substitution_mat_modified = 9 * (1 - substitution_mat_modified)
     substitution_mat_modified = substitution_mat_modified.astype(int)
     # set diagonal to 0
-    for idx in xrange(len(substitution_mat_modified)):
+    for idx in range(len(substitution_mat_modified)):
         substitution_mat_modified[idx,idx] = 0
     print( "Normalized substitution matrix (between 0 and 9)" )
-    print substitution_mat_modified
+    print(substitution_mat_modified)
     print( "Compare first sequence ({0}) with others".format(ref_name) )
     for target in pb_seq[1:,]:
         header = "%s vs %s" % (ref_name, target[0])
@@ -144,7 +160,7 @@ if options.compare:
 
 # change sequence name for a better input in R
 seq_names = {}
-for i in xrange(len(pb_seq)):
+for i in range(len(pb_seq)):
     new_name = "seq%d" % i
     seq_names[new_name] = pb_seq[i, 0]
     pb_seq[i, 0] = new_name
@@ -156,18 +172,18 @@ distance_mat = numpy.empty((len(pb_seq), len(pb_seq)), dtype='float')
 
 print( "Building distance matrix" )
 # get similarity score
-for i in xrange(len(pb_seq)):
+for i in range(len(pb_seq)):
     sys.stdout.write("\r%.f%%" % (float(i+1)/len(pb_seq)*100))
     sys.stdout.flush()
-    for j in xrange(i, len(pb_seq)):
+    for j in range(i, len(pb_seq)):
         score = sum( compute_score_by_position(substitution_mat, pb_seq[i, 1], pb_seq[j, 1]) )
         distance_mat[i, j] = score
         distance_mat[j, i] = score 
 print( "" )
 
 # set equal the diagonal
-diag_mini =  numpy.min([distance_mat[i, i] for i in xrange(len(pb_seq))])
-for i in xrange(len(pb_seq)):
+diag_mini =  numpy.min([distance_mat[i, i] for i in range(len(pb_seq))])
+for i in range(len(pb_seq)):
     distance_mat[i, i] = diag_mini
 
 # convert similarity score to normalized distance between 0 and 1
@@ -256,7 +272,7 @@ cluster_count = {}
 for idx in cluster_id:
     cluster_count[idx] = cluster_count.get(idx, 0) + 1
 for idx in sorted(cluster_count):
-    print "cluster %3s: %5d sequences (%3d%%)" %(idx, cluster_count[idx], 1.0*cluster_count[idx]/len(seq_lst)*100)
+    print("cluster %3s: %5d sequences (%3d%%)" %(idx, cluster_count[idx], 1.0*cluster_count[idx]/len(seq_lst)*100))
 
 
 name = options.o + ".PB.clust"

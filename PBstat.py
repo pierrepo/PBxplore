@@ -12,6 +12,9 @@ Compute Neq, PBs distribution and draw logo representation of PBs.
 #===============================================================================
 # Modules
 #===============================================================================
+## Use print as a function for python 3 compatibility
+from __future__ import print_function
+
 ## standard modules
 import os
 import sys
@@ -24,6 +27,19 @@ import numpy
 
 ## local module
 import PBlib as PB
+
+#===============================================================================
+# Python2/Python3 compatibility
+#===============================================================================
+
+# The range function in python 3 behaves as the range function in python 2
+# and returns a generator rather than a list. To produce a list in python 3,
+# one should use list(range). Here we change range to behave the same in
+# python 2 and in python 3. In both cases, range will return a generator.
+try:
+    range = xrange
+except NameError:
+    pass
 
 #===============================================================================
 # Functions
@@ -252,7 +268,7 @@ box()
         print( "exit code: {0}".format(code) )
     else:
         print( "wrote {0}".format(map_file_name) )
-    print out
+    print(out)
 
 #-------------------------------------------------------------------------------
 # computes Neq and generates neq plot along protein sequence
@@ -262,9 +278,9 @@ if options.neq:
     #-------------------------------------------------------------------------------
     neq_array = numpy.zeros((len(residue_lst), 2))
     neq_array[:, 0] = residue_lst
-    for idx in xrange(len(residue_lst)):
+    for idx in range(len(residue_lst)):
         H = 0.0
-        for b in xrange(PB.NUMBER):
+        for b in range(PB.NUMBER):
             f = freq[idx, b] 
             if f != 0:
                 H += f * math.log(f)
