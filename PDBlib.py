@@ -9,6 +9,9 @@ Python library to handle Protein Data Bank files: PDB and PDBx/mmCIF
 #===============================================================================
 # Modules
 #===============================================================================
+## Use print as a function for python 3 compatibility
+from __future__ import print_function
+
 ## standard modules
 import os
 import sys
