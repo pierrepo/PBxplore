@@ -81,57 +81,7 @@ FASTA_WIDTH = 60
 #===============================================================================
 # Functions
 #===============================================================================
-def get_dihedral(atomA, atomB, atomC, atomD):
-    """
-    Compute dihedral angle between 4 atoms (A, B, C, D)
-    each atom is represented as a list of three coordinates [x, y, z]
-    output is in degree in the range -180 / +180
-    """
-    
-    # convert lists to Numpy objects
-    A = numpy.array(atomA)
-    B = numpy.array(atomB)
-    C = numpy.array(atomC)
-    D = numpy.array(atomD)
- 
-    # vectors
-    AB = B - A 
-    BC = C - B 
-    CD = D - C 
 
-    # normal vectors
-    n1 = numpy.cross(AB, BC)
-    n2 = numpy.cross(BC, CD)
-
-    # normalize normal vectors
-    n1 /= numpy.linalg.norm(n1)
-    n2 /= numpy.linalg.norm(n2)
-    
-    # angle between normals
-    cosine = numpy.sum(n1*n2) / (numpy.linalg.norm(n1) * numpy.linalg.norm(n2))
-    try :
-        torsion = math.acos(cosine)
-    except:
-        cosine = int(cosine) #+0.0001
-        torsion = math.acos(cosine)
-
-    # convert radion to degree
-    torsion = torsion * 180.0 / math.pi 
-
-    # find if the torsion is clockwise or counterclockwise
-    #if numpy.sum(n1 * CD) < 0.0:
-    if numpy.dot(n1, CD) < 0.0:
-        torsion = 360 - torsion
-    if torsion == 360.0:
-        torsion = 0.0
-    
-    # get range -180 / +180
-    if torsion > 180.0:
-        torsion = torsion - 360
-    if torsion < -180.0:
-        torsion = torsion + 360
-   
-    return torsion
 
 #-------------------------------------------------------------------------------    
 def read_fasta(name):

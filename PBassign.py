@@ -57,7 +57,7 @@ def read_pb_definitions(pb_angles_string):
         if line and "#" not in line:
             items = line.split()
             pb_angles[items[0]] = numpy.array([float(items[i]) for i in range(1, len(items))])
-    print("read PB definitions: %d PBs x %d angles " \
+    print("Read PB definitions: %d PBs x %d angles " \
           % (len(pb_angles), len(pb_angles["a"])))
     return pb_angles
 
@@ -102,7 +102,8 @@ def PB_assign(pb_ref, structure, comment):
     """assign Protein Blocks (PB) from phi and psi angles
     """
     # get phi and psi angles from structure
-    dihedrals = structure.get_all_dihedral()
+    dihedrals = structure.get_phi_psi_angles()
+    #print(dihedrals)
     # write phi and psi angles
     if options.phipsi:
         write_phipsi(phipsi_name, dihedrals, comment)
@@ -153,7 +154,7 @@ def PB_assign(pb_ref, structure, comment):
     if options.flat:
         write_flat(flat_name, pb_seq)
  
-    print("PBs assigned for", comment)
+    print("PBs assigned for {0}".format(comment))
              
 #-------------------------------------------------------------------------------
 # vertorize function
@@ -255,53 +256,24 @@ if options.flat:
 #-------------------------------------------------------------------------------
 # read PDB files
 #-------------------------------------------------------------------------------
-structure = PdbStructure()
+
 
 # PB assignement of PDB structures
 if options.p:
-
-    model = ""
-    chain = " "
-    comment = ""
-    
-    ## reading of PDB and PDBx/mmCIF files will be handled by the PDBlib library
-    sys.exit("Nothing is expected to work from here...")
-
     for pdb_name in pdb_name_lst:
-        print(pdb_name)
-        f_in = open(pdb_name, 'r')
-        for line in f_in:
-            flag = line[0:6].strip()
-            if flag == "MODEL":
-                model = line.split()[1]
-            if flag == "ATOM":
-                atom = PdbAtom()
-                atom.read(line)
-                # assign structure upon new chain
-                if structure.size() != 0 and structure.chain != atom.chain:
-                    PB_assign(pb_def, structure, comment)
-                    structure.clean()
-                # append structure with atom
-                structure.add_atom(atom)
-                # define structure comment
-                # when the structure contains 1 atom
-                if structure.size() == 1:
-                    comment = pdb_name 
-                    if model:
-                        comment += " | model %s" % (model)
-                        model = ""
-                    if atom.chain:
-                        comment += " | chain %s" % (atom.chain)
-                        atom.chain = ""
-            # assign structure after end of model (or chain)
-            if structure.size() != 0 and flag in ["TER", "ENDMDL"]:
-                PB_assign(pb_def, structure, comment)
-                structure.clean()
-        # assign last structure
-        if structure.size() != 0:
-            PB_seq = PB_assign(pb_def, structure, comment)
+        pdb = PDB.PDBFile(pdb_name)
+        pdb.read_chains()
+        for chain in pdb.get_chains():
+            # build comment 
+            comment = pdb_name 
+            if chain.model:
+                comment += " | model %s" % (chain.model)
+            if chain.name:
+                comment += " | chain %s" % (chain.name)
+            # assign PBs
+            PB_assign(pb_def, chain, comment)
 
-        f_in.close()   
+
 
 # PB assignement of a Gromacs trajectory
 if not options.p:

@@ -16,14 +16,15 @@ import unittest
 import collections
 
 import PBlib as PB
+import PDBlib as PDB
 
 
 #===============================================================================
 # classes for tests
 #===============================================================================
-class TestPBlib(unittest.TestCase):
+class TestPDBlib(unittest.TestCase):
     """
-    Tests for PBlib
+    Tests for PDBlib
     """
 
     def test_get_dihedral(self):
@@ -73,8 +74,14 @@ class TestPBlib(unittest.TestCase):
                            175.872397707))
         
         for res in results:
-            torsion = PB.get_dihedral(res.A, res.B, res.C, res.D)
+            torsion = PDB.get_dihedral(res.A, res.B, res.C, res.D)
             self.assertAlmostEqual(torsion, res.torsion)
+
+
+class TestPBlib(unittest.TestCase):
+    """
+    Tests for PBlib
+    """
 
     def test_read_fasta(self):
         headers, sequences = PB.read_fasta("test_data/1BTA.PB.fasta")
@@ -82,7 +89,7 @@ class TestPBlib(unittest.TestCase):
         self.assertEqual(sequences, ['ZZdddfklonbfklmmmmmmmmnopafklnoiakl'
                                      'mmmmmnoopacddddddehkllmmmmngoilmmmm'
                                      'mmmmmmmmnopacdcddZZ'])
-
+                                     
 if __name__ == '__main__':
     unittest.main()
 

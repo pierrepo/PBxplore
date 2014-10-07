@@ -21,11 +21,68 @@ import math
 import numpy
 
 #===============================================================================
+# Functions
+#===============================================================================
+def get_dihedral(atomA, atomB, atomC, atomD):
+    """
+    Compute dihedral angle between 4 atoms (A, B, C, D)
+    each atom is represented as a list of three coordinates [x, y, z]
+    output is in degree in the range -180 / +180
+    """
+    
+    # convert lists to Numpy objects
+    A = numpy.array(atomA)
+    B = numpy.array(atomB)
+    C = numpy.array(atomC)
+    D = numpy.array(atomD)
+ 
+    # vectors
+    AB = B - A 
+    BC = C - B 
+    CD = D - C 
+
+    # normal vectors
+    n1 = numpy.cross(AB, BC)
+    n2 = numpy.cross(BC, CD)
+
+    # normalize normal vectors
+    n1 /= numpy.linalg.norm(n1)
+    n2 /= numpy.linalg.norm(n2)
+    
+    # angle between normals
+    cosine = numpy.sum(n1*n2) / (numpy.linalg.norm(n1) * numpy.linalg.norm(n2))
+    try :
+        torsion = math.acos(cosine)
+    except:
+        cosine = int(cosine) #+0.0001
+        torsion = math.acos(cosine)
+
+    # convert radion to degree
+    torsion = torsion * 180.0 / math.pi 
+
+    # find if the torsion is clockwise or counterclockwise
+    #if numpy.sum(n1 * CD) < 0.0:
+    if numpy.dot(n1, CD) < 0.0:
+        torsion = 360 - torsion
+    if torsion == 360.0:
+        torsion = 0.0
+    
+    # get range -180 / +180
+    if torsion > 180.0:
+        torsion = torsion - 360
+    if torsion < -180.0:
+        torsion = torsion + 360
+   
+    return torsion
+    
+#===============================================================================
 # Classes
 #===============================================================================
 
 class Atom:
-    """class for atoms in PDB format"""
+    """
+    Class for atoms in PDB format
+    """
     def __init__(self):
         """default constructor"""
         self.id = 0
@@ -81,38 +138,45 @@ class Atom:
         return [self.x, self.y, self.z]
     
 
-class Structure:
+class Chain:
     """
-    Class for a Protein Data Bank structure (chain)
+    Class for a Protein Data Bank structure./chain
     """
     def __init__(self):
         """default constructor for PDB structure"""
-        self.chain = ""
+        self.name = ""
+        self.model = ""
         self.atoms = []
-        self.comment = ""
 
+    def __repr__(self):
+        """Representation of chain"""
+        return "Chain {0} / model {1}: {2} atoms".format(self.name, 
+                                                         self.model, 
+                                                         len(self.atoms))
+        
     def add_atom(self, atom):
         """add atom to the structure"""
-        # update chain name
+        # update chain name when first atom is stored
         if not self.atoms:
-            self.chain = atom.chain
-        elif self.chain != atom.chain:
-            print "WARNING: several chains in the same structure"
+            self.name = atom.chain
+        # check that chain name is always the same
+        elif self.name != atom.chain:
+            print("WARNING: several chains in the same structure")
         # add atom to structure
         self.atoms.append(atom)
-
-    def clean(self):
-        """clean up chain, atoms and comment"""
-        self.chain = ""
-        self.atoms = []
-        self.comment = ""
-        
+    
+    def set_model(self, model):
+        """Set model number"""
+        self.model = model
+       
     def size(self):
         """get number of atoms from a structure"""
         return len(self.atoms)
                
-    def get_all_dihedral(self):
-        """compute phi and psi angles for a protein"""
+    def get_phi_psi_angles(self):
+        """
+        Compute phi and psi angles for a protein
+        """
         # extract backbone atoms
         backbone = {}
         for atom in self.atoms:
@@ -125,34 +189,84 @@ class Structure:
         
         # get dihedrals 
         phi_psi_angles = {}
-        for res in sorted(backbone.iterkeys()):
-            # phi : C(i-1) - N(i) - CA(i) - C(i)
+        for res in sorted(backbone):
+            # phi: angle between C(i-1) - N(i) - CA(i) - C(i)
             try:
-                phi = PB.get_dihedral(backbone[res-1]["C" ].coord(), 
+                phi = get_dihedral(backbone[res-1]["C" ].coord(), 
                                    backbone[res  ]["N" ].coord(), 
                                    backbone[res  ]["CA"].coord(), 
                                    backbone[res  ]["C" ].coord())
             except:
                 phi = None
-            # psi : N(i) - CA(i) - C(i) - N(i+1)
+            # psi: angle between N(i) - CA(i) - C(i) - N(i+1)
             try:
-                psi = PB.get_dihedral(backbone[res  ]["N" ].coord(), 
+                psi = get_dihedral(backbone[res  ]["N" ].coord(), 
                                    backbone[res  ]["CA"].coord(), 
                                    backbone[res  ]["C" ].coord(), 
                                    backbone[res+1]["N" ].coord())
             except:
                 psi = None
-            #print res, phi, psi
+            #print(res, phi, psi)
             phi_psi_angles[res] = {"phi":phi, "psi":psi}
         return phi_psi_angles
 
 
 class PDBFile:
-    def __init__(self):
+    """
+    Class to read structures from PDB files
+    """
+    def __init__(self, name):
         """
         Default constructor for PDB file
         """
-        self.filename = ""
+        self.filename = name
+        self.chains = []
+
+    def read_chains(self):
+        """
+        Read PDB file
+        """
+        # check that file exists
+        if not os.path.isfile(self.filename):
+            sys.exit("Cannot read {}: does not exist".format(self.filename))
+        # create new chain
+        chain = Chain()
+        # get chains from file
+        # A PDB file can have several models 
+        # that can have several chains themselves.
+        f_in = open(self.filename, 'r')
+        for line in f_in:
+            flag = line[0:6].strip()
+            if flag == "MODEL":
+                chain.set_model( line.split()[1] )
+            if flag == "ATOM":
+                atom = Atom()
+                atom.read(line)
+                # store current chain and clean object
+                if chain.size() != 0 and chain.name != atom.chain:
+                    self.chains.append( chain )
+                    chain = Chain()
+                # append structure with atom
+                chain.add_atom(atom)
+            # store chain after end of model or chain
+            if chain.size() != 0 and flag in ["TER", "ENDMDL"]:
+                self.chains.append( chain )
+                chain = Chain()
+        # store last chain
+        if chain.size() != 0:
+            self.chains.append( chain )
+        f_in.close()
+        print("Read a total of {0} chain(s) in {1}"
+              .format(len(self.chains), self.filename))
+
+        
+    def get_chains(self):
+        """
+        Give chains, one at a time
+        """
+        for chain in self.chains:
+            yield chain
+
 
 class PDBxFile:
     def __init__(self):
