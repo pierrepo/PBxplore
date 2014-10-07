@@ -260,9 +260,14 @@ if options.flat:
 
 # PB assignement of PDB structures
 if options.p:
+    pdb_extensions = ('.pdb', '.PDB', '.ent', '.ENT4')
+    pdbx_extensions = ('.cif', '.CIF', '.cif.gz', '.CIF.GZ') 
     for pdb_name in pdb_name_lst:
         pdb = PDB.PDBFile(pdb_name)
-        pdb.read_chains()
+        if pdb_name.endswith( pdb_extensions ):
+            pdb.read_chains_from_PDB()
+        if pdb_name.endswith( pdbx_extensions ):
+            pdb.read_chains_from_PDBx()
         for chain in pdb.get_chains():
             # build comment 
             comment = pdb_name 
@@ -295,7 +300,7 @@ if not options.p:
         selection = universe.selectAtoms("backbone")
         for atm in selection:
             atom = PdbAtom()        
-            atom.from_xtc(atm)
+            atom.read_from_xtc(atm)
             # append structure with atom
             structure.add_atom(atom)
             # define structure comment

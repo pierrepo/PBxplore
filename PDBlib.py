@@ -16,6 +16,7 @@ from __future__ import print_function
 import os
 import sys
 import math
+import gzip
 
 ## third-party modules
 import numpy
@@ -28,6 +29,8 @@ def get_dihedral(atomA, atomB, atomC, atomD):
     Compute dihedral angle between 4 atoms (A, B, C, D)
     each atom is represented as a list of three coordinates [x, y, z]
     output is in degree in the range -180 / +180
+    
+    Note: this function is not part of any class to ease its reusability
     """
     
     # convert lists to Numpy objects
@@ -99,8 +102,9 @@ class Atom:
         self.tempfactor = 0.0
         self.element = '  '
         self.charge =  '  '
+        self.model = None
         
-    def read(self, line):
+    def read_from_PDB(self, line):
         """read ATOM data from a PDB file line"""
         self.id = int(line[6:11].strip())
         self.name = line[12:16].strip()
@@ -111,7 +115,32 @@ class Atom:
         self.y = float(line[38:46].strip())
         self.z = float(line[46:54].strip()) 
 
-    def from_xtc(self, atm):
+    def read_from_PDBx(self, line, fields):
+        """
+        Read ATOM data from a PDBx/mmCIF file line
+        for more details regarding this format see:
+        http://mmcif.wwpdb.org/docs/tutorials/content/atomic-description.html
+        """
+        try:
+            dic = dict(zip( fields, line.split() ))
+        except:
+            print("Something went wrong in reading\n{0}".format(line))
+            raise
+        try:
+            self.id = int( dic['id'] )
+            self.name = dic['label_atom_id']
+            self.resname = dic['label_comp_id']
+            self.chain = dic['label_asym_id']
+            self.resid = int( dic['label_seq_id'] )
+            self.x = float( dic['Cartn_x'] )
+            self.y = float( dic['Cartn_y'] )
+            self.z = float( dic['Cartn_z'] ) 
+            self.model = dic['pdbx_PDB_model_num']
+        except:
+            print("Something went wrong in data convertion\n{0}".format(dic))
+            raise
+        
+    def read_from_xtc(self, atm):
         """fill atom data from a .xtc mdanalysis selections"""
         self.id = atm.id
         self.name = atm.name
@@ -222,7 +251,7 @@ class PDBFile:
         self.filename = name
         self.chains = []
 
-    def read_chains(self):
+    def read_chains_from_PDB(self):
         """
         Read PDB file
         """
@@ -241,7 +270,7 @@ class PDBFile:
                 chain.set_model( line.split()[1] )
             if flag == "ATOM":
                 atom = Atom()
-                atom.read(line)
+                atom.read_from_PDB(line)
                 # store current chain and clean object
                 if chain.size() != 0 and chain.name != atom.chain:
                     self.chains.append( chain )
@@ -259,19 +288,65 @@ class PDBFile:
         print("Read a total of {0} chain(s) in {1}"
               .format(len(self.chains), self.filename))
 
-        
+    
+    def read_chains_from_PDBx(self):
+        """
+        Read chains from PDBx/mmCIF files
+        """
+        # check that file exists
+        if not os.path.isfile(self.filename):
+            sys.exit("Cannot read {}: does not exist".format(self.filename))
+        # create new chain
+        chain = Chain()
+        # get chains from file
+        # A PDB file can have several models 
+        # that can have several chains themselves.
+        atom_fields = []
+        atom_coordinates = []
+        if self.filename.endswith( ('.gz', '.GZ') ):
+            f_in = gzip.open(self.filename, 'r')
+        else:
+            f_in = open(self.filename, 'r')
+        for line in f_in:
+            item = line.strip()
+            # then store atom field definitions
+            if item.startswith("_atom_site."):
+                atom_fields.append( item.replace("_atom_site.", "") )
+            # then store atom coordinates
+            if atom_fields and item.startswith('ATOM'):
+                atom_coordinates.append( item )
+        f_in.close()
+        # separate all chains and store atoms
+        chain = Chain()
+        for atom_line in atom_coordinates:
+            atom = Atom()
+            atom.read_from_PDBx(atom_line, atom_fields)
+            # define model at first atom
+            if chain.size() == 1:
+                chain.set_model(atom.model)
+            # store current chain when chain name changed
+            if chain.size() != 0 and chain.name != atom.chain:
+                # store model number only if there is more than one model
+                if chain.model == atom.model:
+                    chain.set_model("")
+                print(chain)
+                self.chains.append( chain )
+                chain = Chain()
+            # store current chain when model number changed
+            if chain.size() != 0 and chain.model != atom.model:
+                self.chains.append( chain )
+                chain = Chain()            
+            # append structure with atom
+            chain.add_atom(atom)
+        # store last chain
+        if chain.size() != 0:
+            self.chains.append( chain )
+            
+
     def get_chains(self):
         """
         Give chains, one at a time
         """
         for chain in self.chains:
             yield chain
-
-
-class PDBxFile:
-    def __init__(self):
-        """
-        Default constructor for PDBx/mmCIF file
-        """
-        self.filename = ""
-
+            
