@@ -42,8 +42,10 @@ except NameError:
 # Functions
 #===============================================================================
 def compute_score_by_position(score_mat, seq1, seq2):
-    """computes similarity score between two sequences"""
-    assert len(seq1) == len(seq2), "sequences have different sizes\n%s\n%s" %(seq1, seq2)
+    """
+    Computes similarity score between two sequences
+    """
+    assert len(seq1) == len(seq2), "sequences have different sizes:\n{}\nvs\n{}".format(seq1, seq2)
     score = []
     for pb1, pb2 in zip(seq1, seq2):
         # score is 0 for Z (dummy PB)
@@ -257,14 +259,14 @@ cluster_count = {}
 for idx in cluster_id:
     cluster_count[idx] = cluster_count.get(idx, 0) + 1
 for idx in sorted(cluster_count):
-    print("cluster %3s: %5d sequences (%3d%%)" %(idx, cluster_count[idx], 1.0*cluster_count[idx]/len(seq_lst)*100))
+    print("cluster {}: {} sequences ({:>2.0f}%)".format(idx, cluster_count[idx], 1.0*cluster_count[idx]/len(seq_lst)*100))
 
 
 name = options.o + ".PB.clust"
 f = open(name, "w")
 for seq, cluster in zip(seq_id, cluster_id):
-    f.write('SEQ_CLU  "%s"  %s \n' %(seq_names[seq], cluster))
+    f.write('SEQ_CLU  "{}"  {} \n'.format(seq_names[seq], cluster))
 for idx, med in enumerate(medoid_id):
-    f.write('MED_CLU  "%s"  %d \n' %(seq_names[med], idx+1))
+    f.write('MED_CLU  "{}"  {} \n'.format(seq_names[med], idx+1))
 f.close()
 print( "wrote {0}".format(name) )
