@@ -190,16 +190,12 @@ ynames = c('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
     R_script += """
 png(filename='%s', width = log(length(xnames))*500, height = 1000)
 par(
-    # default margins are: 5.1 4.1 4.1 2.1
-    # extend bottom margin for text (+5 line)
-    mar = c(5.1, 5.1, 4.1, 2.1),
-    oma = c(2,0,0,0), # 2 lines for comments: 0 to 4
     lwd=3,            # line width
     bty = 'o',        # type of box around graphic
     font.lab = 2,     # axis label font (bold)
     font.axis = 2,    # axis font (bold)
-    cex.lab=1.9,      # axis label width
-    cex.axis=1.5      # axis width
+    cex.lab=2,      # axis label width
+    cex.axis=2.0      # axis text width
 )
     """ % (map_file_name)
 
@@ -237,20 +233,21 @@ colorpal = rgb(grad[,1]/255,grad[,2]/255,grad[,3]/255)
     R_script += """
 layout(matrix(1:2, 1, 2), width=c(log(length(xnames))*3, 1))
 
-par(mar = c(5.1, 7.1, 4.1, 1.1))
-image(as.matrix(freq), axes=FALSE, xlab="Residue number", col=colorpal, zlim = c(0, 1))
+par(mar = c(7.1, 8.1, 4.1, 1.1))
+image(as.matrix(freq), axes=FALSE, col=colorpal, zlim = c(0, 1))
 box()
 axis(1, seq(0, 1, 1/(length(xnames)-1)), xnames)
 axis(2, seq(0, 1, 1/(length(ynames)-1)), ynames, font = 4)
-mtext('PBs', side = 2, line = 5, cex=1.9, font=2)
-mtext(bquote(beta~'strand'), side = 2, line = 3, at = 3*1/15, cex=1.5)
+mtext('Residue number', side = 1, line = 5, cex=3.0, font=2)
+mtext('PBs', side = 2, line = 5, cex=3.0, font=2)
+mtext(bquote(beta~'strand'), side = 2, line = 3, at = 3*1/15, cex=1.8)
 mtext('coil', side = 2, line = 3, at = 7*1/15, cex=1.5)
 mtext(bquote(alpha~'helix'), side = 2, line = 3, at = 12*1/15, cex=1.5)
 
-par(mar = c(5.1, 1.1, 4.1, 5.1))
+par(mar = c(7.1, 1.1, 4.1, 7.1))
 image(t(seq(1, 848)), col=colorpal, axes=FALSE)
 axis(4, seq(0, 1, 0.2), seq(0, 1, 0.2))
-mtext("intensity", side = 4, line = 3, cex = 1.7, font = 2)
+mtext("Intensity", side = 4, line = 5, cex = 3, font = 2)
 box()
     """
 
@@ -333,8 +330,9 @@ cex.axis=2.0      # axis width
     # plot data
     R_script += """
 plot(neq, type= 'l', 
-xlab = 'Residue number', ylab = 'Neq', 
-ylim=c(1,max(round(neq[,2]))+2))
+    xlab = 'Residue number', ylab = 'Neq', 
+    ylim=c(1,max(round(neq[,2]))+2)
+)
     """
 
     # execute R script
