@@ -71,8 +71,6 @@ parser.add_argument("-o", action="store", required=True,
     help="name for results")
 
 # optional arguments
-parser.add_argument("--residue-shift", action="store", type=int,
-    dest="residue_shift", help="shift to adjust residue number")
 parser.add_argument("--clusters", action="store", type=int,
     dest="clusters_nb", help="number of wanted clusters")  
 parser.add_argument("--compare", action="store_true", default=False,
@@ -84,13 +82,6 @@ options = parser.parse_args()
 #-------------------------------------------------------------------------------
 # check options
 #-------------------------------------------------------------------------------
-if options.residue_shift and options.residue_shift < 0:
-	parser.error("residue shift must be positive")
-if options.residue_shift:
-    residue_shift = options.residue_shift
-else:
-    residue_shift = 0
-
 if options.clusters_nb and options.clusters_nb <= 0:
     parser.error("number of clusters must be strictly positive")
 
@@ -150,12 +141,6 @@ if options.compare:
         seq = "".join([str(s) for s in score_lst])
         PB.write_fasta(compare_file_name, seq, header)
     print( "wrote {0}".format(compare_file_name) )
-    # name = options.o + ".PB.compare.data"
-    # f = open(name, "w")
-    # for idx, score in enumerate(score_lst):
-    #     f.write( "%4d  %d\n" % (idx + 1 + residue_shift, score) )
-    # f.close()
-    # print "wrote %s" % (name)
     sys.exit(0)
 
 # change sequence name for a better input in R
