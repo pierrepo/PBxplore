@@ -211,10 +211,14 @@ if not options.p:
 pdb_name_lst = []
 if options.p:
     for name in options.p:
+        # input is a file: store file name
         if os.path.isfile(name):
             pdb_name_lst.append(name)
+        # input is a directory: list and store all PDB and PDBx/mmCIF files
         elif os.path.isdir(name):
-            pdb_name_lst += glob.glob(name + os.pathsep + "*.pdb")
+            for extension in (PDB.PDB_EXTENSIONS + PDB.PDBx_EXTENSIONS):
+                pdb_name_lst += glob.glob(os.path.join(name,  "*" + extension))
+        # input is not a file neither a directory: say it
         elif (not os.path.isfile(name) or not os.path.isdir(name)):
             print("{0}: not a valid file or directory".format(name))
     
@@ -260,14 +264,8 @@ if options.flat:
 
 # PB assignement of PDB structures
 if options.p:
-    pdb_extensions = ('.pdb', '.PDB', '.ent', '.ENT4')
-    pdbx_extensions = ('.cif', '.CIF', '.cif.gz', '.CIF.GZ') 
     for pdb_name in pdb_name_lst:
-        pdb = PDB.PDBFile(pdb_name)
-        if pdb_name.endswith( pdb_extensions ):
-            pdb.read_chains_from_PDB()
-        if pdb_name.endswith( pdbx_extensions ):
-            pdb.read_chains_from_PDBx()
+        pdb = PDB.PDB(pdb_name)
         for chain in pdb.get_chains():
             # build comment 
             comment = pdb_name 
@@ -300,7 +298,7 @@ if not options.p:
         selection = universe.selectAtoms("backbone")
         for atm in selection:
             atom = PdbAtom()        
-            atom.read_from_xtc(atm)
+            atom.from_xtc(atm)
             # append structure with atom
             structure.add_atom(atom)
             # define structure comment

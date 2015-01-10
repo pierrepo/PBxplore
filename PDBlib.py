@@ -22,15 +22,33 @@ import gzip
 import numpy
 
 #===============================================================================
+# Data
+#===============================================================================
+# file extensions for PDB and PDBx/mmCIF files
+PDB_EXTENSIONS = ('.pdb', '.PDB', '.ent', '.ENT4')
+PDBx_EXTENSIONS = ('.cif', '.CIF', '.cif.gz', '.CIF.GZ')
+
+#===============================================================================
 # Functions
 #===============================================================================
 def get_dihedral(atomA, atomB, atomC, atomD):
     """
     Compute dihedral angle between 4 atoms (A, B, C, D)
-    each atom is represented as a list of three coordinates [x, y, z]
-    output is in degree in the range -180 / +180
     
-    Note: this function is not part of any class to ease its reusability
+    Each atom is input as list or tuple of three coordinates [x, y, z]
+    
+    Output is in degree in the range -180 / +180
+    
+    Note: this function is on purpose not part of any class 
+          to ease its reusability.
+    
+    Example:
+    >>> atom1 = (-1.918, -6.429, -7.107)
+    >>> atom2 = (-2.609, -5.125, -7.305)
+    >>> atom3 = (-4.108, -5.392, -7.331)
+    >>> atom4 = (-4.469, -6.494, -7.911)
+    >>> get_dihedral(atom1, atom2, atom3, atom4)
+    -36.8942888266
     """
     
     # convert lists to Numpy objects
@@ -81,10 +99,17 @@ def get_dihedral(atomA, atomB, atomC, atomD):
 #===============================================================================
 # Classes
 #===============================================================================
-
+class AtomError(Exception):
+    """
+    Exeption class for the Atom class
+    
+    This is a really lazy class. Feel to improve. 
+    """
+    pass
+    
 class Atom:
     """
-    Class for atoms in PDB format
+    Class for atoms in PDB or PDBx/mmCIF format
     """
     def __init__(self):
         """default constructor"""
@@ -105,7 +130,15 @@ class Atom:
         self.model = None
         
     def read_from_PDB(self, line):
-        """read ATOM data from a PDB file line"""
+        """
+        Read ATOM data from a PDB file line
+        
+        Format documentation:
+        http://www.wwpdb.org/documentation/format33/v3.3.html
+        """
+        if len(line) < 55:
+            raise AtomError("ATOM line too short:\n{0}"
+                             .format(line))
         self.id = int(line[6:11].strip())
         self.name = line[12:16].strip()
         self.resname = line[17:20].strip()
@@ -118,14 +151,15 @@ class Atom:
     def read_from_PDBx(self, line, fields):
         """
         Read ATOM data from a PDBx/mmCIF file line
-        for more details regarding this format see:
+        
+        Format documentation:
         http://mmcif.wwpdb.org/docs/tutorials/content/atomic-description.html
         """
         try:
             dic = dict(zip( fields, line.split() ))
         except:
-            print("Something went wrong in reading\n{0}".format(line))
-            raise
+            raise AtomError("Something went wrong in reading\n{0}"
+                            .format(line))
         try:
             self.id = int( dic['id'] )
             self.name = dic['label_atom_id']
@@ -137,74 +171,100 @@ class Atom:
             self.z = float( dic['Cartn_z'] ) 
             self.model = dic['pdbx_PDB_model_num']
         except:
-            print("Something went wrong in data convertion\n{0}".format(dic))
-            raise
+            raise AtomError("Something went wrong in data convertion\n{0}"
+                            .format(dic))
         
     def read_from_xtc(self, atm):
-        """fill atom data from a .xtc mdanalysis selections"""
+        """
+        Read ATOM date from a .xtc mdanalysis selection
+        """
         self.id = atm.id
         self.name = atm.name
         self.resname = atm.resname
         self.chain = ""
         self.resid = atm.resid
-        self.x = atm.pos[0]#.get_positions()[index][0]
-        self.y = atm.pos[1]#.get_positions()[index][1]
-        self.z = atm.pos[2]#.get_positions()[index][2]
+        self.x = atm.pos[0]
+        self.y = atm.pos[1]
+        self.z = atm.pos[2]
 
     def __repr__(self):
-        """representation for atom"""
-        return 'atom %4d %4s in %4d %3s' \
-        % (self.id, self.name, self.resid, self.resname)
+        """
+        Atom representation
+        """
+        return 'atom {:4d} {:4s} in {:4d} {:3s}' \
+               .format(self.id, self.name, self.resid, self.resname)
         
     def format(self):
-        """atom data formated as PDB"""
+        """
+        Atom displayed in PDB format
+        """
         return '%-6s%5d %4s%1s%3s %1s%4d%1s   %8.3f%8.3f%8.3f%6.2f%6.2f          %2s%2s' \
         % ('ATOM  ', self.id, self.name, self.resalt,self.resname, self.chain, 
         self.resid, self.resins, self.x, self.y, self.z, 
         self.occupancy, self.tempfactor, self.element, self.charge)
         
-    def coord(self):
+    def coords(self):
+        """
+        Return atom coordinates
+        """
         return [self.x, self.y, self.z]
     
-
+class ChainError(Exception):
+    """
+    Exeption class for the Chain class
+    
+    This is a really lazy class. Feel to improve. 
+    """
+    pass
+    
 class Chain:
     """
-    Class for a Protein Data Bank structure./chain
+    Class to handle PDB chain
     """
     def __init__(self):
-        """default constructor for PDB structure"""
+        """
+        Constructor
+        """
         self.name = ""
         self.model = ""
         self.atoms = []
 
     def __repr__(self):
-        """Representation of chain"""
+        """
+        Representation
+        """
         return "Chain {0} / model {1}: {2} atoms".format(self.name, 
                                                          self.model, 
                                                          len(self.atoms))
         
     def add_atom(self, atom):
-        """add atom to the structure"""
-        # update chain name when first atom is stored
+        """
+        Add atom
+        """
+        # set chain name when first atom is stored
         if not self.atoms:
             self.name = atom.chain
         # check that chain name is always the same
         elif self.name != atom.chain:
-            print("WARNING: several chains in the same structure")
+            raise ChainError("Several chains are in the same structure")
         # add atom to structure
         self.atoms.append(atom)
     
     def set_model(self, model):
-        """Set model number"""
+        """
+        Set model number
+        """
         self.model = model
        
     def size(self):
-        """get number of atoms from a structure"""
+        """
+        Get number of atoms
+        """
         return len(self.atoms)
                
     def get_phi_psi_angles(self):
         """
-        Compute phi and psi angles for a protein
+        Compute phi and psi angles
         """
         # extract backbone atoms
         backbone = {}
@@ -221,18 +281,18 @@ class Chain:
         for res in sorted(backbone):
             # phi: angle between C(i-1) - N(i) - CA(i) - C(i)
             try:
-                phi = get_dihedral(backbone[res-1]["C" ].coord(), 
-                                   backbone[res  ]["N" ].coord(), 
-                                   backbone[res  ]["CA"].coord(), 
-                                   backbone[res  ]["C" ].coord())
+                phi = get_dihedral(backbone[res-1]["C" ].coords(), 
+                                   backbone[res  ]["N" ].coords(), 
+                                   backbone[res  ]["CA"].coords(), 
+                                   backbone[res  ]["C" ].coords())
             except:
                 phi = None
             # psi: angle between N(i) - CA(i) - C(i) - N(i+1)
             try:
-                psi = get_dihedral(backbone[res  ]["N" ].coord(), 
-                                   backbone[res  ]["CA"].coord(), 
-                                   backbone[res  ]["C" ].coord(), 
-                                   backbone[res+1]["N" ].coord())
+                psi = get_dihedral(backbone[res  ]["N" ].coords(), 
+                                   backbone[res  ]["CA"].coords(), 
+                                   backbone[res  ]["C" ].coords(), 
+                                   backbone[res+1]["N" ].coords())
             except:
                 psi = None
             #print(res, phi, psi)
@@ -240,9 +300,10 @@ class Chain:
         return phi_psi_angles
 
 
-class PDBFile:
+class PDB:
     """
-    Class to read structures from PDB files
+    Class to read PDB files
+    
     """
     def __init__(self, name):
         """
@@ -250,20 +311,29 @@ class PDBFile:
         """
         self.filename = name
         self.chains = []
+        # check that file exists
+        if not os.path.isfile(self.filename):
+            raise IOError("Cannot read {}: does not exist or is not a file."
+                          .format(self.filename))
+        if self.filename.endswith( PDB_EXTENSIONS ):
+            self.__read_PDB()
+        if self.filename.endswith( PDBx_EXTENSIONS ):
+            self.__read_PDBx()
 
-    def read_chains_from_PDB(self):
+    def __read_PDB(self):
         """
         Read PDB file
         """
-        # check that file exists
-        if not os.path.isfile(self.filename):
-            sys.exit("Cannot read {}: does not exist".format(self.filename))
         # create new chain
         chain = Chain()
         # get chains from file
         # A PDB file can have several models 
         # that can have several chains themselves.
-        f_in = open(self.filename, 'r')
+        if self.filename.endswith( ('.gz', '.GZ') ):
+            # for compressed file
+            f_in = gzip.open(self.filename, 'r')
+        else:
+            f_in = open(self.filename, 'r')
         for line in f_in:
             flag = line[0:6].strip()
             if flag == "MODEL":
@@ -285,25 +355,23 @@ class PDBFile:
         if chain.size() != 0:
             self.chains.append( chain )
         f_in.close()
-        print("Read a total of {0} chain(s) in {1}"
+        print("Read {0} chain(s) in {1}"
               .format(len(self.chains), self.filename))
 
     
-    def read_chains_from_PDBx(self):
+    def __read_PDBx(self):
         """
-        Read chains from PDBx/mmCIF files
+        Read PDBx/mmCIF file
         """
-        # check that file exists
-        if not os.path.isfile(self.filename):
-            sys.exit("Cannot read {}: does not exist".format(self.filename))
         # create new chain
         chain = Chain()
         # get chains from file
-        # A PDB file can have several models 
+        # A PDBx file can have several models 
         # that can have several chains themselves.
         atom_fields = []
         atom_coordinates = []
         if self.filename.endswith( ('.gz', '.GZ') ):
+            # for compressed file
             f_in = gzip.open(self.filename, 'r')
         else:
             f_in = open(self.filename, 'r')
