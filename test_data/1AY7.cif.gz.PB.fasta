@@ -1,0 +1,6 @@
+>test_data/1AY7.cif.gz | chain A
+ZZbjadfklmcfklmmmmmmmmnnpaafbfkgopacehlnomaccddehjaccdddddeh
+klpnbjadcdddfbehiacddfegolaccdddfkZZ
+>test_data/1AY7.cif.gz | model 1 | chain B
+ZZcddfklpcbfklmmmmmmmmnopafklgoiaklmmmmmmmmpacddddddehkllmmm
+mnnommmmmmmmmmmmmmnopacddddZZ
