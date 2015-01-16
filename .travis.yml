@@ -11,5 +11,5 @@ install:
 - pip install -r dev_requirements.txt --use-mirrors
 # command to run tests
 script:
-- nosetests --with-coverage --cover-package=test_functions,test_regression
+- nosetests --with-coverage --cover-package=PBlib,PDBlib test_functions.py test_regression.py
 #after_success:
