@@ -86,7 +86,20 @@ FASTA_WIDTH = 60
 #-------------------------------------------------------------------------------    
 def read_fasta(name):
     """
-    Read fasta file and output sequences in a list
+    Read fasta file and output sequences in a list.
+    
+    Parameters
+    ----------
+    name : str
+        Name of file containing sequences in fasta format.
+    
+    Returns
+    -------
+    header_lst : list
+        List of headers (str)
+    sequence_lst : list
+        List of sequences (str)
+    
     """
     assert os.path.exists(name), name + ' does not exist'
     sequence_lst = []
@@ -128,10 +141,19 @@ def read_fasta(name):
 #-------------------------------------------------------------------------------
 def load_substitution_matrix(name):
     """
-    Load PB substitution matrix
+    Load PB substitution matrix.
+    
+    Parameters
+    ----------
+    name : str
+        Name of the file containing the PBs susbtitution matrix.
+    
+    Returns
+    -------
+    mat : numpy array
+        Array of floats.
     """
     try:
-        # mat = numpy.loadtxt(name, dtype=int, skiprows=2)
         mat = numpy.loadtxt(name, dtype=float, skiprows=2)
     except:
         sys.exit("ERROR: cannot read %s" % name)
@@ -149,7 +171,12 @@ def load_substitution_matrix(name):
 #-------------------------------------------------------------------------------
 def clean_file(name):
     """
-    Clean existing file
+    Clean existing file.
+    
+    Parameters
+    ----------
+    name : str
+        Name of file to remove.
     """
     if os.path.exists(name):
         os.remove(name)
@@ -157,8 +184,17 @@ def clean_file(name):
 #-------------------------------------------------------------------------------
 def write_fasta(name, seq, comment):
     """
-    Format seq and comment to fasta format
-    and write file
+    Format seq and comment to fasta format and write file.
+    
+    Parameters
+    ----------
+    name : str
+        Name of file to write.
+    seq : str
+        Sequence to format.
+    comment : str
+        Comment to make header of sequence.
+    
     """
     fasta_content  = ">"+comment+"\n"
     fasta_content += "\n".join( [seq[i:i+FASTA_WIDTH] for i in range(0, len(seq), FASTA_WIDTH)] )

@@ -33,16 +33,31 @@ PDBx_EXTENSIONS = ('.cif', '.CIF', '.cif.gz', '.CIF.GZ')
 #===============================================================================
 def get_dihedral(atomA, atomB, atomC, atomD):
     """
-    Compute dihedral angle between 4 atoms (A, B, C, D)
+    Compute dihedral angle between 4 atoms (A, B, C, D).
     
-    Each atom is input as list or tuple of three coordinates [x, y, z]
+    Parameters
+    ----------
+    atomA : list
+        Coordinates of atom A as a list or tuple of floats [x, y, z].
+    atomB : list
+        Coordinates of atom B as a list or tuple of floats [x, y, z].
+    atomC : list
+        Coordinates of atom C as a list or tuple of floats [x, y, z].
+    atomD : list
+        Coordinates of atom D as a list or tuple of floats [x, y, z].
+        
+    Returns
+    -------
+    torsion : float
+        Torsion angle defined by the atoms A, B, C and D. Angle is defined 
+        in degrees in the range -180, +180.        
+   
+    Notes
+    -----
+    This function is on purpose not part of any class to ease its reusability.
     
-    Output is in degree in the range -180 / +180
-    
-    Note: this function is on purpose not part of any class 
-          to ease its reusability.
-    
-    Example:
+    Examples
+    --------
     >>> atom1 = (-1.918, -6.429, -7.107)
     >>> atom2 = (-2.609, -5.125, -7.305)
     >>> atom3 = (-4.108, -5.392, -7.331)
@@ -101,7 +116,7 @@ def get_dihedral(atomA, atomB, atomC, atomD):
 #===============================================================================
 class AtomError(Exception):
     """
-    Exeption class for the Atom class
+    Exeption class for the Atom class.
     
     This is a really lazy class. Feel to improve. 
     """
@@ -109,7 +124,7 @@ class AtomError(Exception):
     
 class Atom:
     """
-    Class for atoms in PDB or PDBx/mmCIF format
+    Class for atoms in PDB or PDBx/mmCIF format.
     """
     def __init__(self):
         """default constructor"""
@@ -131,14 +146,25 @@ class Atom:
         
     def read_from_PDB(self, line):
         """
-        Read ATOM data from a PDB file line
+        Read ATOM data from a PDB file line.
         
-        Format documentation:
+        Parameters
+        ----------
+        line : str
+            Line from a PDB file starting with 'ATOM' or 'HETATM'.
+        
+        Raises
+        ------
+        AtomError
+            If line is too short.
+        
+        Notes
+        -----
+        PDB format documentation:
         http://www.wwpdb.org/documentation/format33/v3.3.html
         """
         if len(line) < 55:
-            raise AtomError("ATOM line too short:\n{0}"
-                             .format(line))
+            raise AtomError("ATOM line too short:\n{0}".format(line))
         self.id = int(line[6:11].strip())
         self.name = line[12:16].strip()
         self.resname = line[17:20].strip()
@@ -152,14 +178,22 @@ class Atom:
         """
         Read ATOM data from a PDBx/mmCIF file line
         
+        Parameters
+        ----------
+        line : str
+            Line from a PDBx/mmCIF file starting with 'ATOM' or 'HETATM'.
+        fields : list
+            List of str containing fields of data for PDBx/mmCIF format.
+        
+        Notes
+        -----
         Format documentation:
         http://mmcif.wwpdb.org/docs/tutorials/content/atomic-description.html
         """
         try:
             dic = dict(zip( fields, line.split() ))
         except:
-            raise AtomError("Something went wrong in reading\n{0}"
-                            .format(line))
+            raise AtomError("Something went wrong in reading\n{0}".format(line))
         try:
             self.id = int( dic['id'] )
             self.name = dic['label_atom_id']
@@ -176,7 +210,11 @@ class Atom:
         
     def read_from_xtc(self, atm):
         """
-        Read ATOM date from a .xtc mdanalysis selection
+        Read ATOM date from a .xtc mdanalysis selection.
+        
+        Parameters
+        ----------
+        atm : atom object
         """
         self.id = atm.id
         self.name = atm.name
@@ -189,14 +227,14 @@ class Atom:
 
     def __repr__(self):
         """
-        Atom representation
+        Atom representation.
         """
         return 'atom {:4d} {:4s} in {:4d} {:3s}' \
                .format(self.id, self.name, self.resid, self.resname)
         
     def format(self):
         """
-        Atom displayed in PDB format
+        Atom displayed in PDB format.
         """
         return '%-6s%5d %4s%1s%3s %1s%4d%1s   %8.3f%8.3f%8.3f%6.2f%6.2f          %2s%2s' \
         % ('ATOM  ', self.id, self.name, self.resalt,self.resname, self.chain, 
@@ -205,7 +243,8 @@ class Atom:
         
     def coords(self):
         """
-        Return atom coordinates
+        Return atom coordinates.
+        
         """
         return [self.x, self.y, self.z]
     
@@ -239,7 +278,18 @@ class Chain:
         
     def add_atom(self, atom):
         """
-        Add atom
+        Add atom.
+        
+        Parameters
+        ----------
+        atom : object from Atom class
+            Atom to be added to chain.
+            
+        Raises
+        ------
+        ChainError
+            If the chain has several names.
+        
         """
         # set chain name when first atom is stored
         if not self.atoms:
@@ -252,19 +302,49 @@ class Chain:
     
     def set_model(self, model):
         """
-        Set model number
+        Set model number.
+        
+        Parameters
+        ----------
+        model : str
+            Model identifier.
         """
         self.model = model
        
     def size(self):
         """
-        Get number of atoms
+        Get number of atoms.
         """
         return len(self.atoms)
                
     def get_phi_psi_angles(self):
         """
-        Compute phi and psi angles
+        Compute phi and psi angles.
+        
+        Returns
+        -------
+        phi_psi_angles : dict 
+            Dict with residue number (int) as keys 
+            and a {'phi' : (float), 'psi' : (float)} dictionnary as values.
+        
+        Examples
+        --------
+        >>> lines = ("ATOM    840  C   ARG B  11      22.955  23.561  -4.012  1.00 28.07           C  ",
+        ...          "ATOM    849  N   SER B  12      22.623  24.218  -2.883  1.00 24.77           N  ",
+        ...          "ATOM    850  CA  SER B  12      22.385  23.396  -1.637  1.00 21.99           C  ",
+        ...          "ATOM    851  C   SER B  12      21.150  24.066  -0.947  1.00 32.67           C  ",
+        ...          "ATOM    855  N   ILE B  13      20.421  23.341  -0.088  1.00 30.25           N  ")
+        >>> 
+        >>> import PDBlib as PDB
+        >>> ch = PDB.Chain()
+        >>> for line in lines:
+        ...     at = PDB.Atom()
+        ...     at.read_from_PDB(line)
+        ...     ch.add_atom(at)
+        ... 
+        >>> print(ch.get_phi_psi_angles())
+        {11: {'phi': None, 'psi': None}, 12: {'phi': -139.77684605036447, 'psi': 157.94348570201197}, 13: {'phi': None, 'psi': None}}
+
         """
         # extract backbone atoms
         backbone = {}
@@ -302,12 +382,12 @@ class Chain:
 
 class PDB:
     """
-    Class to read PDB files
+    Class to read PDB files.
     
     """
     def __init__(self, name):
         """
-        Default constructor for PDB file
+        Default constructor for PDB file.
         """
         self.filename = name
         self.chains = []
@@ -322,7 +402,7 @@ class PDB:
 
     def __read_PDB(self):
         """
-        Read PDB file
+        Read PDB file.
         """
         # create new chain
         chain = Chain()
@@ -413,7 +493,12 @@ class PDB:
 
     def get_chains(self):
         """
-        Give chains, one at a time
+        Give chains, one at a time.
+        
+        Returns
+        -------
+        generator
+            Chains in PDB structure.
         """
         for chain in self.chains:
             yield chain
