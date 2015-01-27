@@ -1,4 +1,6 @@
-Build Status from Travis CI: [![Build Status](https://travis-ci.org/pierrepo/PBxplore.svg?branch=master)](https://travis-ci.org/pierrepo/PBxplore)
+Build Status from Travis CI [![Build Status](https://travis-ci.org/pierrepo/PBxplore.svg?branch=master)](https://travis-ci.org/pierrepo/PBxplore)
+
+---
 
 **PBxplore** is a suite of tools dedicated to Protein Block analysis. Protein Blocks are structural prototypes defined by [de Brevern](http://www.dsimb.inserm.fr/~debrevern/index.php) *et al* [1]. The 3-dimensional local structure of a protein backbone can be modelized as an 1-dimensional sequence of PBs. In principle, any conformation of any amino acid could be represented by one of the sixteen available Protein Blocks (see Figure 1).
 
@@ -25,8 +27,6 @@ Optionnaly, PBxplore can use:
 * [WebLogo](http://weblogo.berkeley.edu/) to create logo from PB sequences.
 
 # Documentation
-
-Further documentation is available:
 
 - [Introduction to Protein Blocks](doc/intro.PBs.md)
 - [Single structure analysis](doc/single.structure.analysis.md)
