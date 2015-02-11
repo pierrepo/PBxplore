@@ -165,7 +165,7 @@ class TestPBlib(unittest.TestCase):
     """
 
     def test_read_fasta(self):
-        headers, sequences = PB.read_fasta("test_data/1BTA.PB.fasta")
+        headers, sequences = PB.read_fasta("test_data/1BTA.pdb.PB.fasta")
         self.assertEqual(headers, ['test_data/1BTA.pdb | chain A'])
         self.assertEqual(sequences, ['ZZdddfklonbfklmmmmmmmmnopafklnoiakl'
                                      'mmmmmnoopacddddddehkllmmmmngoilmmmm'
