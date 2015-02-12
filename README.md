@@ -17,7 +17,7 @@ Build Status from Travis CI [![Build Status](https://travis-ci.org/pierrepo/PBxp
 
 PBxplore requires: 
 
-* Python 2.7 or Python 3.x
+* Python 2.7 or Python 3.x (>= 3.3)
 * the [NumPy](http://numpy.scipy.org/ "NumPy") Python library, 
 * the R software.
 
