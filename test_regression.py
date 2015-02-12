@@ -77,16 +77,14 @@ class TestPBAssign(unittest.TestCase):
         Run PBAssign on PDB files, and check the fasta output.
         """
         references = ["1BTA", "1AY7", "2LFU", "3ICH"]
-        extensions = [".pdb", ".cif.gz"]
-        _test_PBassign_options(references, extensions, ['{0}.PB.fasta'], [])
+        _test_PBassign_options(references, ['{0}.PB.fasta'], [])
 
     def test_flat(self):
         """
         Run PBassign with the --flat option.
         """
         references = ["1BTA", "1AY7", "2LFU", "3ICH"]
-        extensions = [".pdb", ".cif.gz"]
-        _test_PBassign_options(references, extensions, ['{0}.PB.fasta', '{0}.PB.flat'],
+        _test_PBassign_options(references, ['{0}.PB.fasta', '{0}.PB.flat'],
                                ['--flat'])
 
     def test_phipsi(self):
@@ -94,8 +92,7 @@ class TestPBAssign(unittest.TestCase):
         Run PBassign with the --phipsi option.
         """
         references = ["1BTA", "1AY7", "2LFU", "3ICH"]
-        extensions = [".pdb", ".cif.gz"]
-        _test_PBassign_options(references, extensions, ['{0}.PB.fasta', '{0}.PB.phipsi'],
+        _test_PBassign_options(references, ['{0}.PB.fasta', '{0}.PB.phipsi'],
                                ['--phipsi'])
 
     def test_flat_phipsi(self):
@@ -103,8 +100,7 @@ class TestPBAssign(unittest.TestCase):
         Run PBassign with the both the --flat and --phipsi options.
         """
         references = ["1BTA", "1AY7", "2LFU", "3ICH"]
-        extensions = [".pdb", ".cif.gz"]
-        _test_PBassign_options(references, extensions,
+        _test_PBassign_options(references,
                                ['{0}.PB.fasta', '{0}.PB.flat', '{0}.PB.phipsi'],
                                ['--flat', '--phipsi'])
 
@@ -113,8 +109,7 @@ class TestPBAssign(unittest.TestCase):
         Run PBassign with multiple inputs.
         """
         references = ["1BTA", "1AY7", "2LFU", "3ICH"]
-        extensions = [".pdb", ".cif.gz"]
-        _test_PBassign_options(references, extensions,
+        _test_PBassign_options(references,
                                ['{0}.PB.fasta', '{0}.PB.flat', '{0}.PB.phipsi'],
                                ['--flat', '--phipsi'], multiple='all')
 
@@ -124,8 +119,7 @@ class TestPBAssign(unittest.TestCase):
         Test if the tests properly fail if an output is missing.
         """
         references = ["1BTA"]
-        extensions = [".pdb"]
-        _test_PBassign_options(references, extensions, 
+        _test_PBassign_options(references,
                                ['{0}.PB.fasta', '{0}.PB.flat', '{0}.PB.phipsi',
                                 '{0}.missing'],
                                ['--flat', '--phipsi'])
@@ -136,8 +130,7 @@ class TestPBAssign(unittest.TestCase):
         Test if the tests properly fail if an output is not expected.
         """
         references = ["1BTA"]
-        extensions = [".pdb"]
-        _test_PBassign_options(references, extensions, 
+        _test_PBassign_options(references,
                                ['{0}.PB.fasta', '{0}.PB.flat'],
                                ['--flat', '--phipsi'])
 
@@ -148,8 +141,7 @@ class TestPBAssign(unittest.TestCase):
         expected.
         """
         references = ["test_fail"]
-        extensions = [".pdb"]
-        _test_PBassign_options(references, extensions, ['{0}.PB.fasta'], [])
+        _test_PBassign_options(references, ['{0}.PB.fasta'], [])
 
 
 def _same_file_content(file_a, file_b):
@@ -159,7 +151,7 @@ def _same_file_content(file_a, file_b):
     with open(file_a) as f1, open(file_b) as f2:
         # Compare content line by line
         for f1_line, f2_line in zip(f1, f2):
-            if (f1_line != f2_line):
+            if f1_line != f2_line:
                 print(file_a, file_b)
                 print(f1_line, f2_line, sep='//')
                 return False
@@ -185,7 +177,7 @@ def _assert_identical_files(file_a, file_b):
                                                .format(file_a, file_b)
 
 
-def _run_prog(program, pdbid, extension, options,
+def _run_prog(program, pdbid, options,
               multiple=None, indir=REFDIR, outdir=OUTDIR):
     """
     Run a PBxplore program on a PDBID with the given options.
@@ -198,45 +190,44 @@ def _run_prog(program, pdbid, extension, options,
                                   .format(program))
     out_run_dir = path.join(OUTDIR, str(uuid1()))
     if multiple is None:
-        test_input = path.join(REFDIR, pdbid + extension)
+        test_input = path.join(REFDIR, pdbid + '.pdb')
         out_basename = path.join(out_run_dir, pdbid)
         input_args = ['-p', test_input]
     else:
         input_args = []
         for basename in pdbid:
-            input_args += ['-p', path.join(REFDIR, basename + extension)]
+            input_args += ['-p', path.join(REFDIR, basename + '.pdb')]
         out_basename = path.join(out_run_dir, multiple)
 
     os.mkdir(out_run_dir)
 
-    run_list = [program] + input_args + ['-o', out_basename + extension] + options
+    run_list = [program] + input_args + ['-o', out_basename] + options
     print(' '.join(run_list))
     status = subprocess.call(run_list, stdout=subprocess.PIPE)
 
     return status, out_run_dir
 
 
-def _test_PBassign_options(basenames, extensions, outfiles, options,
+def _test_PBassign_options(basenames, outfiles, options,
                            multiple=None, expected_exit=0):
     if not multiple is None:
         basenames = [basenames]
         out_name = multiple
     for basename in basenames:
-        for extension in extensions:
-            status, out_run_dir = _run_prog('./PBassign.py', basename, extension, options,
-                                            multiple)
-            assert status == expected_exit, \
-                   'PBassign stoped with a {0} exit code'.format(status)
-            assert len(os.listdir(out_run_dir)) == len(outfiles),\
-                    ('PBassign did not produced the right number of files: '
-                     '{0} files produced instead of {1}').format(
-                        len(os.listdir(out_run_dir)), len(outfiles))
-            out_name = basename if multiple is None else multiple
-            for outfile in (template.format(out_name + extension) for template in outfiles):
-                test_file = path.join(out_run_dir, outfile)
-                ref_file = path.join(REFDIR, outfile)
-                _assert_identical_files(test_file, ref_file)
-            shutil.rmtree(out_run_dir)
+        status, out_run_dir = _run_prog('./PBassign.py', basename, options,
+                                        multiple)
+        assert status == expected_exit, \
+               'PBassign stoped with a {0} exit code'.format(status)
+        assert len(os.listdir(out_run_dir)) == len(outfiles),\
+                ('PBassign did not produced the right number of files: '
+                 '{0} files produced instead of {1}').format(
+                    len(os.listdir(out_run_dir)), len(outfiles))
+        out_name = basename if multiple is None else multiple
+        for outfile in (template.format(out_name) for template in outfiles):
+            test_file = path.join(out_run_dir, outfile)
+            ref_file = path.join(REFDIR, outfile)
+            _assert_identical_files(test_file, ref_file)
+        shutil.rmtree(out_run_dir)
 
 
 if __name__ == '__main__':

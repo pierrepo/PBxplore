@@ -16,15 +16,14 @@ import unittest
 import collections
 
 import PBlib as PB
-import PDBlib as PDB
 
 
 #===============================================================================
 # classes for tests
 #===============================================================================
-class TestPDBlib(unittest.TestCase):
+class TestPBlib(unittest.TestCase):
     """
-    Tests for PDBlib
+    Tests for PBlib
     """
 
     def test_get_dihedral(self):
@@ -74,103 +73,16 @@ class TestPDBlib(unittest.TestCase):
                            175.872397707))
         
         for res in results:
-            torsion = PDB.get_dihedral(res.A, res.B, res.C, res.D)
+            torsion = PB.get_dihedral(res.A, res.B, res.C, res.D)
             self.assertAlmostEqual(torsion, res.torsion)
 
-
-class TestAtomClass(unittest.TestCase):
-    """
-    Tests for the Atom class in PDBlib
-    """
-
-    def test_read_from_PDB(self):
-        """
-        Tests for read_from_PDB()
-        """
-        a = PDB.Atom()
-        a.read_from_PDB("ATOM    512  N   GLU A  32      -1.870  -9.835  -1.853  1.00  0.56           N  ")
-        self.assertAlmostEqual(a.coords(), [-1.87, -9.835, -1.853])
-        a.read_from_PDB("ATOM   1424  CA  SER A  89       7.604  11.308   1.435  1.00  0.62           C  ")
-        self.assertAlmostEqual(a.coords(), [7.604, 11.308, 1.435])
-        a.read_from_PDB("ATOM   1167  CG2 VAL B  50       9.294  44.541  -4.830  1.00 27.62           C  ")
-        self.assertAlmostEqual(a.coords(), [9.294, 44.541, -4.83])
-
-    def test_read_from_PDBx(self):
-        """
-        Tests for read_from_PDBx()
-        """
-        a = PDB.Atom()
-        fields = ['group_PDB', 'id', 'type_symbol', 'label_atom_id', 
-        'label_alt_id', 'label_comp_id', 'label_asym_id', 'label_entity_id', 
-        'label_seq_id', 'pdbx_PDB_ins_code', 'Cartn_x', 'Cartn_y', 'Cartn_z', 
-        'occupancy', 'B_iso_or_equiv', 'Cartn_x_esd', 'Cartn_y_esd', 
-        'Cartn_z_esd', 'occupancy_esd', 'B_iso_or_equiv_esd', 
-        'pdbx_formal_charge', 'auth_seq_id', 'auth_comp_id', 'auth_asym_id', 
-        'auth_atom_id', 'pdbx_PDB_model_num']
-        line = "ATOM 4769  H HB   . ILE A 1 35  ? -20.422 5.104   -0.207  1.00 0.00 ? ? ? ? ? ? 277 ILE A HB   3"
-        a.read_from_PDBx(line, fields)
-        self.assertAlmostEqual(a.coords(), [-20.422, 5.104, -0.207])
-        line = "ATOM 18201 H HG21 . THR A 1 140 ? 11.080  -12.466 -8.977  1.00 0.00 ? ? ? ? ? ? 382 THR A HG21 8"
-        a.read_from_PDBx(line, fields)
-        self.assertAlmostEqual(a.coords(), [11.08, -12.466, -8.977])
-        line = "ATOM 23720 H HE2  . HIS A 1 193 ? 13.974  24.297  0.352   1.00 0.00 ? ? ? ? ? ? 435 HIS A HE2  10"
-        a.read_from_PDBx(line, fields)
-        self.assertAlmostEqual(a.coords(), [13.974, 24.297, 0.352])
-
-class TestChainClass(unittest.TestCase):
-    """
-    Tests for Chain class in PDBlib
-    """
-
-    def test_size(self):
-        """
-        Tests for size()
-        """
-        lines = ("ATOM    840  C   ARG B  11      22.955  23.561  -4.012  1.00 28.07           C  ",
-                 "ATOM    849  N   SER B  12      22.623  24.218  -2.883  1.00 24.77           N  ",
-                 "ATOM    850  CA  SER B  12      22.385  23.396  -1.637  1.00 21.99           C  ",
-                 "ATOM    851  C   SER B  12      21.150  24.066  -0.947  1.00 32.67           C  ",
-                 "ATOM    855  N   ILE B  13      20.421  23.341  -0.088  1.00 30.25           N  ")
-        ch = PDB.Chain()
-        for line in lines:
-            at = PDB.Atom()
-            at.read_from_PDB(line)
-            ch.add_atom( at )
-        self.assertEqual(ch.size(), 5)
-
-    def test_get_phi_psi_angles(self):
-        """
-        Tests for get_phi_psi_angles()
-        """
-        results = {11: {'phi': None, 'psi': None},
-                   12: {'phi': -139.77684605036447, 'psi': 157.94348570201197},
-                   13: {'phi': None, 'psi': None}}
-        lines = ("ATOM    840  C   ARG B  11      22.955  23.561  -4.012  1.00 28.07           C  ",
-                 "ATOM    849  N   SER B  12      22.623  24.218  -2.883  1.00 24.77           N  ",
-                 "ATOM    850  CA  SER B  12      22.385  23.396  -1.637  1.00 21.99           C  ",
-                 "ATOM    851  C   SER B  12      21.150  24.066  -0.947  1.00 32.67           C  ",
-                 "ATOM    855  N   ILE B  13      20.421  23.341  -0.088  1.00 30.25           N  ")
-        ch = PDB.Chain()
-        for line in lines:
-            at = PDB.Atom()
-            at.read_from_PDB(line)
-            ch.add_atom(at)
-        
-        self.assertAlmostEqual(ch.get_phi_psi_angles(), results)
-
-
-class TestPBlib(unittest.TestCase):
-    """
-    Tests for PBlib
-    """
-
     def test_read_fasta(self):
-        headers, sequences = PB.read_fasta("test_data/1BTA.pdb.PB.fasta")
+        headers, sequences = PB.read_fasta("test_data/1BTA.PB.fasta")
         self.assertEqual(headers, ['test_data/1BTA.pdb | chain A'])
         self.assertEqual(sequences, ['ZZdddfklonbfklmmmmmmmmnopafklnoiakl'
                                      'mmmmmnoopacddddddehkllmmmmngoilmmmm'
                                      'mmmmmmmmnopacdcddZZ'])
-                                     
+
 if __name__ == '__main__':
     unittest.main()
 

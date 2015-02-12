@@ -26,8 +26,6 @@ import numpy
 
 ## local module
 import PBlib as PB
-import PDBlib as PDB
-
 
 #===============================================================================
 # Python2/Python3 compatibility
@@ -42,6 +40,131 @@ try:
 except NameError:
     pass
 
+#===============================================================================
+# Classes
+#===============================================================================
+
+class PdbAtom:
+    """class for atoms in PDB format"""
+    def __init__(self):
+        """default constructor"""
+        self.id = 0
+        self.name = None
+        self.resalt = ' '
+        self.resname = None
+        self.chain = None
+        self.resid = 0
+        self.resins = ''
+        self.x = 0.0
+        self.y = 0.0
+        self.z = 0.0
+        self.occupancy = 0.0
+        self.tempfactor = 0.0
+        self.element = '  '
+        self.charge =  '  '
+        
+    def read(self, line):
+        """read ATOM data from a PDB file line"""
+        self.id = int(line[6:11].strip())
+        self.name = line[12:16].strip()
+        self.resname = line[17:20].strip()
+        self.chain = line[21:22].strip()
+        self.resid = int(line[22:26].strip())
+        self.x = float(line[30:38].strip())
+        self.y = float(line[38:46].strip())
+        self.z = float(line[46:54].strip()) 
+
+    def from_xtc(self, atm):
+        """fill atom data from a .xtc mdanalysis selections"""
+        self.id = atm.id
+        self.name = atm.name
+        self.resname = atm.resname
+        self.chain = ""
+        self.resid = atm.resid
+        self.x = atm.pos[0]#.get_positions()[index][0]
+        self.y = atm.pos[1]#.get_positions()[index][1]
+        self.z = atm.pos[2]#.get_positions()[index][2]
+
+    def __repr__(self):
+        """representation for atom"""
+        return 'atom %4d %4s in %4d %3s' \
+        % (self.id, self.name, self.resid, self.resname)
+        
+    def format(self):
+        """atom data formated as PDB"""
+        return '%-6s%5d %4s%1s%3s %1s%4d%1s   %8.3f%8.3f%8.3f%6.2f%6.2f          %2s%2s' \
+        % ('ATOM  ', self.id, self.name, self.resalt,self.resname, self.chain, 
+        self.resid, self.resins, self.x, self.y, self.z, 
+        self.occupancy, self.tempfactor, self.element, self.charge)
+        
+    def coord(self):
+        return [self.x, self.y, self.z]
+    
+
+class PdbStructure:
+    """
+    Class for a Protein Data Bank structure
+    """
+    def __init__(self):
+        """default constructor for PDB structure"""
+        self.chain = ""
+        self.atoms = []
+        self.comment = ""
+
+    def add_atom(self, atom):
+        """add atom to the structure"""
+        # update chain name
+        if not self.atoms:
+            self.chain = atom.chain
+        elif self.chain != atom.chain:
+            print("WARNING: several chains in the same structure")
+        # add atom to structure
+        self.atoms.append(atom)
+
+    def clean(self):
+        """clean up chain, atoms and comment"""
+        self.chain = ""
+        self.atoms = []
+        self.comment = ""
+        
+    def size(self):
+        """get number of atoms from a structure"""
+        return len(self.atoms)
+               
+    def get_all_dihedral(self):
+        """compute phi and psi angles for a protein"""
+        # extract backbone atoms
+        backbone = {}
+        for atom in self.atoms:
+            if atom.name in ["CA", "C", "O", "N"]:
+                resid = atom.resid
+                if resid in backbone:
+                    backbone[resid][atom.name] = atom
+                else:
+                    backbone[resid] = {atom.name: atom}
+        
+        # get dihedrals 
+        phi_psi_angles = {}
+        for res in sorted(backbone):
+            # phi : C(i-1) - N(i) - CA(i) - C(i)
+            try:
+                phi = PB.get_dihedral(backbone[res-1]["C" ].coord(), 
+                                   backbone[res  ]["N" ].coord(), 
+                                   backbone[res  ]["CA"].coord(), 
+                                   backbone[res  ]["C" ].coord())
+            except:
+                phi = None
+            # psi : N(i) - CA(i) - C(i) - N(i+1)
+            try:
+                psi = PB.get_dihedral(backbone[res  ]["N" ].coord(), 
+                                   backbone[res  ]["CA"].coord(), 
+                                   backbone[res  ]["C" ].coord(), 
+                                   backbone[res+1]["N" ].coord())
+            except:
+                psi = None
+            #print res, phi, psi
+            phi_psi_angles[res] = {"phi":phi, "psi":psi}
+        return phi_psi_angles
 
 
 #===============================================================================
@@ -57,7 +180,7 @@ def read_pb_definitions(pb_angles_string):
         if line and "#" not in line:
             items = line.split()
             pb_angles[items[0]] = numpy.array([float(items[i]) for i in range(1, len(items))])
-    print("Read PB definitions: %d PBs x %d angles " \
+    print("read PB definitions: %d PBs x %d angles " \
           % (len(pb_angles), len(pb_angles["a"])))
     return pb_angles
 
@@ -102,8 +225,7 @@ def PB_assign(pb_ref, structure, comment):
     """assign Protein Blocks (PB) from phi and psi angles
     """
     # get phi and psi angles from structure
-    dihedrals = structure.get_phi_psi_angles()
-    #print(dihedrals)
+    dihedrals = structure.get_all_dihedral()
     # write phi and psi angles
     if options.phipsi:
         write_phipsi(phipsi_name, dihedrals, comment)
@@ -154,7 +276,7 @@ def PB_assign(pb_ref, structure, comment):
     if options.flat:
         write_flat(flat_name, pb_seq)
  
-    print("PBs assigned for {0}".format(comment))
+    print("PBs assigned for", comment)
              
 #-------------------------------------------------------------------------------
 # vertorize function
@@ -211,14 +333,10 @@ if not options.p:
 pdb_name_lst = []
 if options.p:
     for name in options.p:
-        # input is a file: store file name
         if os.path.isfile(name):
             pdb_name_lst.append(name)
-        # input is a directory: list and store all PDB and PDBx/mmCIF files
         elif os.path.isdir(name):
-            for extension in (PDB.PDB_EXTENSIONS + PDB.PDBx_EXTENSIONS):
-                pdb_name_lst += glob.glob(os.path.join(name,  "*" + extension))
-        # input is not a file neither a directory: say it
+            pdb_name_lst += glob.glob(name + os.pathsep + "*.pdb")
         elif (not os.path.isfile(name) or not os.path.isdir(name)):
             print("{0}: not a valid file or directory".format(name))
     
@@ -260,23 +378,50 @@ if options.flat:
 #-------------------------------------------------------------------------------
 # read PDB files
 #-------------------------------------------------------------------------------
-
+structure = PdbStructure()
 
 # PB assignement of PDB structures
 if options.p:
+
+    model = ""
+    chain = " "
+    comment = ""
+
     for pdb_name in pdb_name_lst:
-        pdb = PDB.PDB(pdb_name)
-        for chain in pdb.get_chains():
-            # build comment 
-            comment = pdb_name 
-            if chain.model:
-                comment += " | model %s" % (chain.model)
-            if chain.name:
-                comment += " | chain %s" % (chain.name)
-            # assign PBs
-            PB_assign(pb_def, chain, comment)
+        print(pdb_name)
+        f_in = open(pdb_name, 'r')
+        for line in f_in:
+            flag = line[0:6].strip()
+            if flag == "MODEL":
+                model = line.split()[1]
+            if flag == "ATOM":
+                atom = PdbAtom()
+                atom.read(line)
+                # assign structure upon new chain
+                if structure.size() != 0 and structure.chain != atom.chain:
+                    PB_assign(pb_def, structure, comment)
+                    structure.clean()
+                # append structure with atom
+                structure.add_atom(atom)
+                # define structure comment
+                # when the structure contains 1 atom
+                if structure.size() == 1:
+                    comment = pdb_name 
+                    if model:
+                        comment += " | model %s" % (model)
+                        model = ""
+                    if atom.chain:
+                        comment += " | chain %s" % (atom.chain)
+                        atom.chain = ""
+            # assign structure after end of model (or chain)
+            if structure.size() != 0 and flag in ["TER", "ENDMDL"]:
+                PB_assign(pb_def, structure, comment)
+                structure.clean()
+        # assign last structure
+        if structure.size() != 0:
+            PB_seq = PB_assign(pb_def, structure, comment)
 
-
+        f_in.close()   
 
 # PB assignement of a Gromacs trajectory
 if not options.p:
