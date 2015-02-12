@@ -411,9 +411,9 @@ class PDB:
         # that can have several chains themselves.
         if self.filename.endswith( ('.gz', '.GZ') ):
             # for compressed file
-            f_in = gzip.open(self.filename, 'r')
+            f_in = gzip.open(self.filename, 'rt')
         else:
-            f_in = open(self.filename, 'r')
+            f_in = open(self.filename, 'rt')
         for line in f_in:
             flag = line[0:6].strip()
             if flag == "MODEL":
@@ -452,9 +452,9 @@ class PDB:
         atom_coordinates = []
         if self.filename.endswith( ('.gz', '.GZ') ):
             # for compressed file
-            f_in = gzip.open(self.filename, 'r')
+            f_in = gzip.open(self.filename, 'rt')
         else:
-            f_in = open(self.filename, 'r')
+            f_in = open(self.filename, 'rt')
         for line in f_in:
             item = line.strip()
             # then store atom field definitions

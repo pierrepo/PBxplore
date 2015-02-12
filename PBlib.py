@@ -106,7 +106,7 @@ def read_fasta(name):
     header_lst = []
     header = ""
     sequence = ""
-    f_in = open(name, "r")
+    f_in = open(name, "rt")
     for line in f_in:
         data = line.strip()
         # jump empty lines
