@@ -57,8 +57,6 @@ parser.add_argument("-o", action="store", required = True,
 # optional arguments
 parser.add_argument("--first-residue", action="store", type=int,
     dest = "first_residue", help="define first residue number (1 by default)")
-parser.add_argument("--first-frame", action="store", type=int,
-    dest = "first_frame", help="lower index of trajectory frame (default = 1)")
 
 # get all arguments
 options = parser.parse_args()
@@ -68,13 +66,6 @@ options = parser.parse_args()
 #-------------------------------------------------------------------------------
 if options.first_residue and options.first_residue < 1:
 	parser.error("first residue must be >= 1")
-
-if not options.first_frame :
-    index_first_frame = 0
-elif options.first_frame <= 0:
-    parser.error("lower index of trajectory frame must be positive")
-else:
-    index_first_frame = options.first_frame-1
 
 #-------------------------------------------------------------------------------
 # check input files
