@@ -181,6 +181,8 @@ Graph:
 
 ![distribution of PBs](img/md_traj.PB.map.jpg "distribution of PBs")
 
+The color range goes from red to blue. For a given position in the protein sequence, blue corresponds to a null frequency (meaning the particular PB is never met a this position) and red corresponds to a frequency of 1 (meaning the particular PB is always found at this position). 
+
 ### `--neq` option
 
 computes *Neq* and generates *Neq* plot along protein sequence.
