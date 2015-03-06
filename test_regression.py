@@ -118,6 +118,24 @@ class TestPBAssign(unittest.TestCase):
                                ['{0}.PB.fasta', '{0}.PB.flat', '{0}.PB.phipsi'],
                                ['--flat', '--phipsi'], multiple='all')
 
+    def test_xtc_input(self):
+        """
+        Run PBassign on a trajectory in the XTC format.
+        """
+        name = 'md_traj_4'
+        out_run_dir = path.join(OUTDIR, str(uuid1()))
+        call_list = ['./PBassign.py',
+                     '-x', os.path.join(REFDIR, name + '.xtc'),
+                     '-g', os.path.join(REFDIR, name + '.gro'),
+                     '-o', os.path.join(out_run_dir, name)]
+        os.mkdir(out_run_dir)
+        status = subprocess.call(call_list, stdout=subprocess.PIPE)
+        assert status == 0, 'PBassign exited with an error'
+        output_fname = name + '.PB.fasta'
+        _assert_identical_files(os.path.join(REFDIR, output_fname),
+                                os.path.join(out_run_dir, output_fname))
+        os.remove(os.path.join(out_run_dir, output_fname))
+
     @_failure_test
     def test_missing_output(self):
         """
