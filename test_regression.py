@@ -134,7 +134,7 @@ class TestPBAssign(unittest.TestCase):
         output_fname = name + '.PB.fasta'
         _assert_identical_files(os.path.join(REFDIR, output_fname),
                                 os.path.join(out_run_dir, output_fname))
-        os.remove(os.path.join(out_run_dir, output_fname))
+        shutil.rmtree(out_run_dir)
 
     @_failure_test
     def test_missing_output(self):
