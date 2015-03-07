@@ -295,10 +295,11 @@ if not options.p:
     universe = MDAnalysis.Universe(conf, traj)
 
     for ts in universe.trajectory:
+        structure = PDB.Chain()
         selection = universe.selectAtoms("backbone")
         for atm in selection:
-            atom = PdbAtom()        
-            atom.from_xtc(atm)
+            atom = PDB.Atom()
+            atom.read_from_xtc(atm)
             # append structure with atom
             structure.add_atom(atom)
             # define structure comment
@@ -308,7 +309,6 @@ if not options.p:
         # assign structure after end of frame
         if structure.size() != 0 :
             PB_assign(pb_def, structure, comment)
-            structure.clean()
 
 print( "wrote {0}".format(fasta_name) )
 if options.flat:
