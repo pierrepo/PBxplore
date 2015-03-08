@@ -379,7 +379,7 @@ if options.logo:
         item = line.split()
         residue = int(item[0])
         residue_lst.append(residue)
-        transfac_content += "%05d" % residue + line[5:-1] +  "    X" + "\n"
+        transfac_content += "%05d " % residue + line[5:-1] +  "    X" + "\n"
     transfac_content += "XX\n"
     transfac_content += "//"
 
