@@ -35,10 +35,3 @@ Optionally, PBxplore can use:
 
 # References
 [1] A. G. de Brevern, C. Etchebest and S. Hazout. Bayesian probabilistic approach for predicting backbone structures in terms of protein blocks. *Proteins* **41**: 271-288 (2000).
-
-# Tested architectures
-
-So far, PBxplore has been succefully installed and tested with the following architectures 
-
-* Linux Ubuntu 14.04.1 LTS, Python 2.7.6, Numpy 1.8.1, R 3.0.2 and WebLogo 3.3.
-
