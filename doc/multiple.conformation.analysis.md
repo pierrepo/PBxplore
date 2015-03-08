@@ -96,7 +96,7 @@ Output:
 
 By default, the number of the first residue is 1, this option allows to adjust the number associated to the first residue (and to the followings automaticaly).
 
-    ./PBcount.py --residue-shift 5 -f demo2/md_traj_1.PB.fasta -o test1
+    ./PBcount.py --first-residue 5 -f demo2/md_traj_1.PB.fasta -o test1
 
 Output:
 
