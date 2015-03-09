@@ -202,3 +202,34 @@ def write_fasta(name, seq, comment):
     f_out = open(name, "a")
     f_out.write(fasta_content)
     f_out.close()
+
+
+def count_to_transfac(identifier, count_content):
+    """
+    Convert a table of PB frequencies into transfac format
+    
+    http://meme.sdsc.edu/meme/doc/transfac-format.html
+
+    Parameters
+    ----------
+    identifier : str
+        Chain used for the ID property in the output.
+    count_content : 
+        Content of the count file outputed by PBcount as a list of lines.
+
+    Return
+    ------
+    The frequency matrix as a string in the transfac format.
+    """
+    residue_lst = []
+    transfac_content  = "ID %s\n" % identifier
+    transfac_content += "BF unknown\n"
+    transfac_content += "P0" + count_content[0][2:]
+    for line in count_content[1:]:
+        item = line.split()
+        residue = int(item[0])
+        residue_lst.append(residue)
+        transfac_content += "%05d " % residue + line[5:-1] +  "    X" + "\n"
+    transfac_content += "XX\n"
+    transfac_content += "//"
+    return transfac_content

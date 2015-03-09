@@ -170,6 +170,42 @@ class TestPBlib(unittest.TestCase):
         self.assertEqual(sequences, ['ZZdddfklonbfklmmmmmmmmnopafklnoiakl'
                                      'mmmmmnoopacddddddehkllmmmmngoilmmmm'
                                      'mmmmmmmmnopacdcddZZ'])
+
+    def test_count_to_transfac(self):
+        """
+        Test if the count_to_transfac function works.
+        """
+        ref_input = ['         a     b     c     d\n',  # header
+                     '1        0     0     0     0\n', 
+                     '2        2   789 99999    89\n',  # one value is written
+                                                        # on 5 characters
+                     '3    99999  8888     2     2\n',  # the first value is
+                                                        # written on 5 characters
+                     '4       99     0 999999     0\n', # one value is written
+                                                        # on more than 5
+                                                        # characters
+                     '5        0     0     0     0\n', 
+                    ]
+        identifier = 'identifier'
+        ref_output = ("ID identifier\n"
+                      "BF unknown\n"
+                      "P0       a     b     c     d\n"
+                      "00001     0     0     0     0    X\n"
+                      "00002     2   789 99999    89    X\n"
+                      "00003 99999  8888     2     2    X\n"
+                      "00004    99     0 999999     0    X\n"
+                      "00005     0     0     0     0    X\n"
+                      "XX\n"
+                      "//")
+        output = PB.count_to_transfac(identifier, ref_input)
+        ref_output_lines = ref_output.split('\n')
+        output_lines = output.split('\n')
+        self.assertEqual(len(ref_output_lines), len(output_lines),
+                         'Not the right number of lines')
+        for ref_line, line in zip(ref_output_lines, output_lines):
+            print('ref:', ref_line)
+            print('out:', line)
+            self.assertEqual(ref_line, line)
                                      
 if __name__ == '__main__':
     unittest.main()

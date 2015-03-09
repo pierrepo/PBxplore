@@ -53,6 +53,7 @@ def array_to_string(ar):
     #  precision : float with 4 digits
     return numpy.array_str(ar, max_line_width = 100000, precision = 4).translate(None, '[]')
 
+
 #===============================================================================
 # MAIN - program starts here
 #===============================================================================
@@ -370,18 +371,7 @@ if options.logo:
 
     # convert a table of PB frequencies into transfac format as required by weblogo
     # http://meme.sdsc.edu/meme/doc/transfac-format.html
-    #-------------------------------------------------------------------------------
-    residue_lst = []
-    transfac_content  = "ID %s\n" % options.f
-    transfac_content += "BF unknown\n"
-    transfac_content += "P0" + count_content[0][2:]
-    for line in count_content[1:]:
-        item = line.split()
-        residue = int(item[0])
-        residue_lst.append(residue)
-        transfac_content += "%05d" % residue + line[5:-1] +  "    X" + "\n"
-    transfac_content += "XX\n"
-    transfac_content += "//"
+    transfac_content = PB.count_to_transfac(options.f, count_content)
 
     # write transfac file (debug only)
     #-------------------------------------------------------------------------------
