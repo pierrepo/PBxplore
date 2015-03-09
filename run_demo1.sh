@@ -96,9 +96,9 @@ pause
 
 echo  -e "\n"
 echo "Test with all PDB files from a directory"
-echo "../PBassign.py -d ./ -o all"
+echo "../PBassign.py -p ./ -o all"
 pause
-../PBassign.py -d ./ -o all
+../PBassign.py -p ./ -o all
 
 
 echo  -e "\n"
