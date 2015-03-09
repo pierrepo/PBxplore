@@ -46,7 +46,7 @@ pause
 
 echo  -e "\n"
 echo "Test with 2LFU.pdb: RMN structure, 10 models"
-echo "../PBassign.py -f 2LFU.pdb -o 2LFU"
+echo "../PBassign.py -p 2LFU.pdb -o 2LFU"
 pause
 ../PBassign.py -p 2LFU.pdb -o 2LFU
 
@@ -61,7 +61,7 @@ echo "#------------------------------------------------------------------------#
 
 echo  -e "\n"
 echo "Test with 3ICH.pdb: RX structure, one chain"
-echo "../PBassign.py -f 3ICH.pdb -o 3ICH --phipsi"
+echo "../PBassign.py -p 3ICH.pdb -o 3ICH --phipsi"
 pause
 ../PBassign.py -p 3ICH.pdb -o 3ICH --phipsi
 
@@ -76,7 +76,7 @@ echo "#------------------------------------------------------------------------#
 
 echo  -e "\n"
 echo "Test with 2LFU.pdb: RMN structure, 10 models"
-echo "../PBassign.py -f 2LFU.pdb -o 2LFU --flat"
+echo "../PBassign.py -p 2LFU.pdb -o 2LFU --flat"
 pause
 ../PBassign.py -p 2LFU.pdb -o 2LFU --flat
 
@@ -90,7 +90,7 @@ echo "#------------------------------------------------------------------------#
 
 echo  -e "\n"
 echo "Test with several PDB files"
-echo "../PBassign.py -d ./ -o all"
+echo "../PBassign.py -p 3ICH.pdb -p 2LFU.pdb -o several"
 pause
 ../PBassign.py -p 3ICH.pdb -p 2LFU.pdb -o several
 
@@ -98,7 +98,7 @@ echo  -e "\n"
 echo "Test with all PDB files from a directory"
 echo "../PBassign.py -d ./ -o all"
 pause
-../PBassign.py -p ./ -o all
+../PBassign.py -d ./ -o all
 
 
 echo  -e "\n"
