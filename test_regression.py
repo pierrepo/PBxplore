@@ -28,7 +28,16 @@ from functools import wraps
 import os
 import subprocess
 import shutil
+import sys
+import warnings
 
+try:
+    import MDAnalysis
+except ImportError:
+    IS_MDANALYSIS = False
+    warnings.warn('MDanalysis is not available, tests will be run accordingly')
+else:
+    IS_MDANALYSIS = True
 # Resources for the tests are stored in the following directory
 REFDIR = "test_data/"
 
@@ -117,6 +126,35 @@ class TestPBAssign(unittest.TestCase):
         _test_PBassign_options(references, extensions,
                                ['{0}.PB.fasta', '{0}.PB.flat', '{0}.PB.phipsi'],
                                ['--flat', '--phipsi'], multiple='all')
+
+    def test_xtc_input(self):
+        """
+        Run PBassign on a trajectory in the XTC format.
+
+        This test should produce the righ output with python 2. With python 3,
+        PBassign should fail as MDanalysis is not available.
+        """
+        name = 'md_traj_4'
+        out_run_dir = path.join(OUTDIR, str(uuid1()))
+        output_fname = name + '.PB.fasta'
+        call_list = ['./PBassign.py',
+                     '-x', os.path.join(REFDIR, name + '.xtc'),
+                     '-g', os.path.join(REFDIR, name + '.gro'),
+                     '-o', os.path.join(out_run_dir, name)]
+        os.mkdir(out_run_dir)
+        status = subprocess.call(call_list,
+                                 stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE)
+        if IS_MDANALYSIS:
+            # MDanalysis is available, PBassign should run and produce the
+            # correct output
+            assert status == 0, 'PBassign exited with an error'
+            _assert_identical_files(os.path.join(REFDIR, output_fname),
+                                    os.path.join(out_run_dir, output_fname))
+        else:
+            # MDanalysis is not available, PBassign should fail
+            assert status != 0, 'PBassign shoud not have exited with a 0 code'
+        shutil.rmtree(out_run_dir)
 
     @_failure_test
     def test_missing_output(self):
