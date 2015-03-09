@@ -65,7 +65,7 @@ options = parser.parse_args()
 # check options
 #-------------------------------------------------------------------------------
 if options.first_residue and options.first_residue < 1:
-	parser.error("first residue must be >= 1")
+    parser.error("first residue must be >= 1")
 
 #-------------------------------------------------------------------------------
 # check input files
@@ -110,8 +110,8 @@ for seq in pb_seq:
 #-------------------------------------------------------------------------------
 first = 1
 if options.first_residue:
-	first = options.first_residue
-	print( "first residue will be numbered {0}".format(first) )
+    first = options.first_residue
+    print( "first residue will be numbered {0}".format(first) )
 
 count_file_name = options.o + ".PB.count"
 content = "    "
