@@ -40,12 +40,12 @@ except NameError:
 __location__ = os.path.realpath(
                os.path.join(os.getcwd(), os.path.dirname(sys.argv[0])) )
 
-# Protein Blocks angles definitions
+# Protein Blocks reference angles
 # taken from A. G. de Brevern, C. Etchebest and S. Hazout. 
 # "Bayesian probabilistic approach for predicting backbone structures 
 # in terms of protein blocks"
 # Proteins, 41: 271-288 (2000)
-DEFINITIONS = {
+REFERENCES = {
 'a': [ 41.14,    75.53,   13.92,   -99.80,   131.88,   -96.27,  122.08,   -99.68],
 'b': [108.24,   -90.12,  119.54,   -92.21,   -18.06,  -128.93,  147.04,   -99.90],
 'c': [-11.61,  -105.66,   94.81,  -106.09,   133.56,  -106.93,  135.97,  -100.63],

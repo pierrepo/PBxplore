@@ -257,7 +257,7 @@ if options.p:
             if chain.name:
                 comment += " | chain %s" % (chain.name)
             # assign PBs
-            PB_assign(PB.DEFINITIONS, chain, comment)
+            PB_assign(PB.REFERENCES, chain, comment)
 
 
 
@@ -291,7 +291,7 @@ if not options.p:
                 comment = "%s | frame %s" % (options.x, ts.frame)
         # assign structure after end of frame
         if structure.size() != 0 :
-            PB_assign(PB.DEFINITIONS, structure, comment)
+            PB_assign(PB.REFERENCES, structure, comment)
 
 print( "wrote {0}".format(fasta_name) )
 if options.flat:
