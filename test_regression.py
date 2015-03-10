@@ -134,7 +134,7 @@ class TestPBAssign(unittest.TestCase):
         This test should produce the righ output with python 2. With python 3,
         PBassign should fail as MDanalysis is not available.
         """
-        name = 'md_traj_4'
+        name = 'barstar_md_traj'
         out_run_dir = path.join(OUTDIR, str(uuid1()))
         output_fname = name + '.PB.fasta'
         call_list = ['./PBassign.py',

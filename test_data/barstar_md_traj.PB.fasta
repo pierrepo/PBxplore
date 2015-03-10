@@ -1,603 +1,603 @@
->test_data/md_traj_4.xtc | frame 1
+>test_data/barstar_md_traj.xtc | frame 1
 ZZdddfklpmbfklmmmmmmmmnopafklgoiaklmmmmmmmmpacddddddehklmmmm
 moghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 2
+>test_data/barstar_md_traj.xtc | frame 2
 ZZdddfklpcbfklmmmmmmmmnopafkbghiaklmmmmmmmmpccddddddehklmmmm
 moghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 3
+>test_data/barstar_md_traj.xtc | frame 3
 ZZdddfklpcbfklmmmmmmmmnopafkbgoiaklmmmmmnopaacddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 4
+>test_data/barstar_md_traj.xtc | frame 4
 ZZdddfklpcbfklmmmmmmmmnopafkbgoiaklmmmmmmmmpccddddddehklmmmm
 mbghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 5
+>test_data/barstar_md_traj.xtc | frame 5
 ZZdddfklpcbfklmmmmmmmmnopafkbghiaklmmmmmmmmpccddddddehklmmmm
 mcehilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 6
+>test_data/barstar_md_traj.xtc | frame 6
 ZZdddfklgcbfklmmmmmmmmnopafkbgoiaklmmmmmmmmpccddddddehklmmmm
 mbghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 7
+>test_data/barstar_md_traj.xtc | frame 7
 ZZdddfklpcbfklmmmmmmmmnopafkbghiaklmmmmmmmmpccddddddehklmmmm
 mbghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 8
+>test_data/barstar_md_traj.xtc | frame 8
 ZZdddfklpgbfklmmmmmmmmnopafklgoiaklmmmmmmmmpccddddddehkllmmm
 mbghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 9
+>test_data/barstar_md_traj.xtc | frame 9
 ZZdddfklpcbfklmmmmmmmmnopafklgoiaklmmmmmmmmpccddddddehklmmmm
 npghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 10
+>test_data/barstar_md_traj.xtc | frame 10
 ZZdddfklpcbfklmmmmmmmmnopafkbgoiaklmmmmmmmmmccddddddehkllmmm
 mbghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 11
+>test_data/barstar_md_traj.xtc | frame 11
 ZZdddfklpcbfklmmmmmmmmnopafklghiaklmmmmmmmmbccddddddehklmmmm
 mmghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 12
+>test_data/barstar_md_traj.xtc | frame 12
 ZZdddfklmcbfklmmmmmmmmnopafklgoiaklmmmmmmmmpccddddddehklmmmm
 mbghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 13
+>test_data/barstar_md_traj.xtc | frame 13
 ZZdddfklccbfklmmmmmmmmnopafkbghiaklmmmmmnopaccddddddehkllmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 14
+>test_data/barstar_md_traj.xtc | frame 14
 ZZdddfklccbfklmmmmmmmmnopafklgoiaklmmmmmnopaccddddddehkllmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 15
+>test_data/barstar_md_traj.xtc | frame 15
 ZZdddfklpcbfklmmmmmmmmnopafklgoiaklmmmmmmmmpccddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 16
+>test_data/barstar_md_traj.xtc | frame 16
 ZZdddfklpcbfklmmmmmmmmnopafkbghiaklmmmmmnopaacddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 17
+>test_data/barstar_md_traj.xtc | frame 17
 ZZdddfklpmbfklmmmmmmmmnopafklgoiaklmmmmmnopaccddddddehklmmmm
 mpghjllmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 18
+>test_data/barstar_md_traj.xtc | frame 18
 ZZdddfklmmbfklmmmmmmmmnopafklgoiaklmmmmmnombacddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 19
+>test_data/barstar_md_traj.xtc | frame 19
 ZZdddfklpcbfklmmmmmmmmnopafkbgoiaklmmmmmnombacddddddehklmmmm
 noghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 20
+>test_data/barstar_md_traj.xtc | frame 20
 ZZdddfklpmbfklmmmmmmmmnopafkbghiaklmmmmmnopaccddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 21
+>test_data/barstar_md_traj.xtc | frame 21
 ZZdddfklpmbfklmmmmmmmmnopafkbgoiaklmmmmmnopbacddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 22
+>test_data/barstar_md_traj.xtc | frame 22
 ZZdddfklgcbfklmmmmmmmmnopafklghiaklmmmmmmmmpccddddddehklmmmm
 mbghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 23
+>test_data/barstar_md_traj.xtc | frame 23
 ZZdddfklgcbfmlmmmmmmmmnopafkbghiaklmmmmmnopaacddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 24
+>test_data/barstar_md_traj.xtc | frame 24
 ZZdddfklpcbfklmmmmmmmmnopafklghiaklmmmmmmmmmccddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 25
+>test_data/barstar_md_traj.xtc | frame 25
 ZZdddfklpmblmlmmmmmmmmnopafkbghiaklmmmmmnopbacddddddehjllmmm
 noghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 26
+>test_data/barstar_md_traj.xtc | frame 26
 ZZdddfklpmblmlmmmmmmmmnopafkbgoiaklmmmmmnoobacddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 27
+>test_data/barstar_md_traj.xtc | frame 27
 ZZdddfklpmbfklmmmmmmmmnopafklghiaklmmmmmmmmppcddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 28
+>test_data/barstar_md_traj.xtc | frame 28
 ZZdddfklpcbfklmmmmmmmmnopafklgoiaklmmmmmnopaccddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 29
+>test_data/barstar_md_traj.xtc | frame 29
 ZZdddfklcfblmlmmmmmmmmnopafkbgoiaklmmmmmmmmcacddddddehklmmmm
 npghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 30
+>test_data/barstar_md_traj.xtc | frame 30
 ZZdddfklpmbfklmmmmmmmmnopafkbghiaklmmmmmmmmpccddddddehkllmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 31
+>test_data/barstar_md_traj.xtc | frame 31
 ZZdddfklpfbfklmmmmmmmmnopafklgoiaklmmmmmmmmcccddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 32
+>test_data/barstar_md_traj.xtc | frame 32
 ZZdddfklpmblmlmmmmmmmmnopafkbghiaklmmmmmnopbacddddddehklmmmm
 noghjllmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 33
+>test_data/barstar_md_traj.xtc | frame 33
 ZZdddfklpgbfklmmmmmmmmnopafklgoiaklmmmmmnojaccddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 34
+>test_data/barstar_md_traj.xtc | frame 34
 ZZdddfklpgbfklmmmmmmmmnopafklghiaklmmmmmnopaacddddddehkllmmm
 mbghillmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 35
+>test_data/barstar_md_traj.xtc | frame 35
 ZZdddfklcfbfklmmmmmmmmnopafkbghiaklmmmmmnopaacddddddehklmmmm
 mbghjllmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 36
+>test_data/barstar_md_traj.xtc | frame 36
 ZZdddfklcfbfklmmmmmmmmnopafklgoiaklmmmmmnopbacddddddehklmmmm
 mbghkllmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 37
+>test_data/barstar_md_traj.xtc | frame 37
 ZZdddfklpcbfklmmmmmmmmnopafklgoiaklmmmmmmombacddddddehkllmmm
 nbghilkmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 38
+>test_data/barstar_md_traj.xtc | frame 38
 ZZdddfklcfbfklmmmmmmmmnopafkbghiaklmmmmmmmmpacddddddehklmmmm
 mbgoklmmmmmmmmmmmmnopadddddZZ
->test_data/md_traj_4.xtc | frame 39
+>test_data/barstar_md_traj.xtc | frame 39
 ZZdddfklpfblmlmmmmmmmmnopafklgoiaklmmmmmmnmpacddddddehkllmmm
 mbghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 40
+>test_data/barstar_md_traj.xtc | frame 40
 ZZdddfklpgbfklmmmmmmmmnopafklgoiaklmmmmmmnopacddddddehkllmmm
 mbghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 41
+>test_data/barstar_md_traj.xtc | frame 41
 ZZdddfklmmblklmmmmmmmmnopafkbgoiaklmmmmmmmmppcddddddehkllmmm
 mbghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 42
+>test_data/barstar_md_traj.xtc | frame 42
 ZZdddfklpmblmlmmmmmmmmnopafkbghiaklmmmmmmmmcccddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 43
+>test_data/barstar_md_traj.xtc | frame 43
 ZZdddfklcfbfklmmmmmmmmnopafkbgoiaklmmmmmmnmpacddddddehklmmmm
 mbghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 44
+>test_data/barstar_md_traj.xtc | frame 44
 ZZdddfklpmblmlmmmmmmmmnopafklghiaklmmmmmmmmpacddddddehklmmmm
 mbghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 45
+>test_data/barstar_md_traj.xtc | frame 45
 ZZddefklpcbfklmmmmmmmmnopafklghiaklmmmmmnopbacddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 46
+>test_data/barstar_md_traj.xtc | frame 46
 ZZdddfklpmbfklmmmmmmmmnopaffbghiaklmmmmmmmmcacddddddehklmmmm
 mbghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 47
+>test_data/barstar_md_traj.xtc | frame 47
 ZZdddfklpmbfklmmmmmmmmnopafklgoiaklmmmmmmmmcacddddddehklmmmm
 mbghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 48
+>test_data/barstar_md_traj.xtc | frame 48
 ZZdddfklpcbfklmmmmmmmmnopafkbghiaklmmmmmnopbacddddddehkllmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 49
+>test_data/barstar_md_traj.xtc | frame 49
 ZZdddfklcfbfklmmmmmmmmnopafklgoiaklmmmmmmmmpacddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 50
+>test_data/barstar_md_traj.xtc | frame 50
 ZZdddfklmmbfklmmmmmmmmnopafkbghiaklmmmmmmmmpccddddddehklmmmm
 mpghjllmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 51
+>test_data/barstar_md_traj.xtc | frame 51
 ZZdddfklcfblmlmmmmmmmmnopafkbgoiaklmmmmmmmmpacddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 52
+>test_data/barstar_md_traj.xtc | frame 52
 ZZdddfklccbfklmmmmmmmmnopafklgoiaklmmmmmmmmpccddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 53
+>test_data/barstar_md_traj.xtc | frame 53
 ZZdddfklpmbfklmmmmmmmmnopafklgoiaklmmmmmnopbacddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 54
+>test_data/barstar_md_traj.xtc | frame 54
 ZZdddfklccbfklmmmmmmmmnopafklghiaklmmmmmmmmpccddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 55
+>test_data/barstar_md_traj.xtc | frame 55
 ZZdddfklpcbfklmmmmmmmmnopafklgoiaklmmmmmnombacddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 56
+>test_data/barstar_md_traj.xtc | frame 56
 ZZdddfklpmbfklmmmmmmmmnopafklgoiaklmmmmmnopbacddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 57
+>test_data/barstar_md_traj.xtc | frame 57
 ZZdddfklpmbfklmmmmmmmmnopafklghiaklmmmmmmmmpccddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 58
+>test_data/barstar_md_traj.xtc | frame 58
 ZZdddfklpgbfklmmmmmmmmnopafkbgoiaklmmmmmmmmpccddddddehklmmmm
 noghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 59
+>test_data/barstar_md_traj.xtc | frame 59
 ZZdddfklpcbfklmmmmmmmmnopafklghiaklmmmmmmmmpccddddddehklmmmm
 mmghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 60
+>test_data/barstar_md_traj.xtc | frame 60
 ZZdddfklmmbfklmmmmmmmmnopafkbghiaklmmmmmmmmpccddddddehklmmmm
 npghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 61
+>test_data/barstar_md_traj.xtc | frame 61
 ZZdddfklpcbfklmmmmmmmmnopafklghiaklmmmmmmmmpccddddddehklmmmm
 mbghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 62
+>test_data/barstar_md_traj.xtc | frame 62
 ZZdddfklpnbfklmmmmmmmmnopafklghiaklmmmmmnoobacddddddehkllmmm
 mbghkllmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 63
+>test_data/barstar_md_traj.xtc | frame 63
 ZZdddfklpmbfklmmmmmmmmnopafkbgoiaklmmmmmmmmmccddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 64
+>test_data/barstar_md_traj.xtc | frame 64
 ZZdddfklcfbfklmmmmmmmmnopafkbgoiaklmmmmmnopbacddddddehkllmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 65
+>test_data/barstar_md_traj.xtc | frame 65
 ZZdddfklpmbfklmmmmmmmmnopafkbghiaklmmmmmnoobacddddddehkllmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 66
+>test_data/barstar_md_traj.xtc | frame 66
 ZZdddfklccbfklmmmmmmmmnopafklghiaklmmmmmmmmpacddddddehklmmmm
 mbghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 67
+>test_data/barstar_md_traj.xtc | frame 67
 ZZdddfklpnbfklmmmmmmmmnopafklghiaklmmmmmmmmopcddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 68
+>test_data/barstar_md_traj.xtc | frame 68
 ZZdddfklccbfklmmmmmmmmnopafkbgoiaklmmmmmmmmpccddddddehkllmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 69
+>test_data/barstar_md_traj.xtc | frame 69
 ZZdddfklombfklmmmmmmmmnopafkbghiaklmmmmmnopbacddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 70
+>test_data/barstar_md_traj.xtc | frame 70
 ZZdddfklpcbfklmmmmmmmmnopafbbghiaklmmmmmnoobacddddddehkllmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 71
+>test_data/barstar_md_traj.xtc | frame 71
 ZZdddfklpcbfklmmmmmmmmnopafklgoiaklmmmmmnopbacddddddehklmmmm
 mbghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 72
+>test_data/barstar_md_traj.xtc | frame 72
 ZZdddfklpmbfklmmmmmmmmnopafklghiaklmmmmmmmmpccddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 73
+>test_data/barstar_md_traj.xtc | frame 73
 ZZdddfklpmbfklmmmmmmmmnopafklghiaklmmmmmmmmpacddddddehklmmmm
 mpghilmmmmmmmmmmmmnopcdddddZZ
->test_data/md_traj_4.xtc | frame 74
+>test_data/barstar_md_traj.xtc | frame 74
 ZZdddfklpmblmlmmmmmmmmnopafkbghiaklmmmmmmmmpacddddddehklmmmm
 mpghijmlmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 75
+>test_data/barstar_md_traj.xtc | frame 75
 ZZdddfklpmbfklmmmmmmmmnopafkbghiaklmmmmmmmmpccddddddehklmmmm
 mmghiammmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 76
+>test_data/barstar_md_traj.xtc | frame 76
 ZZdddfklpcbfklmmmmmmmmnopafkbgoiaklmmmmmmmmpccddddddehjllmmm
 mpghijmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 77
+>test_data/barstar_md_traj.xtc | frame 77
 ZZdddfklpmblmlmmmmmmmmnopafkbghiaklmmmmmnopbacddddddehklmmmm
 nbghijmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 78
+>test_data/barstar_md_traj.xtc | frame 78
 ZZdddfklpcbfklmmmmmmmmnopafkbghiaklmmmmmnopbacddddddehklmmmm
 mpghijmlmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 79
+>test_data/barstar_md_traj.xtc | frame 79
 ZZdddfklccbfklmmmmmmmmnopafkbgoiaklmmmmmmmmmccddddddehklmmmm
 mbghijklmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 80
+>test_data/barstar_md_traj.xtc | frame 80
 ZZdddfklmmblmlmmmmmmmmnopafkbghiaklmmmmmmmmpccddddddehkllmmm
 mpghiamlmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 81
+>test_data/barstar_md_traj.xtc | frame 81
 ZZdddfklcfbfklmmmmmmmmnopafklgoiaklmmmmmmmmpacddddddehkllmmm
 mmghijklmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 82
+>test_data/barstar_md_traj.xtc | frame 82
 ZZdddfklpcbfklmmmmmmmmnopafkbghiaklmmmmmmmmpccddddddehkllmmm
 mpghiaklmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 83
+>test_data/barstar_md_traj.xtc | frame 83
 ZZdddfklccblmlmmmmmmmmnopafkbghiaklmmmmmmmmbccddddddehilmmmm
 nbghijmlmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 84
+>test_data/barstar_md_traj.xtc | frame 84
 ZZdddfklpmblklmmmmmmmmnopafkbghiaklmmmmmmoobacddddddehkllmmm
 mmghijmlmmmmmmmmmmnopadddddZZ
->test_data/md_traj_4.xtc | frame 85
+>test_data/barstar_md_traj.xtc | frame 85
 ZZdddfklpcbfklmmmmmmmmnopafklghiaklmmmmmmmmpccddddddehklmmmm
 mpghijklmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 86
+>test_data/barstar_md_traj.xtc | frame 86
 ZZdddfklccbfklmmmmmmmmnopafklgoiaklmmmmmnopbacddddddehkllmmm
 mmghijklmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 87
+>test_data/barstar_md_traj.xtc | frame 87
 ZZdddfklpmbfmlmmmmmmmmnopafklghiaklmmmmmmmmpacddddddehklmmmm
 mpghijklmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 88
+>test_data/barstar_md_traj.xtc | frame 88
 ZZdddfklpmbfklmmmmmmmmnopafkbghiaklmmmmmnopbacddddddehklmmmm
 mpghijklmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 89
+>test_data/barstar_md_traj.xtc | frame 89
 ZZdddfklpmbfklmmmmmmmmnopafkbghiaklmmmmmmoopacddddddehklmmmm
 mmghijmlmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 90
+>test_data/barstar_md_traj.xtc | frame 90
 ZZdddfklpmblmlmmmmmmmmnopafklghiaklmmmmmmmmpccddddddehklmmmm
 mcghijklmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 91
+>test_data/barstar_md_traj.xtc | frame 91
 ZZdddfklpfbfklmmmmmmmmnopafklghiaklmmmmmnombacddddddehkllmmm
 mmghijklmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 92
+>test_data/barstar_md_traj.xtc | frame 92
 ZZdddfklpcblmlmmmmmmmmnopafkbghiaklmmmmmmmmmccddddddehklmmmm
 mmghiamlmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 93
+>test_data/barstar_md_traj.xtc | frame 93
 ZZdddfklpfblmlmmmmmmmmnopafkbgoiaklmmmmmmombacddddddehklmmmm
 mmghijmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 94
+>test_data/barstar_md_traj.xtc | frame 94
 ZZdddfklcfbfklmmmmmmmmnopafklgoiaklmmmmmmnopacddddddehkllmmm
 mpghijklmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 95
+>test_data/barstar_md_traj.xtc | frame 95
 ZZdddfklpmbfklmmmmmmmmnopafbdcddfklmmmmmmnmpacddddddehkllmmm
 mmghijmlmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 96
+>test_data/barstar_md_traj.xtc | frame 96
 ZZdddfklpfbfmlmmmmmmmmnopafkbccdfklmmmmmmombacddddddehkllmmm
 mpghijmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 97
+>test_data/barstar_md_traj.xtc | frame 97
 ZZdddfklpmbfklmmmmmmmmnopafkbccdfklmmmmmnopaccddddddehklmmmm
 mbghijklmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 98
+>test_data/barstar_md_traj.xtc | frame 98
 ZZdddfklpmblklmmmmmmmmnopafklccdfklmmmmmmompacddddddehklmmmm
 mmghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 99
+>test_data/barstar_md_traj.xtc | frame 99
 ZZdddfklpmbfklmmmmmmmmnopafkbccdfklmmmmmmombacddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 100
+>test_data/barstar_md_traj.xtc | frame 100
 ZZdddfklpgbfklmmmmmmmmnopafkbccdfklmmmmmmmmpacddddddehkllmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 101
+>test_data/barstar_md_traj.xtc | frame 101
 ZZdddfklpgbfklmmmmmmmmnopafkbccdfklmmmmmmmmpacddddddehklmmmm
 mpghklmmmmmmmmmmmmnopadddddZZ
->test_data/md_traj_4.xtc | frame 102
+>test_data/barstar_md_traj.xtc | frame 102
 ZZdddfklpgbfklmmmmmmmmnopafkbccdfklmmmmmmnopacddddddehkllmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 103
+>test_data/barstar_md_traj.xtc | frame 103
 ZZdddfklpmbfklmmmmmmmmnopafkbccdfklmmmmmmnmcacddddddehklmmmm
 mpgojllmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 104
+>test_data/barstar_md_traj.xtc | frame 104
 ZZdddfklpmbfklmmmmmmmmnopafklccdfklmmmmmnombacddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 105
+>test_data/barstar_md_traj.xtc | frame 105
 ZZdddfklpmbfklmmmmmmmmnopafkbccdfklmmmmmmnmpacddddddehklmmmm
 mbghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 106
+>test_data/barstar_md_traj.xtc | frame 106
 ZZdddfklpmbfklmmmmmmmmnopafkbccbfklmmmmmmmmpccddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 107
+>test_data/barstar_md_traj.xtc | frame 107
 ZZdddfklpmblmlmmmmmmmmnopafklccdfklmmmmmnomaccddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 108
+>test_data/barstar_md_traj.xtc | frame 108
 ZZdddfklpmbfklmmmmmmmmnopafkbccdfklmmmmmnopbacddddddehklmmmm
 mpghjllmmmmmmmmmmmnopadddddZZ
->test_data/md_traj_4.xtc | frame 109
+>test_data/barstar_md_traj.xtc | frame 109
 ZZdddfklpcbfklmmmmmmmmnopafkbccbfklmmmmmmmmpccddddddehklmmmm
 mbghillmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 110
+>test_data/barstar_md_traj.xtc | frame 110
 ZZdddfklacbfklmmmmmmmmnopafkbccdfklmmmmmmmmbccddddddehklmmmm
 moghkllmmmmmmmmmmmnopadddddZZ
->test_data/md_traj_4.xtc | frame 111
+>test_data/barstar_md_traj.xtc | frame 111
 ZZdddfklpcbfklmmmmmmmmnopafkbccdfklmmmmmnopbacddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 112
+>test_data/barstar_md_traj.xtc | frame 112
 ZZdddfklombfklmmmmmmmmnopafkbcfbfklmmmmmmmmpacddddddehkllmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 113
+>test_data/barstar_md_traj.xtc | frame 113
 ZZdddfklmmbfmlmmmmmmmmnopafkbccdfklmmmmmmmmpacddddddehkllmmm
 mpghklmmmmmmmmmmmmnopadddddZZ
->test_data/md_traj_4.xtc | frame 114
+>test_data/barstar_md_traj.xtc | frame 114
 ZZddddfbccbfklmmmmmmmmnopafklccdfklmmmmmmmmcacddddddehklmmmm
 mpghjlmmmmmmmmmmmmnopadddddZZ
->test_data/md_traj_4.xtc | frame 115
+>test_data/barstar_md_traj.xtc | frame 115
 ZZddddfbpfbfklmmmmmmmmnopafkbccdfklmmmmmmmmpacddddddehklmmmm
 moghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 116
+>test_data/barstar_md_traj.xtc | frame 116
 ZZddddfbpcbfklmmmmmmmmnopafkbccdfklmmmmmmomcacddddddehklmmmm
 moghklmmmmmmmmmmmmnopadddddZZ
->test_data/md_traj_4.xtc | frame 117
+>test_data/barstar_md_traj.xtc | frame 117
 ZZdddfkbpcbfklmmmmmmmmnopafkbccbfklmmmmmnombacddddddehkllmmm
 moghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 118
+>test_data/barstar_md_traj.xtc | frame 118
 ZZdddffklmbfklmmmmmmmmnopafklccdfklmmmmmmmmpccddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 119
+>test_data/barstar_md_traj.xtc | frame 119
 ZZdddfklccbfklmmmmmmmmnopafkbccdfklmmmmmnopaccddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 120
+>test_data/barstar_md_traj.xtc | frame 120
 ZZdddfkbcfbfklmmmmmmmmnopafklccdfklmmmmmnomaccddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 121
+>test_data/barstar_md_traj.xtc | frame 121
 ZZdddfklpmbfklmmmmmmmmnopafkbccbfklmmmmmnombccddddddehjlmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 122
+>test_data/barstar_md_traj.xtc | frame 122
 ZZdddfklcfblmlmmmmmmmmnopafkbccbfklmmmmmnopaccddddddehjllmmm
 moghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 123
+>test_data/barstar_md_traj.xtc | frame 123
 ZZdddfklpmbfklmmmmmmmmnopafklccdfklmmmmmmmmpccddddddehkllmmm
 mpghklmmmmmmmmmmmmnopadddddZZ
->test_data/md_traj_4.xtc | frame 124
+>test_data/barstar_md_traj.xtc | frame 124
 ZZdddfklpmbfklmmmmmmmmnopafkbccdfklmmmmmnojbacddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 125
+>test_data/barstar_md_traj.xtc | frame 125
 ZZdddfklpmbfklmmmmmmmmnopafklccdfklmmmmmnopaacddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 126
+>test_data/barstar_md_traj.xtc | frame 126
 ZZdddfklpgbfklmmmmmmmmnopafkbccdfklmmmmmmmmpccddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 127
+>test_data/barstar_md_traj.xtc | frame 127
 ZZdddfklpgbfklmmmmmmmmnopafkbccdfklmmmmmmmmppcddddddehkllmmm
 mbghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 128
+>test_data/barstar_md_traj.xtc | frame 128
 ZZdddfklpmbfklmmmmmmmmnopafkbccdfklmmmmmmmmpacddddddehklmmmm
 mpghillmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 129
+>test_data/barstar_md_traj.xtc | frame 129
 ZZdddfklcfbfklmmmmmmmmnopafkbcbdfklmmmmmmmmpacddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 130
+>test_data/barstar_md_traj.xtc | frame 130
 ZZdddfklpmbfmlmmmmmmmmnopafkbccbfklmmmmmnomaccddddddehjllmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 131
+>test_data/barstar_md_traj.xtc | frame 131
 ZZdddfklccblmlmmmmmmmmnopafkbccbfklmmmmmmmmpccddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 132
+>test_data/barstar_md_traj.xtc | frame 132
 ZZdddfklcfbfklmmmmmmmmnopafkbccdfklmmmmmmmmpacddddddehklmmmm
 moghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 133
+>test_data/barstar_md_traj.xtc | frame 133
 ZZdddfklpcbfmlmmmmmmmmnopafkbckbfklmmmmmmmmmccddddddehjlmmmm
 moghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 134
+>test_data/barstar_md_traj.xtc | frame 134
 ZZdddfklcfbfklmmmmmmmmnopafkbccdfklmmmmmmnopacddddddehkllmmm
 mpghjlmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 135
+>test_data/barstar_md_traj.xtc | frame 135
 ZZdddfklpnbfklmmmmmmmmnopafklccbfklmmmmmmmmmccddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 136
+>test_data/barstar_md_traj.xtc | frame 136
 ZZdddfklcfbfklmmmmmmmmnopafklccdfklmmmmmmmmpccddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 137
+>test_data/barstar_md_traj.xtc | frame 137
 ZZdddfklcfbfklmmmmmmmmnopafklccdfklmmmmmmmmpccddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 138
+>test_data/barstar_md_traj.xtc | frame 138
 ZZdddfklcfbfklmmmmmmmmnopafkbccbfklmmmmmnombacddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 139
+>test_data/barstar_md_traj.xtc | frame 139
 ZZdddfklcfbfklmmmmmmmmnopafkbccdcklmmmmmmmmpacddddddehklmmmm
 moghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 140
+>test_data/barstar_md_traj.xtc | frame 140
 ZZdddfklcfbfklmmmmmmmmnopafklcbbfklmmmmmmmmpccddddddehklmmmm
 moghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 141
+>test_data/barstar_md_traj.xtc | frame 141
 ZZdddfklcfbfklmmmmmmmmnopafkbccdfklmmmmmmmmppcddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 142
+>test_data/barstar_md_traj.xtc | frame 142
 ZZdddfkbcfbfklmmmmmmmmnopafkbccdfklmmmmmmnopacddddddehklmmmm
 moghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 143
+>test_data/barstar_md_traj.xtc | frame 143
 ZZdddfklcfbfklmmmmmmmmnopafkbcfbmklmmmmmnopaacddddddehkllmmm
 mpghjlmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 144
+>test_data/barstar_md_traj.xtc | frame 144
 ZZdddfklpmbfklmmmmmmmmnopafkbccdfklmmmmmmmmpccddddddehklmmmm
 moghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 145
+>test_data/barstar_md_traj.xtc | frame 145
 ZZdddfklpgbjklmmmmmmmmnopafkbccbfklmmmmmmmmpacddddddehklmmmm
 moghjlmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 146
+>test_data/barstar_md_traj.xtc | frame 146
 ZZdddfklccbfklmmmmmmmmnopafkbccdfklmmmmmmmmmccddddddehklmmmm
 mpghjlmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 147
+>test_data/barstar_md_traj.xtc | frame 147
 ZZdddfklcgbjklmmmmmmmmnopafkbccbfklmmmmmnopbacddddddehklmmmm
 moghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 148
+>test_data/barstar_md_traj.xtc | frame 148
 ZZdddfklcfbfklmmmmmmmmnopafkbccdfklmmmmmmmmpacddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 149
+>test_data/barstar_md_traj.xtc | frame 149
 ZZdddfklpfbfklmmmmmmmmnopafklccbfklmmmmmnopbacddddddehklmmmm
 moghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 150
+>test_data/barstar_md_traj.xtc | frame 150
 ZZdddfkbcfbfklmmmmmmmmnopafkbccbfklmmmmmnojaccddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 151
+>test_data/barstar_md_traj.xtc | frame 151
 ZZdddfklpfbfmlmmmmmmmmnopafkbccbfklmmmmmmmmmccddddddehklmmmm
 mpghklmmmmmmmmmmmmnopadddddZZ
->test_data/md_traj_4.xtc | frame 152
+>test_data/barstar_md_traj.xtc | frame 152
 ZZdddfkbpcbfklmmmmmmmmnopafkbccbfklmmmmmnomaccddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 153
+>test_data/barstar_md_traj.xtc | frame 153
 ZZdddfklccbfklmmmmmmmmnopafkbckbfklmmmmmmompacddddddehklmmmm
 moghjlmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 154
+>test_data/barstar_md_traj.xtc | frame 154
 ZZdddfklcfbfklmmmmmmmmnopafkbccdfklmmmmmmmmcccddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 155
+>test_data/barstar_md_traj.xtc | frame 155
 ZZdddfklgcbfklmmmmmmmmnopafkbckbmklmmmmmnopbacddddddehkllmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 156
+>test_data/barstar_md_traj.xtc | frame 156
 ZZdddfklcfbfklmmmmmmmmnopafkbccbfklmmmmmnombccddddddehkllmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 157
+>test_data/barstar_md_traj.xtc | frame 157
 ZZdddfklpmblmlmmmmmmmmnopafkbccdfklmmmmmmmmcacddddddehklmmmm
 moghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 158
+>test_data/barstar_md_traj.xtc | frame 158
 ZZdddfklcfblmlmmmmmmmmnopafkbccdfklmmmmmmmmpccddddddehjllmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 159
+>test_data/barstar_md_traj.xtc | frame 159
 ZZdddfklpcbfklmmmmmmmmnopafkbcfbfklmmmmmmmmpccddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 160
+>test_data/barstar_md_traj.xtc | frame 160
 ZZdddfklgcbfklmmmmmmmmnopafkbccdfklmmmmmnoobacddddddehjllmmm
 mogoilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 161
+>test_data/barstar_md_traj.xtc | frame 161
 ZZdddfklcfbfmlmmmmmmmmnopafkbccbfklmmmmmmmmmccddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 162
+>test_data/barstar_md_traj.xtc | frame 162
 ZZdddfklpmbfmlmmmmmmmmnopafkbccbfklmmmmmmmmbccddddddehklmmmm
 mpghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 163
+>test_data/barstar_md_traj.xtc | frame 163
 ZZdddfklcfbfklmmmmmmmmnopafkbccdfklmmmmmmnobacddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 164
+>test_data/barstar_md_traj.xtc | frame 164
 ZZdddfklpmblmlmmmmmmmmnopafkbccdfklmmmmmnombacddddddehklmmmm
 mmghjlmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 165
+>test_data/barstar_md_traj.xtc | frame 165
 ZZdddfklpmbfklmmmmmmmmnopafkbccdfklmmmmmmnopacddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 166
+>test_data/barstar_md_traj.xtc | frame 166
 ZZdddfkbcfbfklmmmmmmmmnopafkbccdfklmmmmmmombacddddddehklmmmm
 moghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 167
+>test_data/barstar_md_traj.xtc | frame 167
 ZZdddfklccbfklmmmmmmmmnopafklccbfklmmmmmmmmcacddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 168
+>test_data/barstar_md_traj.xtc | frame 168
 ZZdddfklccbfklmmmmmmmmnopafkbccdfklmmmmmmnmcacddddddehkllmmm
 mmghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 169
+>test_data/barstar_md_traj.xtc | frame 169
 ZZdddfklpmblmlmmmmmmmmnopafkbccdfklmmmmmmgoiacddddddehklmmmm
 mmgoklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 170
+>test_data/barstar_md_traj.xtc | frame 170
 ZZdddfklcfbfklmmmmmmmmnopafkbccdfklmmmmmnopbacddddddehklmmmm
 moghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 171
+>test_data/barstar_md_traj.xtc | frame 171
 ZZdddfklccbfmlmmmmmmmmnopafkbccdfklmmmmmmmmpacddddddehklmmmm
 mpghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 172
+>test_data/barstar_md_traj.xtc | frame 172
 ZZdddfkbcfbfklmmmmmmmmnopafkbccdfklmmmmmnopbacddddddehklmmmm
 moghilmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 173
+>test_data/barstar_md_traj.xtc | frame 173
 ZZdddfklpcbfklmmmmmmmmnopafklccdfklmmmmmmmmpacddddddehklmmmm
 mmghklmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 174
+>test_data/barstar_md_traj.xtc | frame 174
 ZZdddfklpfbfklmmmmmmmmnopafklccdfklmmmmmmmmbacddddddehklmmmm
 mpghijmmmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 175
+>test_data/barstar_md_traj.xtc | frame 175
 ZZdddfklcfbfklmmmmmmmmnopafkbccbfklmmmmmnombccddddddehjkmmmm
 mpghijmlmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 176
+>test_data/barstar_md_traj.xtc | frame 176
 ZZdddfklpmbfklmmmmmmmmnopafkbccdfklmmmmmmmmpccddddddehjllmmm
 mmghiafklmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 177
+>test_data/barstar_md_traj.xtc | frame 177
 ZZdddfklcfbfklmmmmmmmmnopafkbccdfklmmmmmmmmgccddddddehjllmmm
 mmghiaklmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 178
+>test_data/barstar_md_traj.xtc | frame 178
 ZZdddfkbcfbfklmmmmmmmmnopafklccbfklmmmmmmmmppcddddddehklmmmm
 mpghijmlmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 179
+>test_data/barstar_md_traj.xtc | frame 179
 ZZdddfklccbfklmmmmmmmmnopafkbccdfklmmmmmmmmpccddddddehklmmmm
 mpghijklmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 180
+>test_data/barstar_md_traj.xtc | frame 180
 ZZdddfklpmbfklmmmmmmmmnopafkbccdfklmmmmmmmmpccddddddehklmmmm
 mpghijklmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 181
+>test_data/barstar_md_traj.xtc | frame 181
 ZZdddfklcfbfmlmmmmmmmmnopafkbccbfklmmmmmmmmcccddddddehklmmmm
 mpghiamlmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 182
+>test_data/barstar_md_traj.xtc | frame 182
 ZZdddfklcfbfklmmmmmmmmnopafkbccdfklmmmmmmmmcacddddddehklmmmm
 mpghijmlmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 183
+>test_data/barstar_md_traj.xtc | frame 183
 ZZdddfklcfbfklmmmmmmmmnopafkbccdfklmmmmmmnmpacddddddehjllmmm
 ncghiamlmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 184
+>test_data/barstar_md_traj.xtc | frame 184
 ZZdddfklcfbfklmmmmmmmmnopafkbcfbfklmmmmmnopbccddddddehklmmmm
 mpghiamlmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 185
+>test_data/barstar_md_traj.xtc | frame 185
 ZZdddfkbcfbfklmmmmmmmmnopafkbccdfklmmmmmmmmpacddddddehkllmmm
 mpghijmlmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 186
+>test_data/barstar_md_traj.xtc | frame 186
 ZZdddfkbcfbfklmmmmmmmmnopafklccdfklmmmmmnopaccddddddehklmmmm
 moghijklmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 187
+>test_data/barstar_md_traj.xtc | frame 187
 ZZdddfklcfbfklmmmmmmmmnopafklccbfklmmmmmmmmpccddddddehklmmmm
 mpghijklmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 188
+>test_data/barstar_md_traj.xtc | frame 188
 ZZdddfkbcfbfklmmmmmmmmnopafkbccdfklmmmmmmmmbccddddddehjllmmm
 mpghijmlmmmmmmmmmmnopadddddZZ
->test_data/md_traj_4.xtc | frame 189
+>test_data/barstar_md_traj.xtc | frame 189
 ZZdddfkbcfbfklmmmmmmmmnopafkbccdfklmmmmmmmmpccddddddehklmmmm
 mpghijklmmmmmmmmmmnopadddddZZ
->test_data/md_traj_4.xtc | frame 190
+>test_data/barstar_md_traj.xtc | frame 190
 ZZdddfklcfbfklmmmmmmmmnopafkbccdfklmmmmmmmmpacddddddehklmmmm
 mcghijmlmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 191
+>test_data/barstar_md_traj.xtc | frame 191
 ZZdddfkbcfbfklmmmmmmmmnopafkbccdfklmmmmmmmmmccddddddehklmmmm
 mcghiamlmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 192
+>test_data/barstar_md_traj.xtc | frame 192
 ZZdddfkbcfbfklmmmmmmmmnopafkbccdfklmmmmmmnmpacddddddehkllmmm
 mgghijklmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 193
+>test_data/barstar_md_traj.xtc | frame 193
 ZZdddfkbcfbfklmmmmmmmmnopafkbccdfklmmmmmmomcacddddddehkllmmm
 mpghilmlmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 194
+>test_data/barstar_md_traj.xtc | frame 194
 ZZdddfkbacbfmlmmmmmmmmnopafkbccdfklmmmmmmmmpccddddddehklmmmm
 mpghijklmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 195
+>test_data/barstar_md_traj.xtc | frame 195
 ZZdddfkbcfbfklmmmmmmmmnopafkbccbfklmmmmmmmmpacddddddehklmmmm
 mpghiaklmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 196
+>test_data/barstar_md_traj.xtc | frame 196
 ZZdddfkbcfbfklmmmmmmmmnopafkbccdfklmmmmmmmmpacddddddehklmmmm
 mpghiaklmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 197
+>test_data/barstar_md_traj.xtc | frame 197
 ZZdddffbcfbfklmmmmmmmmnopafkbccbfklmmmmmmnmpacddddddehklmmmm
 mpghijklmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 198
+>test_data/barstar_md_traj.xtc | frame 198
 ZZdddfkbcfbfklmmmmmmmmnopafkbccdfklmmmmmmmmcacddddddehklmmmm
 mpghijmlmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 199
+>test_data/barstar_md_traj.xtc | frame 199
 ZZdddfkbcfbfklmmmmmmmmnopafkbccdfklmmmmmmmmpccddddddehklmmmm
 mpghijklmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 200
+>test_data/barstar_md_traj.xtc | frame 200
 ZZdddfkbcfbfklmmmmmmmmnopafkbccdfklmmmmmmnmpacddddddehklmmmm
 mpghiaklmmmmmmmmmmnopacddddZZ
->test_data/md_traj_4.xtc | frame 201
+>test_data/barstar_md_traj.xtc | frame 201
 ZZdddfklgfbfklmmmmmmmmnopafklccdfklmmmmmmmmmccddddddehklmmmm
 mpghijmmmmmmmmmmmmnopacddddZZ
