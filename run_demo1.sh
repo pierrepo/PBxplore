@@ -108,7 +108,8 @@ echo "|  Demo completed!                                                       |
 echo "|                                                                        |"
 echo "#------------------------------------------------------------------------#"
 echo 
-echo "Look at *.PB.* files in the demo directory."
+echo "Look at *.PB.* files in the demo1_tmp directory."
 pwd
-ls -lh 
+ls -lh
+echo "Do not forget to delete demo1_tmp directory when you will be done with this demo." 
 
