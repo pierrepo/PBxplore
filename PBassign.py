@@ -48,20 +48,7 @@ except NameError:
 # functions
 #===============================================================================
 
-def read_pb_definitions(pb_angles_string):
-    """
-    Read angle definitions of PBs
-    """
-    pb_angles = {}
-    for line in pb_angles_string.split("\n"):
-        if line and "#" not in line:
-            items = line.split()
-            pb_angles[items[0]] = numpy.array([float(items[i]) for i in range(1, len(items))])
-    print("Read PB definitions: %d PBs x %d angles " \
-          % (len(pb_angles), len(pb_angles["a"])))
-    return pb_angles
 
-#-------------------------------------------------------------------------------
 def angle_modulo_360(angle):
     """keep angle in the range -180 / +180 [degrees]
     """
@@ -232,10 +219,6 @@ else:
     elif not os.path.isfile(options.g):
         sys.exit("{0}: not a valid file".format(options.g))
 
-#-------------------------------------------------------------------------------
-# read PB definitions
-#-------------------------------------------------------------------------------
-pb_def = read_pb_definitions(PB.DEFINITIONS)
 
 #-------------------------------------------------------------------------------
 # prepare fasta file for output
@@ -274,7 +257,7 @@ if options.p:
             if chain.name:
                 comment += " | chain %s" % (chain.name)
             # assign PBs
-            PB_assign(pb_def, chain, comment)
+            PB_assign(PB.DEFINITIONS, chain, comment)
 
 
 
@@ -308,7 +291,7 @@ if not options.p:
                 comment = "%s | frame %s" % (options.x, ts.frame)
         # assign structure after end of frame
         if structure.size() != 0 :
-            PB_assign(pb_def, structure, comment)
+            PB_assign(PB.DEFINITIONS, structure, comment)
 
 print( "wrote {0}".format(fasta_name) )
 if options.flat:
