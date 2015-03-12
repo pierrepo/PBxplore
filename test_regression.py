@@ -38,6 +38,7 @@ except ImportError:
     warnings.warn('MDanalysis is not available, tests will be run accordingly')
 else:
     IS_MDANALYSIS = True
+
 # Resources for the tests are stored in the following directory
 REFDIR = "test_data/"
 
@@ -80,6 +81,19 @@ class TestPBAssign(unittest.TestCase):
         """
         if not path.isdir(OUTDIR):
             os.mkdir(OUTDIR)
+        self._temp_directory = os.path.join(OUTDIR, str(uuid1()))
+        os.mkdir(self._temp_directory)
+
+    def tearDown(self):
+        if ((sys.version_info[0] == 2
+                 and sys.exc_info() == (None, None, None))
+                or sys.version_info[0] == 3):
+            # On python 2, sys.exc_info() is (None, None, None) only when a test 
+            # pass. On python 3, however, there is no difference in 
+            # sys.exc_info() between a passing and a failing test. Here, on
+            # python 2, we delete the temporary directory only is the test
+            # passes; on python 3 we always delete the temporary directory.
+            shutil.rmtree(self._temp_directory)
 
     def test_fasta(self):
         """
@@ -87,7 +101,8 @@ class TestPBAssign(unittest.TestCase):
         """
         references = ["1BTA", "1AY7", "2LFU", "3ICH"]
         extensions = [".pdb", ".cif.gz"]
-        _test_PBassign_options(references, extensions, ['{0}.PB.fasta'], [])
+        _test_PBassign_options(references, extensions, ['{0}.PB.fasta'], [],
+                               tmp_dir=self._temp_directory)
 
     def test_flat(self):
         """
@@ -95,8 +110,10 @@ class TestPBAssign(unittest.TestCase):
         """
         references = ["1BTA", "1AY7", "2LFU", "3ICH"]
         extensions = [".pdb", ".cif.gz"]
-        _test_PBassign_options(references, extensions, ['{0}.PB.fasta', '{0}.PB.flat'],
-                               ['--flat'])
+        _test_PBassign_options(references, extensions,
+                               ['{0}.PB.fasta', '{0}.PB.flat'],
+                               ['--flat'],
+                               tmp_dir=self._temp_directory)
 
     def test_phipsi(self):
         """
@@ -104,8 +121,10 @@ class TestPBAssign(unittest.TestCase):
         """
         references = ["1BTA", "1AY7", "2LFU", "3ICH"]
         extensions = [".pdb", ".cif.gz"]
-        _test_PBassign_options(references, extensions, ['{0}.PB.fasta', '{0}.PB.phipsi'],
-                               ['--phipsi'])
+        _test_PBassign_options(references, extensions,
+                               ['{0}.PB.fasta', '{0}.PB.phipsi'],
+                               ['--phipsi'],
+                               tmp_dir=self._temp_directory)
 
     def test_flat_phipsi(self):
         """
@@ -115,7 +134,8 @@ class TestPBAssign(unittest.TestCase):
         extensions = [".pdb", ".cif.gz"]
         _test_PBassign_options(references, extensions,
                                ['{0}.PB.fasta', '{0}.PB.flat', '{0}.PB.phipsi'],
-                               ['--flat', '--phipsi'])
+                               ['--flat', '--phipsi'],
+                               tmp_dir=self._temp_directory)
 
     def test_multiple_inputs(self):
         """
@@ -125,7 +145,8 @@ class TestPBAssign(unittest.TestCase):
         extensions = [".pdb", ".cif.gz"]
         _test_PBassign_options(references, extensions,
                                ['{0}.PB.fasta', '{0}.PB.flat', '{0}.PB.phipsi'],
-                               ['--flat', '--phipsi'], multiple='all')
+                               ['--flat', '--phipsi'], multiple='all',
+                               tmp_dir=self._temp_directory)
 
     def test_xtc_input(self):
         """
@@ -166,7 +187,8 @@ class TestPBAssign(unittest.TestCase):
         _test_PBassign_options(references, extensions, 
                                ['{0}.PB.fasta', '{0}.PB.flat', '{0}.PB.phipsi',
                                 '{0}.missing'],
-                               ['--flat', '--phipsi'])
+                               ['--flat', '--phipsi'],
+                               tmp_dir=self._temp_directory)
 
     @_failure_test
     def test_too_many_outputs(self):
@@ -177,7 +199,8 @@ class TestPBAssign(unittest.TestCase):
         extensions = [".pdb"]
         _test_PBassign_options(references, extensions, 
                                ['{0}.PB.fasta', '{0}.PB.flat'],
-                               ['--flat', '--phipsi'])
+                               ['--flat', '--phipsi'],
+                               tmp_dir=self._temp_directory)
 
     @_failure_test
     def test_different_outputs(self):
@@ -187,7 +210,8 @@ class TestPBAssign(unittest.TestCase):
         """
         references = ["test_fail"]
         extensions = [".pdb"]
-        _test_PBassign_options(references, extensions, ['{0}.PB.fasta'], [])
+        _test_PBassign_options(references, extensions, ['{0}.PB.fasta'], [],
+                               tmp_dir=self._temp_directory)
 
 
 def _same_file_content(file_a, file_b):
@@ -224,7 +248,7 @@ def _assert_identical_files(file_a, file_b):
 
 
 def _run_prog(program, pdbid, extension, options,
-              multiple=None, indir=REFDIR, outdir=OUTDIR):
+              multiple=None, indir=REFDIR, outdir=OUTDIR, tmp_dir='.'):
     """
     Run a PBxplore program on a PDBID with the given options.
 
@@ -234,7 +258,9 @@ def _run_prog(program, pdbid, extension, options,
     if program not in ('./PBassign.py',):
         raise NotImplementedError('_run_prog does not know how to run {0}'
                                   .format(program))
-    out_run_dir = path.join(OUTDIR, str(uuid1()))
+
+    out_run_dir = os.path.join(tmp_dir, str(uuid1()))
+    os.mkdir(out_run_dir)
     if multiple is None:
         test_input = path.join(REFDIR, pdbid + extension)
         out_basename = path.join(out_run_dir, pdbid)
@@ -245,8 +271,6 @@ def _run_prog(program, pdbid, extension, options,
             input_args += ['-p', path.join(REFDIR, basename + extension)]
         out_basename = path.join(out_run_dir, multiple)
 
-    os.mkdir(out_run_dir)
-
     run_list = [program] + input_args + ['-o', out_basename + extension] + options
     print(' '.join(run_list))
     status = subprocess.call(run_list, stdout=subprocess.PIPE)
@@ -255,14 +279,15 @@ def _run_prog(program, pdbid, extension, options,
 
 
 def _test_PBassign_options(basenames, extensions, outfiles, options,
-                           multiple=None, expected_exit=0):
+                           multiple=None, expected_exit=0,
+                           tmp_dir='.'):
     if not multiple is None:
         basenames = [basenames]
         out_name = multiple
     for basename in basenames:
         for extension in extensions:
-            status, out_run_dir = _run_prog('./PBassign.py', basename, extension, options,
-                                            multiple)
+            status, out_run_dir = _run_prog('./PBassign.py', basename, extension,
+                               options, multiple, tmp_dir=tmp_dir)
             assert status == expected_exit, \
                    'PBassign stoped with a {0} exit code'.format(status)
             assert len(os.listdir(out_run_dir)) == len(outfiles),\
@@ -270,11 +295,11 @@ def _test_PBassign_options(basenames, extensions, outfiles, options,
                      '{0} files produced instead of {1}').format(
                         len(os.listdir(out_run_dir)), len(outfiles))
             out_name = basename if multiple is None else multiple
-            for outfile in (template.format(out_name + extension) for template in outfiles):
+            for outfile in (template.format(out_name + extension)
+                            for template in outfiles):
                 test_file = path.join(out_run_dir, outfile)
                 ref_file = path.join(REFDIR, outfile)
                 _assert_identical_files(test_file, ref_file)
-            shutil.rmtree(out_run_dir)
 
 
 if __name__ == '__main__':
