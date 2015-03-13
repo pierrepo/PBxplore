@@ -46,7 +46,7 @@ pause
 
 echo  -e "\n"
 echo "Test with the Barstar protein"
-echo "201 conformations issued from 1 molecular dynamics simulation"
+echo "51 conformations issued from 1 molecular dynamics simulation"
 echo "../PBassign.py -x barstar_md_traj.xtc -g barstar_md_traj.gro -o barstar_md_traj"
 pause
 ../PBassign.py -x barstar_md_traj.xtc -g barstar_md_traj.gro -o barstar_md_traj
@@ -64,14 +64,11 @@ echo "../PBcount.py -f psi_md_traj_1.PB.fasta -o psi_md_traj_1"
 pause
 ../PBcount.py -f psi_md_traj_1.PB.fasta -o psi_md_traj_1
 
-
 echo  -e "\n"
 echo "with several input files"
 echo "../PBcount.py -f psi_md_traj_1.PB.fasta -f psi_md_traj_2.PB.fasta -f psi_md_traj_3.PB.fasta -o psi_md_traj"
 pause
 ../PBcount.py -f psi_md_traj_1.PB.fasta -f psi_md_traj_2.PB.fasta -f psi_md_traj_3.PB.fasta -o psi_md_traj
-
-
 
 echo  -e "\n"
 echo "with one input file and the --first-residue option"
@@ -92,7 +89,6 @@ echo  -e "\n"
 echo "../PBstat.py -f psi_md_traj.PB.count -o psi_md_traj --map --neq --logo"
 pause
 ../PBstat.py -f psi_md_traj.PB.count -o psi_md_traj --map --neq --logo
-
 
 echo  -e "\n"
 echo "Test with --residue-min and --residue-max options"
