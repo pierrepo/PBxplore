@@ -394,7 +394,7 @@ if options.logo:
     command = """weblogo \
 --format pdf \
 --errorbars NO \
---fineprint "PBlogo" \
+--fineprint "" \
 --title %s \
 --color "#1240AB" d      "strand main" \
 --color "#1240AB" abcdef "strand others" \
