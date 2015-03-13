@@ -276,29 +276,6 @@ def assign(dihedrals, pb_ref):
     return pb_seq
 
 
-def PB_assign(pb_ref, structure, comment, options,
-              fasta_name, flat_name, phipsi_name):
-    """assign Protein Blocks (PB) from phi and psi angles
-    """
-    # get phi and psi angles from structure
-    dihedrals = structure.get_phi_psi_angles()
-    #print(dihedrals)
-    # write phi and psi angles
-    if options.phipsi:
-        write_phipsi(phipsi_name, dihedrals, comment)
-
-    pb_seq = assign(dihedrals, pb_ref)
-    
-    # write PBs in fasta file
-    write_fasta(fasta_name, pb_seq, comment)
-    
-    # write PBs in flat file
-    if options.flat:
-        write_flat(flat_name, pb_seq)
- 
-    print("PBs assigned for {0}".format(comment))
-
-
 def angle_modulo_360(angle):
     """keep angle in the range -180 / +180 [degrees]
     """
