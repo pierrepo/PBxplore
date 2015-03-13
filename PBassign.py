@@ -43,15 +43,15 @@ except NameError:
     pass
 
 
-def PB_assign(pb_ref, structure, comment, options,
-              fasta_name, flat_name, phipsi_name):
+def PB_assign(pb_ref, structure, comment,
+              fasta_name, flat_name=None, phipsi_name=None):
     """assign Protein Blocks (PB) from phi and psi angles
     """
     # get phi and psi angles from structure
     dihedrals = structure.get_phi_psi_angles()
     #print(dihedrals)
     # write phi and psi angles
-    if options.phipsi:
+    if not phipsi_name is None:
         PB.write_phipsi(phipsi_name, dihedrals, comment)
 
     pb_seq = PB.assign(dihedrals, pb_ref)
@@ -60,7 +60,7 @@ def PB_assign(pb_ref, structure, comment, options,
     PB.write_fasta(fasta_name, pb_seq, comment)
     
     # write PBs in flat file
-    if options.flat:
+    if not flat_name is None:
         PB.write_flat(flat_name, pb_seq)
  
     print("PBs assigned for {0}".format(comment))
@@ -177,7 +177,7 @@ if options.p:
             if chain.name:
                 comment += " | chain %s" % (chain.name)
             # assign PBs
-            PB_assign(PB.REFERENCES, chain, comment, options,
+            PB_assign(PB.REFERENCES, chain, comment,
                       fasta_name=fasta_name, flat_name=flat_name,
                       phipsi_name=phipsi_name)
 
@@ -213,7 +213,7 @@ if not options.p:
                 comment = "%s | frame %s" % (options.x, ts.frame)
         # assign structure after end of frame
         if structure.size() != 0 :
-            PB_assign(PB.REFERENCES, structure, comment, options,
+            PB_assign(PB.REFERENCES, structure, comment,
                       fasta_name=fasta_name, flat_name=flat_name,
                       phipsi_name=phipsi_name)
 
