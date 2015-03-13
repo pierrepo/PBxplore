@@ -15,7 +15,6 @@ from __future__ import print_function
 ## standard modules
 import os
 import sys
-import math
 
 ## third-party modules
 import numpy
@@ -258,7 +257,7 @@ def assign(dihedrals, pb_ref):
         # cannot get required angles (Nter, Cter or missign residues)
         # -> cannot assign PB
         # jump to next residue
-        except:
+        except KeyError:
             pb_seq += "Z"
             continue
         
@@ -294,11 +293,11 @@ def write_phipsi(name, torsion, com):
     for res in sorted(torsion):
         try:
             phi_str = "%8.2f" % torsion[res]["phi"]
-        except:
+        except TypeError:
             phi_str = "    None"
         try:
             psi_str = "%8.2f" % torsion[res]["psi"]
-        except:
+        except TypeError:
             psi_str = "    None"
         f_out.write("%s %6d %s %s \n" % (com, res, phi_str, psi_str))
     f_out.close()

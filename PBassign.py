@@ -17,7 +17,6 @@ from __future__ import print_function
 ## standard modules
 import os
 import sys
-import math
 import glob
 import argparse 
 
@@ -187,7 +186,7 @@ if options.p:
 if not options.p:
     try:
         import MDAnalysis
-    except:
+    except ImportError:
         sys.exit("Error: failed to import MDAnalysis")
 
     model = ""
