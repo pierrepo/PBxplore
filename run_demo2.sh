@@ -40,9 +40,9 @@ pause
 echo  -e "\n"
 echo "Test with the PSI domain of the human beta3 integrin"
 echo "270 conformations issued from 3 molecular dynamics simulation" 
-echo "../PBassign.py -p psi_md_traj_1.pdb -p psi_md_traj_2.pdb -p psi_md_traj_3.pdb -o psi_md_traj"
+echo "../PBassign.py -p psi_md_traj_1.pdb -p psi_md_traj_2.pdb -p psi_md_traj_3.pdb -o psi_md_traj_all"
 pause
-../PBassign.py -p psi_md_traj_1.pdb -p psi_md_traj_2.pdb -p psi_md_traj_3.pdb -o psi_md_traj
+../PBassign.py -p psi_md_traj_1.pdb -p psi_md_traj_2.pdb -p psi_md_traj_3.pdb -o psi_md_traj_all
 
 echo  -e "\n"
 echo "Test with the Barstar protein"
@@ -66,9 +66,9 @@ pause
 
 echo  -e "\n"
 echo "with several input files"
-echo "../PBcount.py -f psi_md_traj_1.PB.fasta -f psi_md_traj_2.PB.fasta -f psi_md_traj_3.PB.fasta -o psi_md_traj"
+echo "../PBcount.py -f psi_md_traj_1.PB.fasta -f psi_md_traj_2.PB.fasta -f psi_md_traj_3.PB.fasta -o psi_md_traj_all"
 pause
-../PBcount.py -f psi_md_traj_1.PB.fasta -f psi_md_traj_2.PB.fasta -f psi_md_traj_3.PB.fasta -o psi_md_traj
+../PBcount.py -f psi_md_traj_1.PB.fasta -f psi_md_traj_2.PB.fasta -f psi_md_traj_3.PB.fasta -o psi_md_traj_all
 
 echo  -e "\n"
 echo "with one input file and the --first-residue option"
@@ -88,13 +88,13 @@ echo "#------------------------------------------------------------------------#
 echo  -e "\n"
 echo "../PBstat.py -f psi_md_traj.PB.count -o psi_md_traj --map --neq --logo"
 pause
-../PBstat.py -f psi_md_traj.PB.count -o psi_md_traj --map --neq --logo
+../PBstat.py -f psi_md_traj_all.PB.count -o psi_md_traj --map --neq --logo
 
 echo  -e "\n"
 echo "Test with --residue-min and --residue-max options"
 echo "../PBstat.py -f psi_md_traj.PB.count -o psi_md_traj --map --neq --logo --residue-min 10 --residue-max 30"
 pause
-../PBstat.py -f psi_md_traj.PB.count -o psi_md_traj --map --neq --logo --residue-min 10 --residue-max 30
+../PBstat.py -f psi_md_traj_all.PB.count -o psi_md_traj --map --neq --logo --residue-min 10 --residue-max 30
 
 
 echo  -e "\n"
