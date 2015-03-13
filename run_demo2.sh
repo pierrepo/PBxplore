@@ -91,10 +91,35 @@ pause
 ../PBstat.py -f psi_md_traj_all.PB.count -o psi_md_traj --map --neq --logo
 
 echo  -e "\n"
-echo "Test with --residue-min and --residue-max options"
+echo "Define a residue frame (--residue-min and --residue-max options)"
 echo "../PBstat.py -f psi_md_traj.PB.count -o psi_md_traj --map --neq --logo --residue-min 10 --residue-max 30"
 pause
 ../PBstat.py -f psi_md_traj_all.PB.count -o psi_md_traj --map --neq --logo --residue-min 10 --residue-max 30
+
+
+echo  -e "\n"
+echo "#------------------------------------------------------------------------#"
+echo "|                                                                        |"
+echo "|  Cluster structures                                                    |"
+echo "|                                                                        |"
+echo "#------------------------------------------------------------------------#"
+
+echo  -e "\n"
+echo "../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all"
+pause
+../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all
+
+echo  -e "\n"
+echo "Produce only 3 clusters (--clusters option)"
+echo "../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all_3  --clusters 3"
+pause
+../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all_3  --clusters 3
+
+echo  -e "\n"
+echo "Compare only sequence against the first one (--compare option)"
+echo "../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all --compare"
+pause
+../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all --compare
 
 
 echo  -e "\n"

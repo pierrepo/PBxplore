@@ -19,51 +19,46 @@ eventually, another option is to [cluster structures](#cluster) protein conforma
 
 For this example, first perform PB assignment (with `PBassign.py`):
 
-    ./PBassign.py -p ./demo2/md_traj.pdb -o md_traj
+    ./PBassign.py -p ./demo2/psi_md_traj_1.pdb -o psi_md_traj_1
 
 Output:
 
     1 PDB file(s) to process
-    read PB definitions: 16 PBs x 8 angles 
-    demo2/md_traj.pdb
-    PBs assigned for demo2/md_traj.pdb | model 0
-    PBs assigned for demo2/md_traj.pdb | model 1
-    PBs assigned for demo2/md_traj.pdb | model 2
-    PBs assigned for demo2/md_traj.pdb | model 3
+    Read 90 chain(s) in ./demo2/psi_md_traj_1.pdb
+    PBs assigned for ./demo2/psi_md_traj_1.pdb | model 0
+    PBs assigned for ./demo2/psi_md_traj_1.pdb | model 1
+    PBs assigned for ./demo2/psi_md_traj_1.pdb | model 2
     [snip]
-    PBs assigned for demo2/md_traj.pdb | model 221
-    PBs assigned for demo2/md_traj.pdb | model 222
-    PBs assigned for demo2/md_traj.pdb | model 223
-    PBs assigned for demo2/md_traj.pdb | model 224
-    wrote md_traj.PB.fasta
+    PBs assigned for ./demo2/psi_md_traj_1.pdb | model 87
+    PBs assigned for ./demo2/psi_md_traj_1.pdb | model 88
+    PBs assigned for ./demo2/psi_md_traj_1.pdb | model 89
+    wrote psi_md_traj_1.PB.fasta
 
 Then compute PBs frequency:
 
-    ./PBcount.py -f md_traj.PB.fasta -o md_traj
+    ./PBcount.py -f psi_md_traj_1.PB.fasta -o psi_md_traj_1
 
 Output:
 
-    read 225 sequences in md_traj.PB.fasta
-    wrote md_traj.PB.count
+    read 90 sequences in psi_md_traj_1.PB.fasta
+    wrote psi_md_traj_1.PB.count
 
-Content of `md_traj.PB.count`:
+Content of `psi_md_traj_1.PB.count`:
 
              a     b     c     d     e     f     g     h     i     j     k     l     m     n     o     p
     1        0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
     2        0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
-    3        0     0     0     0     0    98     0     0     0     0   127     0     0     0     0     0
-    4        0     0     0     0     0     0     0     0     0     0   101   124     0     0     0     0
-    5        0     0     0     0     0     0     0     0     0     0     1   118   106     0     0     0
-    6        0     0     0     0     0     0     0     0     0     0     0     0   224     1     0     0
-    7        0     0     0     0     0     0   158     0     0     0     0     0    47    20     0     0
-    8        0     0     0     0     0     0     0     0     0     0     0     0    46     0   179     0
-    9        0     0     0     0     0     0     0     0     0    76     2     0    48     0     0    99
+    3        0     0     0     0     0    90     0     0     0     0     0     0     0     0     0     0
+    4        0     0     0     0     0     1     0     0     0     0    89     0     0     0     0     0
     [snip]
-    687      3     0     2   124     0    92     2     0     0     0     0     2     0     0     0     0
-    688      0    63    35    26    50    23    23     0     0     0     5     0     0     0     0     0
-    689      0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
-    690      0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+    51       0     0     0     0     0    22     0    40     0     0    28     0     0     0     0     0
+    52       0    23     0     0     0     0     0     0    38     1     1    27     0     0     0     0
+    53      62     0    21     0     0     0     0     0     0     0     0     0     0     0     0     7
+    54       0     0    90     0     0     0     0     0     0     0     0     0     0     0     0     0
+    55       0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+    56       0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
 
+Note that residues 1, 2, 55 and 56 have a null count of all PBs. These residues are the first and last residues of the structure and no PB can be assigned to them.
 
 ### Usage
 
@@ -83,28 +78,28 @@ Content of `md_traj.PB.count`:
 
 can be used several times:
 
-    ./PBcount.py -f demo2/md_traj_1.PB.fasta -f demo2/md_traj_2.PB.fasta -f demo2/md_traj_3.PB.fasta -o test
+    ./PBcount.py -f demo2/psi_md_traj_1.PB.fasta -f demo2/psi_md_traj_2.PB.fasta -f demo2/psi_md_traj_3.PB.fasta -o psi_md_traj_all
 
 Output:
 
-    read 90 sequences in demo2/md_traj_1.PB.fasta
-    read 90 sequences in demo2/md_traj_2.PB.fasta
-    read 90 sequences in demo2/md_traj_3.PB.fasta
-    wrote test.PB.count
+    read 90 sequences in demo2/psi_md_traj_1.PB.fasta
+    read 90 sequences in demo2/psi_md_traj_2.PB.fasta
+    read 90 sequences in demo2/psi_md_traj_3.PB.fasta
+    wrote psi_md_traj_all.PB.count
 
 ### `--first-residue` option
 
 By default, the number of the first residue is 1, this option allows to adjust the number associated to the first residue (and to the followings automaticaly).
 
-    ./PBcount.py --first-residue 5 -f demo2/md_traj_1.PB.fasta -o test1
+    ./PBcount.py --first-residue 5 -f demo2/psi_md_traj_1.PB.fasta -o psi_md_traj_1_shifted
 
 Output:
 
-    read 90 sequences in demo2/md_traj_1.PB.fasta
+    read 90 sequences in demo2/psi_md_traj_1.PB.fasta
     first residue will be numbered 5
-    wrote test1.PB.count
+    wrote psi_md_traj_1_shifted.PB.count
 
-Content of `test1.PB.count`:
+Content of `psi_md_traj_1_shifted.PB.count`:
 
              a     b     c     d     e     f     g     h     i     j     k     l     m     n     o     p
     5        0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
@@ -113,8 +108,6 @@ Content of `test1.PB.count`:
     8        0     0     0     0     0     1     0     0     0     0    89     0     0     0     0     0
     9        0    89     0     0     0     0     0     0     0     0     0     1     0     0     0     0
     10       0     0    86     0     0     3     0     0     0     0     0     0     1     0     0     0
-    11       0     0     1     0     0     7     4     0     0     0     0     0     0    78     0     0
-    12       0    48     0     0     0     0     0     9     0     0     0     7     0     0    26     0
     [snip]
 
 
@@ -124,24 +117,23 @@ Content of `test1.PB.count`:
 
 generates frequency and logo plots and estimates *Neq*. 
 
-To generate map or Neq plot, PBxplore requires R to be installed and present in the user PATH.
+To generate map or *Neq* plot, PBxplore requires R to be installed and present in the user environment.
 
-To generate Weblogo-like represations, PBxplore requires R to be installed and present in the user PATH.
+To generate Weblogo-like represations, PBxplore requires weblogo to be installed and present in the user environment.
 
 Example:
 
-    ./PBstat.py -f md_traj.PB.count --map --neq --logo -o md_traj
+    ./PBstat.py -f demo2/psi_md_traj_all.PB.count --map --neq --logo -o psi_md_traj_all
 
 Output:
 
     Index of first residue is: 1
-    wrote md_traj.PB.map.png
+    wrote psi_md_traj_all.PB.map.png
 
-    wrote md_traj.PB.Neq
-    wrote md_traj.PB.Neq.png
+    wrote psi_md_traj_all.PB.Neq
+    wrote psi_md_traj_all.PB.Neq.png
 
-    wrote md_traj.PB.logo.pdf
-
+    wrote psi_md_traj_all.PB.logo.pdf
 
 ### Usage
 
@@ -171,15 +163,16 @@ generates map of the distribution of PBs along protein sequence.
 
 Example:
 
-    ./PBstat.py -f demo2/md_traj.PB.count --map -o md_traj
+    ./PBstat.py -f demo2/psi_md_traj_all.PB.count --map -o psi_md_traj_all
 
 Output:
 
-    wrote md_traj.PB.map.png
+    Index of first residue is: 1
+    wrote psi_md_traj_all.PB.map.png
 
 Graph:
 
-![distribution of PBs](img/md_traj.PB.map.jpg "distribution of PBs")
+![Distribution of PBs](img/psi_md_traj_all.PB.map.jpg)
 
 The color range goes from red to blue. For a given position in the protein sequence, blue corresponds to a null frequency (meaning the particular PB is never met a this position) and red corresponds to a frequency of 1 (meaning the particular PB is always found at this position). 
 
@@ -189,29 +182,28 @@ computes *Neq* and generates *Neq* plot along protein sequence.
 
 Example:
 
-    ./PBstat.py -f demo2/md_traj.PB.count --neq -o md_traj
+    ./PBstat.py -f demo2/psi_md_traj_all.PB.count --neq -o psi_md_traj_all
 
 Output:
 
-    wrote md_traj.PB.Neq
-    wrote md_traj.PB.Neq.png
+    Index of first residue is: 1
+    wrote psi_md_traj_all.PB.Neq
+    wrote psi_md_traj_all.PB.Neq.png
 
-Content of `md_traj.PB.Neq`:
+Content of `psi_md_traj_all.PB.Neq`:
 
     resid       Neq 
     1          1.00 
     2          1.00 
-    3          1.99 
-    4          2.00 
-    5          2.06 
-    6          1.04 
-    7          2.21 
-    8          1.67 
+    3          2.03 
+    4          1.92 
+    5          3.12 
+    6          2.14  
     [snip]
 
 Graph:
 
-![Neq versus residue number](img/md_traj.PB.Neq.jpg "Neq versus residue number")
+![Neq versus residue number](img/psi_md_traj_all.PB.Neq.jpg)
 
 
 ### `--logo` option
@@ -220,97 +212,98 @@ generates WebLogo-like representation of PBs frequency along protein sequence. T
 
 Example:
 
-    ./PBstat.py -f demo2/md_traj.PB.count --logo -o md_traj
+    ./PBstat.py -f demo2/psi_md_traj_all.PB.count --logo -o psi_md_traj_all
 
 Output:
 
-    wrote md_traj.PB.logo.pdf
+    Index of first residue is: 1
+    wrote psi_md_traj_all.PB.logo.pdf
 
 Graph:
 
-![logo representation of PBs frequency](img/md_traj.PB.logo.jpg "logo representation of PBs frequency")
-
+![Logo representation of PBs frequency](img/psi_md_traj_all.PB.logo.jpg)
 
 
 ### `--residue-min` and `--residue-max` options
 
 These options define the lower and upper bound of residue frame. 
 
-    ./PBstat.py -f md_traj.PB.count --map --neq --logo -o md_traj --residue-min 15 --residue-max 35
+    ./PBstat.py -f demo2/psi_md_traj_all.PB.count --map --neq --logo -o psi_md_traj_all_frame --residue-min 15 --residue-max 42
 
 Output:
 
-    wrote md_traj.PB.map.15-35.png
+    Index of first residue is: 1
+    wrote psi_md_traj_all_frame.PB.map.15-42.png
 
-    wrote md_traj.PB.Neq.15-35
-    wrote md_traj.PB.Neq.15-35.png
+    wrote psi_md_traj_all_frame.PB.Neq.15-42
+    wrote psi_md_traj_all_frame.PB.Neq.15-42.png
 
-    wrote md_traj.PB.logo.15-35.pdf
+    wrote psi_md_traj_all_frame.PB.logo.15-42.pdf
 
 PBs distribution:
 
-![PBs distribution with residue frame](img/md_traj.PB.Neq.frame.jpg)
+![PBs distribution with residue frame](img/psi_md_traj_all_frame.PB.map.15-42.jpg)
 
 Neq versus residue number:
 
-![Neq versus residue number with residue frame](img/md_traj.PB.Neq.frame.jpg "Neq versus residue number with residue frame")
+![Neq versus residue number with residue frame](img/psi_md_traj_all_frame.PB.Neq.15-42.jpg)
 
 Logo representation of PBs frequency:
 
-![Logo representation of PBs frequency](img/md_traj.PB.logo.frame.jpg "Logo representation of PBs frequency with residue frame")
+![Logo representation of PBs frequency](img/psi_md_traj_all_frame.PB.logo.15-42.jpg)
 
 
 ## <a name="cluster"></a>Clustering of protein structures
 
-Once converted to PB sequences, conformations of a same protein structure car be clustered based on PB similarities with `PBclust.py`. 
+Once converted to PB sequences, conformations of a same protein can be clustered based on PB similarities with `PBclust.py`. 
 
 Example: 
 
-    ./PBclust.py -f demo2/beta3_IEGF12.PB.fasta -o beta3_IEGF12
+    ./PBclust.py -f demo2/psi_md_traj_all.PB.fasta -o psi_md_traj_all
 
 Output:
 
-    read 190 sequences in demo2/beta3_IEGF12.PB.fasta
+    read 270 sequences in demo2/psi_md_traj_all.PB.fasta
     read substitution matrix
     Building distance matrix
     100%
-    wrote beta3_IEGF12.PB.dist
+    wrote psi_md_traj_all.PB.dist
     R clustering: OK
-    cluster   1:     9 sequences (  4%)
-    cluster   2:    16 sequences (  8%)
-    cluster   3:    48 sequences ( 25%)
-    cluster   4:    52 sequences ( 27%)
-    cluster   5:    65 sequences ( 34%)
-    wrote beta3_IEGF12.PB.clust
+    cluster 1: 90 sequences (33%)
+    cluster 2: 55 sequences (20%)
+    cluster 3: 35 sequences (13%)
+    cluster 4: 35 sequences (13%)
+    cluster 5: 55 sequences (20%)
+    wrote psi_md_traj_all.PB.clust
 
-Cluster 5 is the biggest cluster with 34% of conformations.
-
-
-`beta3_IEGF12.PB.dist` contains the matrix distance between all PB sequences.
+Cluster 1 is the biggest cluster with 33% of all conformations.
 
 
-Content of `md_traj_1.PB.clust` (clustering results):
+`psi_md_traj_all.PB.dist` contains the matrix distance between all PB sequences.
 
-    SEQ_CLU  "beta3_IEGF12.pdb | model 0"  1 
-    SEQ_CLU  "beta3_IEGF12.pdb | model 1"  1 
-    SEQ_CLU  "beta3_IEGF12.pdb | model 2"  1 
+
+Content of `psi_md_traj_all.PB.clust` (clustering results):
+
+    SEQ_CLU  "psi_md_traj_1.pdb | model 0"  1 
+    SEQ_CLU  "psi_md_traj_1.pdb | model 1"  1 
+    SEQ_CLU  "psi_md_traj_1.pdb | model 2"  1 
     [snip]
     ...
     [snip]
-    SEQ_CLU  "beta3_IEGF12.pdb | model 26"  2 
-    SEQ_CLU  "beta3_IEGF12.pdb | model 27"  3 
-    SEQ_CLU  "beta3_IEGF12.pdb | model 28"  3 
+    SEQ_CLU  "psi_md_traj_3.pdb | model 31"  4 
+    SEQ_CLU  "psi_md_traj_3.pdb | model 32"  4 
+    SEQ_CLU  "psi_md_traj_3.pdb | model 33"  5 
+    SEQ_CLU  "psi_md_traj_3.pdb | model 34"  5 
     [snip]
     ...
     [snip]
-    SEQ_CLU  "beta3_IEGF12.pdb | model 188"  5 
-    SEQ_CLU  "beta3_IEGF12.pdb | model 189"  5 
-    MED_CLU  "beta3_IEGF12.pdb | model 6"  1 
-    MED_CLU  "beta3_IEGF12.pdb | model 18"  2 
-    MED_CLU  "beta3_IEGF12.pdb | model 48"  3 
-    MED_CLU  "beta3_IEGF12.pdb | model 98"  4 
-    MED_CLU  "beta3_IEGF12.pdb | model 157"  5 
-
+    SEQ_CLU  "psi_md_traj_3.pdb | model 88"  5 
+    SEQ_CLU  "psi_md_traj_3.pdb | model 89"  5 
+    MED_CLU  "psi_md_traj_1.pdb | model 65"  1 
+    MED_CLU  "psi_md_traj_2.pdb | model 33"  2 
+    MED_CLU  "psi_md_traj_2.pdb | model 74"  3 
+    MED_CLU  "psi_md_traj_3.pdb | model 0"  4 
+    MED_CLU  "psi_md_traj_3.pdb | model 87"  5 
 
 ### Usage
 
@@ -327,38 +320,38 @@ Content of `md_traj_1.PB.clust` (clustering results):
       --compare             compare the first sequence versus all others
 
 
-### `--clusers` option
+### `--clusters` option
 
-defines the number of wnated clusters (5 is the default)
+defines the number of wanted clusters (5 by default)
 
 Example:
 
-    ./PBclust.py -f demo2/beta3_IEGF12.PB.fasta -o beta3_IEGF12 --clusters 3
+    ./PBclust.py -f demo2/psi_md_traj_all.PB.fasta -o psi_md_traj_all_3 --clusters 3
 
 Output:
 
-    read 190 sequences in demo2/beta3_IEGF12.PB.fasta
+    read 270 sequences in demo2/psi_md_traj_all.PB.fasta
     read substitution matrix
     Building distance matrix
     100%
-    wrote beta3_IEGF12.PB.dist
+    wrote psi_md_traj_all_3.PB.dist
     R clustering: OK
-    cluster   1:    25 sequences ( 13%)
-    cluster   2:    48 sequences ( 25%)
-    cluster   3:   117 sequences ( 61%)
-    wrote beta3_IEGF12.PB.clust
+    cluster 1: 90 sequences (33%)
+    cluster 2: 90 sequences (33%)
+    cluster 3: 90 sequences (33%)
+    wrote psi_md_traj_all_3.PB.clust
 
 ### `--compare` option
 
-compares, position by position, the first sequence found in the fasta file against all others. The substitution matric between PBs is converted to a score between O (identical) and 9 (different).
+compares, position by position, the first sequence found in the fasta file against all others. The result of the comparison est a score between O (identical) and 9 (different).
 
 Example:
 
-    ./PBclust.py -f demo2/beta3_IEGF12.PB.fasta -o beta3_IEGF12 --compare
+    ./PBclust.py -f demo2/psi_md_traj_all.PB.fasta -o psi_md_traj_all --compare
 
 Output:
 
-    read 190 sequences in demo2/beta3_IEGF12.PB.fasta
+    read 270 sequences in demo2/psi_md_traj_all.PB.fasta
     read substitution matrix
     Normalized substitution matrix (between 0 and 9)
     [[0 3 2 3 4 3 3 4 2 3 5 3 5 4 3 3]
@@ -377,30 +370,26 @@ Output:
      [4 3 4 6 4 5 2 4 3 4 3 2 2 0 2 2]
      [3 3 3 5 5 4 2 2 3 3 4 2 3 2 0 2]
      [3 2 2 4 5 5 1 4 2 3 4 4 3 2 2 0]]
-    Compare first sequence (beta3_IEGF12.pdb | model 0) with others
-    wrote beta3_IEGF12.PB.compare.fasta
+    Compare first sequence (psi_md_traj_1.pdb | model 0) with others
+    wrote psi_md_traj_all.PB.compare.fasta
 
-Content of `beta3_IEGF12.PB.compare.fasta`:
+Content of `psi_md_traj_all.PB.compare.fasta`:
 
-    >beta3_IEGF12.pdb | model 0 vs beta3_IEGF12.pdb | model 1
-    000000200000000020000000000000000000000000200030000300003204
-    20240030012200000000000000200
-    >beta3_IEGF12.pdb | model 0 vs beta3_IEGF12.pdb | model 2
-    000000200000020000000003200000000000000000200000300300000004
-    20040430013200000330000000200
+    >psi_md_traj_1.pdb | model 0 vs psi_md_traj_1.pdb | model 1
+    00000002000000000020000000000002000200000000000230002000
+    >psi_md_traj_1.pdb | model 0 vs psi_md_traj_1.pdb | model 2
+    00000002000000000005000000000002000243000000055230000000
+    >psi_md_traj_1.pdb | model 0 vs psi_md_traj_1.pdb | model 3
+    00000002000000000020000000000002000200000000055230002000
     [snip]
     ...
     [snip]
-    >beta3_IEGF12.pdb | model 0 vs beta3_IEGF12.pdb | model 187
-    003355030000033432330000000000000000000333200030000300000004
-    20230000012203333035030000200
-    >beta3_IEGF12.pdb | model 0 vs beta3_IEGF12.pdb | model 188
-    003355030000023432330000000000000000000333200030303000000004
-    20230000012203333035030000200
-    >beta3_IEGF12.pdb | model 0 vs beta3_IEGF12.pdb | model 189
-    003355030030023432000000000000004000000333200030304000000004
-    20230000012203333035030000200
-
+    >psi_md_traj_1.pdb | model 0 vs psi_md_traj_3.pdb | model 87
+    00302523340000000005000000035032000323300000335220000000
+    >psi_md_traj_1.pdb | model 0 vs psi_md_traj_3.pdb | model 88
+    00302523350500000005000000032232000323300000555225000000
+    >psi_md_traj_1.pdb | model 0 vs psi_md_traj_3.pdb | model 89
+    00333522250000000025000000035032000323300002035020002000
 
 # References
 
