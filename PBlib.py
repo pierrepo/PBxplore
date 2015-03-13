@@ -234,6 +234,23 @@ def count_to_transfac(identifier, count_content):
 
 
 def assign(dihedrals, pb_ref):
+    """
+    Assign Protein Blocks.
+
+    Dihedral angles are provided as a dictionnary with one item per residue. The
+    key is the residue number, and the value is a dictionnary with phi and psi
+    as keys, and the dihedral angles as values.
+
+    The protein block definitions are provided as a dictionnary. Each key is a
+    block name, the values are lists of dihedral angles.
+
+    Parameters
+    ----------
+    dihedrals : dict
+        Phi and psi dihedral angles for each residue.
+    pb_ref : dict
+        The definition of the protein blocks.
+    """
     pb_seq = ""
     # iterate over all residues
     for res in sorted(dihedrals):
