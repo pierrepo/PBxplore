@@ -234,17 +234,7 @@ def count_to_transfac(identifier, count_content):
     return transfac_content
 
 
-def PB_assign(pb_ref, structure, comment, options,
-              fasta_name, flat_name, phipsi_name):
-    """assign Protein Blocks (PB) from phi and psi angles
-    """
-    # get phi and psi angles from structure
-    dihedrals = structure.get_phi_psi_angles()
-    #print(dihedrals)
-    # write phi and psi angles
-    if options.phipsi:
-        write_phipsi(phipsi_name, dihedrals, comment)
-
+def assign(dihedrals, pb_ref):
     pb_seq = ""
     # iterate over all residues
     for res in sorted(dihedrals):
@@ -283,7 +273,22 @@ def PB_assign(pb_ref, structure, comment, options,
             rmsda = numpy.sum(diff2**2)
             rmsda_lst[rmsda] = block
         pb_seq += rmsda_lst[min(rmsda_lst)]
+    return pb_seq
 
+
+def PB_assign(pb_ref, structure, comment, options,
+              fasta_name, flat_name, phipsi_name):
+    """assign Protein Blocks (PB) from phi and psi angles
+    """
+    # get phi and psi angles from structure
+    dihedrals = structure.get_phi_psi_angles()
+    #print(dihedrals)
+    # write phi and psi angles
+    if options.phipsi:
+        write_phipsi(phipsi_name, dihedrals, comment)
+
+    pb_seq = assign(dihedrals, pb_ref)
+    
     # write PBs in fasta file
     write_fasta(fasta_name, pb_seq, comment)
     
