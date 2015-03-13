@@ -43,111 +43,6 @@ except NameError:
     pass
 
 
-
-#===============================================================================
-# functions
-#===============================================================================
-
-
-def angle_modulo_360(angle):
-    """keep angle in the range -180 / +180 [degrees]
-    """
-    if angle > 180.0:
-        return angle - 360.0
-    elif angle < -180.0:
-        return angle + 360.0
-    else:
-        return angle
-    
-#-------------------------------------------------------------------------------
-def write_phipsi(name, torsion, com):
-    """save phi and psi angles
-    """
-    f_out = open(name, "a")
-    for res in sorted(torsion):
-        try:
-            phi_str = "%8.2f" % torsion[res]["phi"]
-        except:
-            phi_str = "    None"
-        try:
-            psi_str = "%8.2f" % torsion[res]["psi"]
-        except:
-            psi_str = "    None"
-        f_out.write("%s %6d %s %s \n" % (com, res, phi_str, psi_str))
-    f_out.close()
-
-#-------------------------------------------------------------------------------
-def write_flat(name, seq):
-    """write flat sequence to file 
-    """
-    f_out = open(name, "a")
-    f_out.write(seq + "\n")
-    f_out.close()
-
-#-------------------------------------------------------------------------------
-def PB_assign(pb_ref, structure, comment):
-    """assign Protein Blocks (PB) from phi and psi angles
-    """
-    # get phi and psi angles from structure
-    dihedrals = structure.get_phi_psi_angles()
-    #print(dihedrals)
-    # write phi and psi angles
-    if options.phipsi:
-        write_phipsi(phipsi_name, dihedrals, comment)
-
-    pb_seq = ""
-    # iterate over all residues
-    for res in sorted(dihedrals):
-        angles = []
-        # try to get all eight angles required for PB assignement
-        try:
-            angles.append(dihedrals[res-2]["psi"])
-            angles.append(dihedrals[res-1]["phi"])
-            angles.append(dihedrals[res-1]["psi"])
-            angles.append(dihedrals[res  ]["phi"])
-            angles.append(dihedrals[res  ]["psi"])
-            angles.append(dihedrals[res+1]["phi"])
-            angles.append(dihedrals[res+1]["psi"])
-            angles.append(dihedrals[res+2]["phi"])
-            # check for bad angles 
-            # (error while calculating torsion: missing atoms)
-            if None in angles:
-                pb_seq += "Z"
-                continue 
-           
-        # cannot get required angles (Nter, Cter or missign residues)
-        # -> cannot assign PB
-        # jump to next residue
-        except:
-            pb_seq += "Z"
-            continue
-        
-        # convert to array
-        angles = numpy.array(angles)
-
-        # compare to reference PB angles
-        rmsda_lst = {}
-        for block in pb_ref:
-            diff = pb_ref[block] - angles
-            diff2 = angle_modulo_360_vect(diff)
-            rmsda = numpy.sum(diff2**2)
-            rmsda_lst[rmsda] = block
-        pb_seq += rmsda_lst[min(rmsda_lst)]
-
-    # write PBs in fasta file
-    PB.write_fasta(fasta_name, pb_seq, comment)
-    
-    # write PBs in flat file
-    if options.flat:
-        write_flat(flat_name, pb_seq)
- 
-    print("PBs assigned for {0}".format(comment))
-             
-#-------------------------------------------------------------------------------
-# vertorize function
-#-------------------------------------------------------------------------------
-angle_modulo_360_vect = numpy.vectorize(angle_modulo_360)
-
 #===============================================================================
 # MAIN - program starts here
 #===============================================================================
@@ -229,6 +124,7 @@ PB.clean_file(fasta_name)
 #-------------------------------------------------------------------------------
 # prepare phi psi file for output
 #-------------------------------------------------------------------------------
+phipsi_name = None
 if options.phipsi:
     phipsi_name = options.o + ".PB.phipsi"
     PB.clean_file(phipsi_name)
@@ -236,6 +132,7 @@ if options.phipsi:
 #-------------------------------------------------------------------------------
 # prepare flat file for output
 #-------------------------------------------------------------------------------
+flat_name = None
 if options.flat:
     flat_name = options.o + ".PB.flat"
     PB.clean_file(flat_name)
@@ -257,7 +154,9 @@ if options.p:
             if chain.name:
                 comment += " | chain %s" % (chain.name)
             # assign PBs
-            PB_assign(PB.REFERENCES, chain, comment)
+            PB.PB_assign(PB.REFERENCES, chain, comment, options,
+                         fasta_name=fasta_name, flat_name=flat_name,
+                         phipsi_name=phipsi_name)
 
 
 
@@ -291,7 +190,9 @@ if not options.p:
                 comment = "%s | frame %s" % (options.x, ts.frame)
         # assign structure after end of frame
         if structure.size() != 0 :
-            PB_assign(PB.REFERENCES, structure, comment)
+            PB.PB_assign(PB.REFERENCES, structure, comment, options,
+                         fasta_name=fasta_name, flat_name=flat_name,
+                         phipsi_name=phipsi_name)
 
 print( "wrote {0}".format(fasta_name) )
 if options.flat:
