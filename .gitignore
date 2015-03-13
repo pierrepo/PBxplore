@@ -1,7 +1,7 @@
 # files currently opened by vi
 *.swp
 # image files 
-*.png
+/*.png
 # result files in the current directory
 /*.PB.*
 # memo file
