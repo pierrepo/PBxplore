@@ -20,9 +20,6 @@ import sys
 import glob
 import argparse 
 
-## third-party module
-import numpy 
-
 ## local module
 import PBlib as PB
 import PDBlib as PDB
