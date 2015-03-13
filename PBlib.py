@@ -70,7 +70,6 @@ NAMES = ["a", "b", "c", "d", "e", "f", "g", "h",
            "i", "j", "k", "l", "m", "n", "o", "p"]
 NUMBER = len(NAMES)
 
-print(__location__)
 SUBSTITUTION_MATRIX_NAME = os.path.join(__location__, "PBs_substitution_matrix.dat")
 
 
