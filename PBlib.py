@@ -15,7 +15,6 @@ from __future__ import print_function
 ## standard modules
 import os
 import sys
-import math
 
 ## third-party modules
 import numpy
@@ -232,3 +231,105 @@ def count_to_transfac(identifier, count_content):
     transfac_content += "XX\n"
     transfac_content += "//"
     return transfac_content
+
+
+def assign(dihedrals, pb_ref):
+    """
+    Assign Protein Blocks.
+
+    Dihedral angles are provided as a dictionnary with one item per residue. The
+    key is the residue number, and the value is a dictionnary with phi and psi
+    as keys, and the dihedral angles as values.
+
+    The protein block definitions are provided as a dictionnary. Each key is a
+    block name, the values are lists of dihedral angles.
+
+    Parameters
+    ----------
+    dihedrals : dict
+        Phi and psi dihedral angles for each residue.
+    pb_ref : dict
+        The definition of the protein blocks.
+    """
+    pb_seq = ""
+    # iterate over all residues
+    for res in sorted(dihedrals):
+        angles = []
+        # try to get all eight angles required for PB assignement
+        try:
+            angles.append(dihedrals[res-2]["psi"])
+            angles.append(dihedrals[res-1]["phi"])
+            angles.append(dihedrals[res-1]["psi"])
+            angles.append(dihedrals[res  ]["phi"])
+            angles.append(dihedrals[res  ]["psi"])
+            angles.append(dihedrals[res+1]["phi"])
+            angles.append(dihedrals[res+1]["psi"])
+            angles.append(dihedrals[res+2]["phi"])
+            # check for bad angles 
+            # (error while calculating torsion: missing atoms)
+            if None in angles:
+                pb_seq += "Z"
+                continue 
+           
+        # cannot get required angles (Nter, Cter or missign residues)
+        # -> cannot assign PB
+        # jump to next residue
+        except KeyError:
+            pb_seq += "Z"
+            continue
+        
+        # convert to array
+        angles = numpy.array(angles)
+
+        # compare to reference PB angles
+        rmsda_lst = {}
+        for block in pb_ref:
+            diff = pb_ref[block] - angles
+            diff2 = angle_modulo_360_vect(diff)
+            rmsda = numpy.sum(diff2**2)
+            rmsda_lst[rmsda] = block
+        pb_seq += rmsda_lst[min(rmsda_lst)]
+    return pb_seq
+
+
+def angle_modulo_360(angle):
+    """keep angle in the range -180 / +180 [degrees]
+    """
+    if angle > 180.0:
+        return angle - 360.0
+    elif angle < -180.0:
+        return angle + 360.0
+    else:
+        return angle
+    
+
+def write_phipsi(name, torsion, com):
+    """save phi and psi angles
+    """
+    f_out = open(name, "a")
+    for res in sorted(torsion):
+        try:
+            phi_str = "%8.2f" % torsion[res]["phi"]
+        except TypeError:
+            phi_str = "    None"
+        try:
+            psi_str = "%8.2f" % torsion[res]["psi"]
+        except TypeError:
+            psi_str = "    None"
+        f_out.write("%s %6d %s %s \n" % (com, res, phi_str, psi_str))
+    f_out.close()
+
+
+def write_flat(name, seq):
+    """write flat sequence to file 
+    """
+    f_out = open(name, "a")
+    f_out.write(seq + "\n")
+    f_out.close()
+
+#-------------------------------------------------------------------------------
+# vertorize function
+#-------------------------------------------------------------------------------
+angle_modulo_360_vect = numpy.vectorize(angle_modulo_360)
+
+
