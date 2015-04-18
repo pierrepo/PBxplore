@@ -77,6 +77,23 @@ FASTA_WIDTH = 60
 
 
 #===============================================================================
+# Exceptions
+#===============================================================================
+
+class SizeError(AssertionError):
+    """
+    Exception raised when a sequence does not have the expected length.
+    """
+    pass
+
+
+class InvalidBlockError(ValueError):
+    """
+    Exception raised when encounter an invalid protein block.
+    """
+    pass
+
+#===============================================================================
 # Functions
 #===============================================================================
 
@@ -135,6 +152,23 @@ def read_fasta(name):
     if len(sequence_lst) == 0:
         print("WARNING: %s seems empty of sequence" %(name))
     return header_lst, sequence_lst
+
+
+def read_several_fasta(input_files):
+    pb_seq = []
+    pb_name = []
+    for name in input_files:
+        header, seq = read_fasta(name)
+        pb_name += header
+        pb_seq += seq
+    return pb_name, pb_seq
+
+
+def assert_same_size(sequences):
+    seq_size = len(sequences[0])
+    for seq in sequences:
+        if len(seq) != seq_size:
+            raise SizeError
 
 #-------------------------------------------------------------------------------
 def load_substitution_matrix(name):
@@ -326,6 +360,27 @@ def write_flat(name, seq):
     f_out = open(name, "a")
     f_out.write(seq + "\n")
     f_out.close()
+
+
+def count_matrix(pb_seq):
+    assert_same_size(pb_seq)
+    pb_count = numpy.zeros((len(pb_seq[0]),  len(NAMES)))
+    for seq in pb_seq:
+        for idx, block in enumerate(seq):
+            if block in NAMES:
+                pb_count[idx, NAMES.index(block)] += 1.0
+            elif block not in ["Z", "z"]:
+                raise InvalidBlockError
+    return pb_count
+
+
+def write_count_matrix(pb_count, outfile, first=1):
+    # write the header (PB names)
+    print("    " + "".join(["%6s" % name for name in NAMES]), file=outfile)
+    # write the data table
+    for residue_idx, residue_pb in enumerate(pb_count):
+        print("%-5d" % (residue_idx + first) +
+              " ".join("%5d" % i for i in residue_pb), file=outfile)
 
 #-------------------------------------------------------------------------------
 # vertorize function
