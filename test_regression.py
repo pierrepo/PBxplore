@@ -268,7 +268,7 @@ class TestPBcount(unittest.TestCase):
         reference = 'count_multi1.PB.count'
         self._run_PBcount_test(input_files, output, reference)
 
-    def test_multiples_file_single_model(self):
+    def test_multiple_files_single_model(self):
         """
         Run PBcount with multiple input files that contain a single model.
         """
