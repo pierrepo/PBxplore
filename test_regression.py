@@ -30,6 +30,7 @@ import subprocess
 import shutil
 import sys
 import warnings
+import contextlib
 
 try:
     import MDAnalysis
@@ -214,6 +215,104 @@ class TestPBAssign(unittest.TestCase):
                                tmp_dir=self._temp_directory)
 
 
+class TestPBcount(unittest.TestCase):
+    """
+    Test running PBcount.
+    """
+    def setUp(self):
+        """
+        Run before each test.
+
+        Make sure that the output directory exists.
+        """
+        if not path.isdir(OUTDIR):
+            os.mkdir(OUTDIR)
+        self._temp_directory = os.path.join(OUTDIR, str(uuid1()))
+        os.mkdir(self._temp_directory)
+
+    def tearDown(self):
+        if ((sys.version_info[0] == 2
+                 and sys.exc_info() == (None, None, None))
+                or sys.version_info[0] == 3):
+            # On python 2, sys.exc_info() is (None, None, None) only when a test
+            # pass. On python 3, however, there is no difference in
+            # sys.exc_info() between a passing and a failing test. Here, on
+            # python 2, we delete the temporary directory only is the test
+            # passes; on python 3 we always delete the temporary directory.
+            shutil.rmtree(self._temp_directory)
+
+    def _run_PBcount_test(self, input_files, output, reference,
+                          first_residue=None):
+        output = os.path.join(self._temp_directory, output)
+        status = _run_PBcount(input_files, output, first_residue)
+        assert status == 0, 'PBcount exited with code {}'.format(status)
+        reference_full_path = os.path.join(REFDIR, reference)
+        output_full_path = output + '.PB.count'
+        _assert_identical_files(output_full_path, reference_full_path)
+
+    def test_single_file_single_model(self):
+        """
+        Run PBcount with a single input file that contains a single model.
+        """
+        input_files = ['count_single1.PB.fasta',]
+        output = 'output'
+        reference = 'count_single1.PB.count'
+        self._run_PBcount_test(input_files, output, reference)
+
+    def test_single_file_multiple_models(self):
+        """
+        Run PBcount with a single input file that contains multiple models.
+        """
+        input_files = ['count_multi1.PB.fasta',]
+        output = 'output'
+        reference = 'count_multi1.PB.count'
+        self._run_PBcount_test(input_files, output, reference)
+
+    def test_multiples_file_single_model(self):
+        """
+        Run PBcount with multiple input files that contain a single model.
+        """
+        input_files = ['count_single1.PB.fasta',
+                       'count_single2.PB.fasta',
+                       'count_single3.PB.fasta']
+        output = 'output'
+        reference = 'count_single123.PB.count'
+        self._run_PBcount_test(input_files, output, reference)
+
+    def test_multiple_files_multiple_models(self):
+        """
+        Run PBcount with multiple input files that contain multiple models each.
+        """
+        input_files = ['count_multi1.PB.fasta',
+                       'count_multi2.PB.fasta',
+                       'count_multi3.PB.fasta']
+        output = 'output'
+        reference = 'count_multi123.PB.count'
+        self._run_PBcount_test(input_files, output, reference)
+
+    def test_first_residue_positive(self):
+        """
+        Test PBcount on with the --first-residue option and a positive value.
+        """
+        input_files = ['count_multi1.PB.fasta',]
+        output = 'output'
+        reference = 'count_multi1_first20.PB.count'
+        self._run_PBcount_test(input_files, output, reference,
+                               first_residue=20)
+
+    # This test is commented because first-residue must be >= 1 in the current
+    # state of the program. See issue #47.
+    #def test_first_residue_negative(self):
+    #    """
+    #    Test PBcount on with the --first-residue option and a negative value.
+    #    """
+    #    input_files = ['count_multi1.PB.fasta',]
+    #    output = 'output'
+    #    reference = 'count_multi1_first-20.PB.count'
+    #    self._run_PBcount_test(input_files, output, reference,
+    #                           first_residue=-20)
+
+
 def _same_file_content(file_a, file_b):
     """
     Return True if two files are identical. Take file path as arguments.
@@ -300,6 +399,31 @@ def _test_PBassign_options(basenames, extensions, outfiles, options,
                 test_file = path.join(out_run_dir, outfile)
                 ref_file = path.join(REFDIR, outfile)
                 _assert_identical_files(test_file, ref_file)
+
+
+@contextlib.contextmanager
+def move_to(path):
+    origin_dir = os.getcwd()
+    os.chdir(path)
+    try:
+        yield
+    finally:
+        os.chdir(origin_dir)
+
+
+def _run_PBcount(input_files, output, first_residue=None):
+    command = ['./PBcount.py', '-o', output]
+    for input_file in input_files:
+        command += ['-f', os.path.join(REFDIR, input_file)]
+    if not first_residue is None:
+        command += ['--first-residue', str(first_residue)]
+    print(command)
+    exe = subprocess.Popen(command,
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = exe.communicate()
+    print(out)
+    print(err)
+    return exe.returncode
 
 
 if __name__ == '__main__':
