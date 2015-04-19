@@ -4,12 +4,12 @@
 """
 Compute PB frequency along protein sequence.
 
-2013 - P. Poulain, A. G. de Brevern 
+2013 - P. Poulain, A. G. de Brevern
 """
 
-#===============================================================================
+#==============================================================================
 # Modules
-#===============================================================================
+#==============================================================================
 ## Use print as a function for python 3 compatibility
 from __future__ import print_function
 
@@ -21,9 +21,9 @@ import argparse
 ## local module
 import PBlib as PB
 
-#===============================================================================
+#==============================================================================
 # Python2/Python3 compatibility
-#===============================================================================
+#==============================================================================
 
 # The range function in python 3 behaves as the range function in python 2
 # and returns a generator rather than a list. To produce a list in python 3,
@@ -34,43 +34,43 @@ try:
 except NameError:
     pass
 
-#===============================================================================
+#==============================================================================
 # MAIN - program starts here
-#===============================================================================
+#==============================================================================
+
 
 def user_input():
-    #--------------------------------------------------------------------------
-    # get options
-    #--------------------------------------------------------------------------
+    """
+    Handle the user parameters for PBcount.
+
+    Returns
+    -------
+
+    The parsed arguments as parsed by `argparse`.
+    """
     parser = argparse.ArgumentParser(
-        description = 'Compute PB frequency along protein sequence.')
-
+        description='Compute PB frequency along protein sequence.')
     # mandatory arguments
-    parser.add_argument("-f", action="append", required = True,
-        help="name(s) of the PBs file (in fasta format)")
-    parser.add_argument("-o", action="store", required = True,
-        help="name for results")
-
-
+    parser.add_argument("-f", action="append", required=True,
+                        help="name(s) of the PBs file (in fasta format)")
+    parser.add_argument("-o", action="store", required=True,
+                        help="name for results")
     # optional arguments
     parser.add_argument("--first-residue", action="store", type=int, default=1,
-        dest = "first_residue", help="define first residue number (1 by default)")
+                        dest="first_residue",
+                        help="define first residue number (1 by default)")
 
-    # get all arguments
+    # parse the arguments
     options = parser.parse_args()
 
-    #--------------------------------------------------------------------------
     # check options
-    #--------------------------------------------------------------------------
     if options.first_residue and options.first_residue < 1:
         parser.error("first residue must be >= 1")
 
-    #--------------------------------------------------------------------------
     # check input files
-    #--------------------------------------------------------------------------
     for name in options.f:
         if not os.path.isfile(name):
-            sys.exit( "{0}: not a valid file. Bye.".format(name) )
+            sys.exit("{0}: not a valid file. Bye.".format(name))
 
     return options
 
@@ -78,25 +78,19 @@ def user_input():
 def main():
     options = user_input()
 
-    #-------------------------------------------------------------------------------
     # read PBs files
-    #-------------------------------------------------------------------------------
     pb_name, pb_seq = PB.read_several_fasta(options.f)
 
-    #-------------------------------------------------------------------------------
     # count PBs at each position of the sequence
-    #-------------------------------------------------------------------------------
     try:
         pb_count = PB.count_matrix(pb_seq)
     except PB.SizeError:
         sys.exit("cannot compute PB frequencies / different sequence lengths")
-    except PB.InvalidBlockError:
-        msg = "{0} is not a valid protein block (abcdefghijklmnop)".format
-        sys.exit( msg(block) )
+    except PB.InvalidBlockError as e:
+        msg = "'{0}' is not a valid protein block (abcdefghijklmnop)".format
+        sys.exit(msg(e.block))
 
-    #-------------------------------------------------------------------------------
     # write PBs count file
-    #-------------------------------------------------------------------------------
     count_file_name = options.o + ".PB.count"
     with open(count_file_name, 'w') as outfile:
         PB.write_count_matrix(pb_count, outfile, options.first_residue)
