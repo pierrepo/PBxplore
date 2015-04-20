@@ -108,7 +108,7 @@ for name in options.f:
     header_lst += header
     seq_lst += seq
 
-pb_seq = numpy.array( zip(header_lst, seq_lst) )
+pb_seq = numpy.array(list(zip(header_lst, seq_lst)))
 
 #-------------------------------------------------------------------------------
 # load subtitution matrix
@@ -147,7 +147,7 @@ if options.compare:
 
 # change sequence name for a better input in R
 seq_names = {}
-for i in range(len(pb_seq)):
+for i in range(pb_seq.shape[0]):
     new_name = "seq%d" % i
     seq_names[new_name] = pb_seq[i, 0]
     pb_seq[i, 0] = new_name
@@ -183,7 +183,7 @@ maxi = numpy.max(distance_mat)
 distance_mat = 1 - (distance_mat + abs(mini))/(maxi - mini)
 
 numpy.set_printoptions(threshold=numpy.inf, precision = 3, linewidth = 100000)
-output_mat_str = numpy.array_str(distance_mat).translate(None, '[]')
+output_mat_str = numpy.array_str(distance_mat).replace('[', '').replace(']', '')
 
 # add sequence labels
 output_mat_str = " ".join(pb_seq[:,0])+"\n"+output_mat_str
@@ -228,6 +228,7 @@ cat("seq_id", names(clusters), "\n")
 cat("cluster_id", clusters, "\n")
 cat("medoid_id", medoids)
 """.format( matrix=output_mat_str, clusters=options.clusters_nb )
+R_script = R_script.encode('utf-8')
 
 
 # execute R script
@@ -236,6 +237,8 @@ command="R --vanilla --slave"
 proc = subprocess.Popen(command, shell = True, 
 stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
 (out, err) = proc.communicate(R_script)
+out = out.decode('utf-8')
+err = err.decode('utf-8')
 if err:
     print( "ERROR: {0}".format(err) )
 code = proc.wait()
