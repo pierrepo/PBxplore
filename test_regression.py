@@ -523,47 +523,5 @@ def _test_PBassign_options(basenames, extensions, outfiles, options,
                 _assert_identical_files(test_file, ref_file)
 
 
-@contextlib.contextmanager
-def move_to(path):
-    origin_dir = os.getcwd()
-    os.chdir(path)
-    try:
-        yield
-    finally:
-        os.chdir(origin_dir)
-
-
-def _run_PBcount(input_files, output, first_residue=None):
-    command = ['./PBcount.py', '-o', output]
-    for input_file in input_files:
-        command += ['-f', os.path.join(REFDIR, input_file)]
-    if not first_residue is None:
-        command += ['--first-residue', str(first_residue)]
-    print(command)
-    exe = subprocess.Popen(command,
-                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = exe.communicate()
-    print(out)
-    print(err)
-    return exe.returncode
-
-
-def _run_PBclust(input_files, output, clusters=None, compare=False):
-    command = ['./PBclust.py', '-o', output]
-    for input_file in input_files:
-        command += ['-f', os.path.join(REFDIR, input_file)]
-    if not clusters is None:
-        command += ['-c', str(clusters)]
-    if compare:
-        command += ['--compare']
-    print(command)
-    exe = subprocess.Popen(command,
-                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = exe.communicate()
-    print(out)
-    print(err)
-    return exe.returncode
-
-
 if __name__ == '__main__':
     unittest.main()
