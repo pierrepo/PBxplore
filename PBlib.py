@@ -77,6 +77,30 @@ FASTA_WIDTH = 60
 
 
 #===============================================================================
+# Exceptions
+#===============================================================================
+
+class SizeError(AssertionError):
+    """
+    Exception raised when a sequence does not have the expected length.
+    """
+    pass
+
+
+class InvalidBlockError(ValueError):
+    """
+    Exception raised when encounter an invalid protein block.
+    """
+    def __init__(self, block=None):
+        self.block = block
+
+    def __repr__(self):
+        if block is None:
+            return "Invald block"
+        else:
+            return "Ivalid block '{}'".format(self.block)
+
+#===============================================================================
 # Functions
 #===============================================================================
 
@@ -135,6 +159,48 @@ def read_fasta(name):
     if len(sequence_lst) == 0:
         print("WARNING: %s seems empty of sequence" %(name))
     return header_lst, sequence_lst
+
+
+def read_several_fasta(input_files):
+    """
+    Read several fasta files
+
+    Note that each fasta file may contain several sequences.
+
+    Parameters
+    ----------
+    input_files: a list of fasta file paths.
+
+    Returns
+    -------
+    pb_name: a list of the headers
+    pb_seq: a list of the sequences
+    """
+    pb_seq = []
+    pb_name = []
+    for name in input_files:
+        header, seq = read_fasta(name)
+        pb_name += header
+        pb_seq += seq
+    return pb_name, pb_seq
+
+
+def assert_same_size(sequences):
+    """
+    Raise an exception is all sequence are not the same length.
+
+    Parameters
+    ----------
+    sequences: a list of sequences
+
+    Exceptions
+    ----------
+    SizeError: not all the sequences are the same length.
+    """
+    seq_size = len(sequences[0])
+    for seq in sequences:
+        if len(seq) != seq_size:
+            raise SizeError
 
 #-------------------------------------------------------------------------------
 def load_substitution_matrix(name):
@@ -326,6 +392,50 @@ def write_flat(name, seq):
     f_out = open(name, "a")
     f_out.write(seq + "\n")
     f_out.close()
+
+
+def count_matrix(pb_seq):
+    """
+    Count the occurences of each block at each position.
+
+    The occurence matrix has one row per sequence, and one column per block.
+    The columns are ordered in as PB.NAMES.
+
+    Parameters
+    ----------
+    pb_seq: a list of PB sequences.
+
+    Returns
+    -------
+    The occurence matrix.
+    """
+    assert_same_size(pb_seq)
+    pb_count = numpy.zeros((len(pb_seq[0]),  len(NAMES)))
+    for seq in pb_seq:
+        for idx, block in enumerate(seq):
+            if block in NAMES:
+                pb_count[idx, NAMES.index(block)] += 1.0
+            elif block not in ["Z", "z"]:
+                raise InvalidBlockError(block=block)
+    return pb_count
+
+
+def write_count_matrix(pb_count, outfile, first=1):
+    """
+    Write a PB occurence matrix in a file.
+
+    Parameters
+    ----------
+    pb_count: an occurence matrix as a 2D numpy array.
+    outfile: an open file where to write the matrix.
+    first: the residue number of the first position.
+    """
+    # write the header (PB names)
+    print("    " + "".join(["%6s" % name for name in NAMES]), file=outfile)
+    # write the data table
+    for residue_idx, residue_pb in enumerate(pb_count):
+        print("%-5d" % (residue_idx + first) +
+              " ".join("%5d" % i for i in residue_pb), file=outfile)
 
 #-------------------------------------------------------------------------------
 # vertorize function
