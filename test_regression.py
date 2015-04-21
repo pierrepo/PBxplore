@@ -300,17 +300,15 @@ class TestPBcount(unittest.TestCase):
         self._run_PBcount_test(input_files, output, reference,
                                first_residue=20)
 
-    # This test is commented because first-residue must be >= 1 in the current
-    # state of the program. See issue #47.
-    #def test_first_residue_negative(self):
-    #    """
-    #    Test PBcount on with the --first-residue option and a negative value.
-    #    """
-    #    input_files = ['count_multi1.PB.fasta',]
-    #    output = 'output'
-    #    reference = 'count_multi1_first-20.PB.count'
-    #    self._run_PBcount_test(input_files, output, reference,
-    #                           first_residue=-20)
+    def test_first_residue_negative(self):
+        """
+        Test PBcount on with the --first-residue option and a negative value.
+        """
+        input_files = ['count_multi1.PB.fasta',]
+        output = 'output'
+        reference = 'count_multi1_first-20.PB.count'
+        self._run_PBcount_test(input_files, output, reference,
+                               first_residue=-20)
 
 
 class TestPBclust(unittest.TestCase):
