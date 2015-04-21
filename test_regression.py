@@ -313,6 +313,65 @@ class TestPBcount(unittest.TestCase):
     #                           first_residue=-20)
 
 
+class TestPBclust(unittest.TestCase):
+    def setUp(self):
+        """
+        Run before each test.
+
+        Make sure that the output directory exists.
+        """
+        if not path.isdir(OUTDIR):
+            os.mkdir(OUTDIR)
+        self._temp_directory = os.path.join(OUTDIR, str(uuid1()))
+        os.mkdir(self._temp_directory)
+
+    def tearDown(self):
+        if ((sys.version_info[0] == 2
+                 and sys.exc_info() == (None, None, None))
+                or sys.version_info[0] == 3):
+            # On python 2, sys.exc_info() is (None, None, None) only when a test 
+            # pass. On python 3, however, there is no difference in 
+            # sys.exc_info() between a passing and a failing test. Here, on
+            # python 2, we delete the temporary directory only is the test
+            # passes; on python 3 we always delete the temporary directory.
+            shutil.rmtree(self._temp_directory)
+
+    def _run_PBclust_test(self, input_files, output, reference,
+                          clusters=None, compare=False):
+        output = os.path.join(self._temp_directory, output)
+        status = _run_PBclust(input_files, output, clusters, compare)
+        assert status == 0, 'PBclust exited with code {}'.format(status)
+        if compare:
+            # Asses the validity of the distance file
+            reference_full_path = os.path.join(REFDIR,
+                                               reference + '.PB.compare.fasta')
+            output_full_path = output + '.PB.compare.fasta'
+            _assert_identical_files(output_full_path, reference_full_path)
+        else:
+            # Asses the validity of the main output od PBclust (the clust file)
+            reference_full_path = os.path.join(REFDIR, reference + '.PB.clust')
+            output_full_path = output + '.PB.clust'
+            _assert_identical_files(output_full_path, reference_full_path)
+
+    def test_default_single_input(self):
+        self._run_PBclust_test(['psi_md_traj_all.PB.fasta',], 'output',
+                               'psi_md_traj_all')
+
+    def test_default_multi_input(self):
+        self._run_PBclust_test(['psi_md_traj_1.PB.fasta',
+                                'psi_md_traj_2.PB.fasta',
+                                'psi_md_traj_3.PB.fasta'], 'output',
+                               'psi_md_traj_all')
+
+    def test_nclusters(self):
+        self._run_PBclust_test(['psi_md_traj_all.PB.fasta',], 'output',
+                               'psi_md_traj_all_3', clusters=3)
+
+    def test_compare(self):
+        self._run_PBclust_test(['psi_md_traj_1.PB.fasta',], 'output',
+                               'psi_md_traj_1', compare=True)
+
+
 def _same_file_content(file_a, file_b):
     """
     Return True if two files are identical. Take file path as arguments.
@@ -327,7 +386,11 @@ def _same_file_content(file_a, file_b):
         # Check if one file is longer than the other; it would result as one
         # file iterator not completely consumed
         for infile in (f1, f2):
-            if infile.readline() != '':
+            try:
+                next(infile) 
+            except StopIteration:
+                pass
+            else:
                 # The iterator is not consumed, it means that this file is
                 # longer than the other
                 print('File too long')
@@ -417,6 +480,23 @@ def _run_PBcount(input_files, output, first_residue=None):
         command += ['-f', os.path.join(REFDIR, input_file)]
     if not first_residue is None:
         command += ['--first-residue', str(first_residue)]
+    print(command)
+    exe = subprocess.Popen(command,
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = exe.communicate()
+    print(out)
+    print(err)
+    return exe.returncode
+
+
+def _run_PBclust(input_files, output, clusters=None, compare=False):
+    command = ['./PBclust.py', '-o', output]
+    for input_file in input_files:
+        command += ['-f', os.path.join(REFDIR, input_file)]
+    if not clusters is None:
+        command += ['--clusters', str(clusters)]
+    if compare:
+        command += ['--compare']
     print(command)
     exe = subprocess.Popen(command,
                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
