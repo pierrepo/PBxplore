@@ -70,15 +70,19 @@ def _failure_test(method):
     return wrapped
 
 
-class TestPBAssign(unittest.TestCase):
+class TemplateTestCase(unittest.TestCase):
     """
-    Regression tests for PBAssign.py
+    Template TestCase class for the other TestCase class to inherit from.
+
+    Children class must overload the `_build_command_line` and the
+    `_validate_output` methods.
     """
     def setUp(self):
         """
         Run before each test.
 
-        Make sure that the output directory exists.
+        Make sure that the output directory exists. And create a temporary
+        directory to work in.
         """
         if not path.isdir(OUTDIR):
             os.mkdir(OUTDIR)
@@ -86,15 +90,120 @@ class TestPBAssign(unittest.TestCase):
         os.mkdir(self._temp_directory)
 
     def tearDown(self):
+        """
+        Run after each test.
+
+        Delete the temporary directory except if the test failed. Note that, on
+        python 3, the temporary directory is always deleted.
+        """
         if ((sys.version_info[0] == 2
                  and sys.exc_info() == (None, None, None))
                 or sys.version_info[0] == 3):
-            # On python 2, sys.exc_info() is (None, None, None) only when a test 
-            # pass. On python 3, however, there is no difference in 
+            # On python 2, sys.exc_info() is (None, None, None) only when a
+            # test pass. On python 3, however, there is no difference in 
             # sys.exc_info() between a passing and a failing test. Here, on
             # python 2, we delete the temporary directory only is the test
             # passes; on python 3 we always delete the temporary directory.
             shutil.rmtree(self._temp_directory)
+
+    def _run_program_and_validate(self, reference, **kwargs):
+        """
+        Run the program to test and validate its outputs.
+        """
+        # Build the command line to run. This relies on the _build_command_line
+        # method that is a virtual method, which must be overloaded by the
+        # child class.
+        command = self._build_command_line(**kwargs)
+        print(command)
+
+        # Run the command.
+        exe = subprocess.Popen(command,
+                               stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = exe.communicate()
+        print(out.decode('utf-8'))
+        print(err.decode('utf-8'))
+
+        # The return code should be 0.
+        assert exe.returncode == 0, 'Program exited with a {} code.'.format(
+            exe.returncode)
+
+        # Validate the output files. This relies on the _validate_output
+        # virtual method.
+        self._validate_output(reference, **kwargs)
+
+    def _build_command_line(self, **kwargs):
+        """
+        Build the command line to run.
+
+        This is a virtual method. It must be overloaded by the child class.
+        """
+        raise NotImplementedError
+
+    def _validate_output(self, reference, **kwargs):
+        """
+        Validate the output files.
+
+        This is a virtual method. It must be overloaded by the child class.
+        """
+        raise NotImplementedError
+
+
+class TestPBAssign(TemplateTestCase):
+    """
+    Regression tests for PBAssign.py
+    """
+    def _run_PBassign(self, pdbid, extension, options,
+                      multiple=None, indir=REFDIR, outdir=OUTDIR):
+        """
+        Run a PBxplore program on a PDBID with the given options.
+
+        `options` is expected to be a list that will be directly passed to
+        subprocess, it must not contain the input or output options.
+        """
+        out_run_dir = os.path.join(self._temp_directory, str(uuid1()))
+        os.mkdir(out_run_dir)
+        if multiple is None:
+            test_input = path.join(REFDIR, pdbid + extension)
+            out_basename = path.join(out_run_dir, pdbid)
+            input_args = ['-p', test_input]
+        else:
+            input_args = []
+            for basename in pdbid:
+                input_args += ['-p', path.join(REFDIR, basename + extension)]
+            out_basename = path.join(out_run_dir, multiple)
+
+        run_list = (['./PBassign.py'] + input_args + 
+                    ['-o', out_basename + extension] + options)
+        print(' '.join(run_list))
+        exe = subprocess.Popen(run_list,
+                               stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = exe.communicate()
+        print(out.decode('utf-8'))
+        print(err.decode('utf-8'))
+
+        return exe.returncode, out_run_dir
+
+    def _test_PBassign_options(self, basenames, extensions, outfiles, options,
+                               multiple=None, expected_exit=0):
+        if not multiple is None:
+            basenames = [basenames]
+            out_name = multiple
+        for basename in basenames:
+            for extension in extensions:
+                status, out_run_dir = self._run_PBassign(basename, extension,
+                                                         options, multiple)
+                assert status == expected_exit, \
+                       'PBassign stoped with a {0} exit code'.format(status)
+                assert len(os.listdir(out_run_dir)) == len(outfiles),\
+                        ('PBassign did not produced the right number of files: '
+                         '{0} files produced instead of {1}').format(
+                            len(os.listdir(out_run_dir)), len(outfiles))
+                out_name = basename if multiple is None else multiple
+                for outfile in (template.format(out_name + extension)
+                                for template in outfiles):
+                    test_file = path.join(out_run_dir, outfile)
+                    ref_file = path.join(REFDIR, outfile)
+                    _assert_identical_files(test_file, ref_file)
 
     def test_fasta(self):
         """
@@ -102,8 +211,8 @@ class TestPBAssign(unittest.TestCase):
         """
         references = ["1BTA", "1AY7", "2LFU", "3ICH"]
         extensions = [".pdb", ".cif.gz"]
-        _test_PBassign_options(references, extensions, ['{0}.PB.fasta'], [],
-                               tmp_dir=self._temp_directory)
+        self._test_PBassign_options(references, extensions,
+                                    ['{0}.PB.fasta'], [])
 
     def test_flat(self):
         """
@@ -111,10 +220,9 @@ class TestPBAssign(unittest.TestCase):
         """
         references = ["1BTA", "1AY7", "2LFU", "3ICH"]
         extensions = [".pdb", ".cif.gz"]
-        _test_PBassign_options(references, extensions,
-                               ['{0}.PB.fasta', '{0}.PB.flat'],
-                               ['--flat'],
-                               tmp_dir=self._temp_directory)
+        self._test_PBassign_options(references, extensions,
+                                    ['{0}.PB.fasta', '{0}.PB.flat'],
+                                    ['--flat'])
 
     def test_phipsi(self):
         """
@@ -122,10 +230,9 @@ class TestPBAssign(unittest.TestCase):
         """
         references = ["1BTA", "1AY7", "2LFU", "3ICH"]
         extensions = [".pdb", ".cif.gz"]
-        _test_PBassign_options(references, extensions,
-                               ['{0}.PB.fasta', '{0}.PB.phipsi'],
-                               ['--phipsi'],
-                               tmp_dir=self._temp_directory)
+        self._test_PBassign_options(references, extensions,
+                                    ['{0}.PB.fasta', '{0}.PB.phipsi'],
+                                    ['--phipsi'])
 
     def test_flat_phipsi(self):
         """
@@ -133,10 +240,9 @@ class TestPBAssign(unittest.TestCase):
         """
         references = ["1BTA", "1AY7", "2LFU", "3ICH"]
         extensions = [".pdb", ".cif.gz"]
-        _test_PBassign_options(references, extensions,
-                               ['{0}.PB.fasta', '{0}.PB.flat', '{0}.PB.phipsi'],
-                               ['--flat', '--phipsi'],
-                               tmp_dir=self._temp_directory)
+        self._test_PBassign_options(references, extensions,
+                                    ['{0}.PB.fasta', '{0}.PB.flat', '{0}.PB.phipsi'],
+                                    ['--flat', '--phipsi'])
 
     def test_multiple_inputs(self):
         """
@@ -144,10 +250,9 @@ class TestPBAssign(unittest.TestCase):
         """
         references = ["1BTA", "1AY7", "2LFU", "3ICH"]
         extensions = [".pdb", ".cif.gz"]
-        _test_PBassign_options(references, extensions,
-                               ['{0}.PB.fasta', '{0}.PB.flat', '{0}.PB.phipsi'],
-                               ['--flat', '--phipsi'], multiple='all',
-                               tmp_dir=self._temp_directory)
+        self._test_PBassign_options(references, extensions,
+                                    ['{0}.PB.fasta', '{0}.PB.flat', '{0}.PB.phipsi'],
+                                    ['--flat', '--phipsi'], multiple='all')
 
     def test_xtc_input(self):
         """
@@ -185,11 +290,10 @@ class TestPBAssign(unittest.TestCase):
         """
         references = ["1BTA"]
         extensions = [".pdb"]
-        _test_PBassign_options(references, extensions, 
-                               ['{0}.PB.fasta', '{0}.PB.flat', '{0}.PB.phipsi',
-                                '{0}.missing'],
-                               ['--flat', '--phipsi'],
-                               tmp_dir=self._temp_directory)
+        self._test_PBassign_options(references, extensions, 
+                                    ['{0}.PB.fasta', '{0}.PB.flat',
+                                     '{0}.PB.phipsi', '{0}.missing'],
+                                    ['--flat', '--phipsi'])
 
     @_failure_test
     def test_too_many_outputs(self):
@@ -198,10 +302,9 @@ class TestPBAssign(unittest.TestCase):
         """
         references = ["1BTA"]
         extensions = [".pdb"]
-        _test_PBassign_options(references, extensions, 
-                               ['{0}.PB.fasta', '{0}.PB.flat'],
-                               ['--flat', '--phipsi'],
-                               tmp_dir=self._temp_directory)
+        self._test_PBassign_options(references, extensions, 
+                                    ['{0}.PB.fasta', '{0}.PB.flat'],
+                                    ['--flat', '--phipsi'])
 
     @_failure_test
     def test_different_outputs(self):
@@ -211,43 +314,26 @@ class TestPBAssign(unittest.TestCase):
         """
         references = ["test_fail"]
         extensions = [".pdb"]
-        _test_PBassign_options(references, extensions, ['{0}.PB.fasta'], [],
-                               tmp_dir=self._temp_directory)
+        self._test_PBassign_options(references, extensions, ['{0}.PB.fasta'], [])
 
 
-class TestPBcount(unittest.TestCase):
+class TestPBcount(TemplateTestCase):
     """
     Test running PBcount.
     """
-    def setUp(self):
-        """
-        Run before each test.
+    def _build_command_line(self, input_files, output, first_residue=None):
+        output_full_path = os.path.join(self._temp_directory, output)
+        command = ['./PBcount.py', '-o', output_full_path]
+        for input_file in input_files:
+            command += ['-f', os.path.join(REFDIR, input_file)]
+        if not first_residue is None:
+            command += ['--first-residue', str(first_residue)]
+        return command
 
-        Make sure that the output directory exists.
-        """
-        if not path.isdir(OUTDIR):
-            os.mkdir(OUTDIR)
-        self._temp_directory = os.path.join(OUTDIR, str(uuid1()))
-        os.mkdir(self._temp_directory)
-
-    def tearDown(self):
-        if ((sys.version_info[0] == 2
-                 and sys.exc_info() == (None, None, None))
-                or sys.version_info[0] == 3):
-            # On python 2, sys.exc_info() is (None, None, None) only when a test
-            # pass. On python 3, however, there is no difference in
-            # sys.exc_info() between a passing and a failing test. Here, on
-            # python 2, we delete the temporary directory only is the test
-            # passes; on python 3 we always delete the temporary directory.
-            shutil.rmtree(self._temp_directory)
-
-    def _run_PBcount_test(self, input_files, output, reference,
-                          first_residue=None):
-        output = os.path.join(self._temp_directory, output)
-        status = _run_PBcount(input_files, output, first_residue)
-        assert status == 0, 'PBcount exited with code {}'.format(status)
+    def _validate_output(self, reference, output, **kwargs):
         reference_full_path = os.path.join(REFDIR, reference)
-        output_full_path = output + '.PB.count'
+        output_full_path = os.path.join(self._temp_directory,
+                                        output + '.PB.count')
         _assert_identical_files(output_full_path, reference_full_path)
 
     def test_single_file_single_model(self):
@@ -257,7 +343,8 @@ class TestPBcount(unittest.TestCase):
         input_files = ['count_single1.PB.fasta',]
         output = 'output'
         reference = 'count_single1.PB.count'
-        self._run_PBcount_test(input_files, output, reference)
+        self._run_program_and_validate(reference,
+                                       input_files=input_files, output=output)
 
     def test_single_file_multiple_models(self):
         """
@@ -266,7 +353,8 @@ class TestPBcount(unittest.TestCase):
         input_files = ['count_multi1.PB.fasta',]
         output = 'output'
         reference = 'count_multi1.PB.count'
-        self._run_PBcount_test(input_files, output, reference)
+        self._run_program_and_validate(reference,
+                                       input_files=input_files, output=output)
 
     def test_multiple_files_single_model(self):
         """
@@ -277,7 +365,8 @@ class TestPBcount(unittest.TestCase):
                        'count_single3.PB.fasta']
         output = 'output'
         reference = 'count_single123.PB.count'
-        self._run_PBcount_test(input_files, output, reference)
+        self._run_program_and_validate(reference,
+                                       input_files=input_files, output=output)
 
     def test_multiple_files_multiple_models(self):
         """
@@ -288,7 +377,8 @@ class TestPBcount(unittest.TestCase):
                        'count_multi3.PB.fasta']
         output = 'output'
         reference = 'count_multi123.PB.count'
-        self._run_PBcount_test(input_files, output, reference)
+        self._run_program_and_validate(reference,
+                                       input_files=input_files, output=output)
 
     def test_first_residue_positive(self):
         """
@@ -297,8 +387,9 @@ class TestPBcount(unittest.TestCase):
         input_files = ['count_multi1.PB.fasta',]
         output = 'output'
         reference = 'count_multi1_first20.PB.count'
-        self._run_PBcount_test(input_files, output, reference,
-                               first_residue=20)
+        self._run_program_and_validate(reference,
+                                       input_files=input_files, output=output,
+                                       first_residue=20)
 
     def test_first_residue_negative(self):
         """
@@ -307,38 +398,27 @@ class TestPBcount(unittest.TestCase):
         input_files = ['count_multi1.PB.fasta',]
         output = 'output'
         reference = 'count_multi1_first-20.PB.count'
-        self._run_PBcount_test(input_files, output, reference,
-                               first_residue=-20)
+        self._run_program_and_validate(reference,
+                                       input_files=input_files, output=output,
+                                       first_residue=-20)
 
 
-class TestPBclust(unittest.TestCase):
-    def setUp(self):
-        """
-        Run before each test.
+class TestPBclust(TemplateTestCase):
+    def _build_command_line(self, input_files, output,
+                            clusters=None, compare=False): 
+        output_full_path = os.path.join(self._temp_directory, output)
+        command = ['./PBclust.py', '-o', output_full_path]
+        for input_file in input_files:
+            command += ['-f', os.path.join(REFDIR, input_file)]
+        if not clusters is None:
+            command += ['-c', str(clusters)]
+        if compare:
+            command += ['--compare']
+        return command
 
-        Make sure that the output directory exists.
-        """
-        if not path.isdir(OUTDIR):
-            os.mkdir(OUTDIR)
-        self._temp_directory = os.path.join(OUTDIR, str(uuid1()))
-        os.mkdir(self._temp_directory)
-
-    def tearDown(self):
-        if ((sys.version_info[0] == 2
-                 and sys.exc_info() == (None, None, None))
-                or sys.version_info[0] == 3):
-            # On python 2, sys.exc_info() is (None, None, None) only when a test 
-            # pass. On python 3, however, there is no difference in 
-            # sys.exc_info() between a passing and a failing test. Here, on
-            # python 2, we delete the temporary directory only is the test
-            # passes; on python 3 we always delete the temporary directory.
-            shutil.rmtree(self._temp_directory)
-
-    def _run_PBclust_test(self, input_files, output, reference, clusters, 
-                          compare=False):
+    def _validate_output(self, reference, input_files, output,
+                         clusters=None, compare=False, **kwargs):
         output = os.path.join(self._temp_directory, output)
-        status = _run_PBclust(input_files, output, clusters, compare)
-        assert status == 0, 'PBclust exited with code {}'.format(status)
         if compare:
             # Asses the validity of the distance file
             reference_full_path = os.path.join(REFDIR,
@@ -352,31 +432,28 @@ class TestPBclust(unittest.TestCase):
             _assert_identical_files(output_full_path, reference_full_path)
 
     def test_default_single_input(self):
-        self._run_PBclust_test(['psi_md_traj_all.PB.fasta',], 
-                               'output',
-                               'psi_md_traj_all',
-                               3)
+        self._run_program_and_validate(reference='psi_md_traj_all',
+                                       input_files=['psi_md_traj_all.PB.fasta',],
+                                       output='output', clusters=3)
 
     def test_default_multi_input(self):
-        self._run_PBclust_test(['psi_md_traj_1.PB.fasta',
-                                'psi_md_traj_2.PB.fasta',
-                                'psi_md_traj_3.PB.fasta'], 
-                               'output',
-                               'psi_md_traj_all',
-                               3)
+        self._run_program_and_validate(reference='psi_md_traj_all',
+                                       input_files=['psi_md_traj_1.PB.fasta',
+                                                    'psi_md_traj_2.PB.fasta',
+                                                    'psi_md_traj_3.PB.fasta'],
+                                       output='output', clusters=3)
 
     def test_nclusters(self):
-        self._run_PBclust_test(['psi_md_traj_all.PB.fasta',], 
-                               'output',
-                               'psi_md_traj_all_c5', 
-                               5)
+        self._run_program_and_validate(reference='psi_md_traj_all_c5',
+                                       input_files=['psi_md_traj_all.PB.fasta',],
+                                       output='output',
+                                       clusters=5)
 
     def test_compare(self):
-        self._run_PBclust_test(['psi_md_traj_1.PB.fasta',], 
-                               'output',
-                               'psi_md_traj_1', 
-                               3,
-                               compare=True)
+        self._run_program_and_validate(reference='psi_md_traj_1',
+                                       input_files=['psi_md_traj_1.PB.fasta',],
+                                       output='output',
+                                       compare=True, clusters=3)
 
 
 def _same_file_content(file_a, file_b):
@@ -414,103 +491,6 @@ def _assert_identical_files(file_a, file_b):
     """
     assert _same_file_content(file_a, file_b), '{0} and {1} are not identical'\
                                                .format(file_a, file_b)
-
-
-def _run_prog(program, pdbid, extension, options,
-              multiple=None, indir=REFDIR, outdir=OUTDIR, tmp_dir='.'):
-    """
-    Run a PBxplore program on a PDBID with the given options.
-
-    options is expected to be a list that will be directly pass to subprocess,
-    it must not contain the input or output options.
-    """
-    if program not in ('./PBassign.py',):
-        raise NotImplementedError('_run_prog does not know how to run {0}'
-                                  .format(program))
-
-    out_run_dir = os.path.join(tmp_dir, str(uuid1()))
-    os.mkdir(out_run_dir)
-    if multiple is None:
-        test_input = path.join(REFDIR, pdbid + extension)
-        out_basename = path.join(out_run_dir, pdbid)
-        input_args = ['-p', test_input]
-    else:
-        input_args = []
-        for basename in pdbid:
-            input_args += ['-p', path.join(REFDIR, basename + extension)]
-        out_basename = path.join(out_run_dir, multiple)
-
-    run_list = [program] + input_args + ['-o', out_basename + extension] + options
-    print(' '.join(run_list))
-    status = subprocess.call(run_list, stdout=subprocess.PIPE)
-
-    return status, out_run_dir
-
-
-def _test_PBassign_options(basenames, extensions, outfiles, options,
-                           multiple=None, expected_exit=0,
-                           tmp_dir='.'):
-    if not multiple is None:
-        basenames = [basenames]
-        out_name = multiple
-    for basename in basenames:
-        for extension in extensions:
-            status, out_run_dir = _run_prog('./PBassign.py', basename, extension,
-                               options, multiple, tmp_dir=tmp_dir)
-            assert status == expected_exit, \
-                   'PBassign stoped with a {0} exit code'.format(status)
-            assert len(os.listdir(out_run_dir)) == len(outfiles),\
-                    ('PBassign did not produced the right number of files: '
-                     '{0} files produced instead of {1}').format(
-                        len(os.listdir(out_run_dir)), len(outfiles))
-            out_name = basename if multiple is None else multiple
-            for outfile in (template.format(out_name + extension)
-                            for template in outfiles):
-                test_file = path.join(out_run_dir, outfile)
-                ref_file = path.join(REFDIR, outfile)
-                _assert_identical_files(test_file, ref_file)
-
-
-@contextlib.contextmanager
-def move_to(path):
-    origin_dir = os.getcwd()
-    os.chdir(path)
-    try:
-        yield
-    finally:
-        os.chdir(origin_dir)
-
-
-def _run_PBcount(input_files, output, first_residue=None):
-    command = ['./PBcount.py', '-o', output]
-    for input_file in input_files:
-        command += ['-f', os.path.join(REFDIR, input_file)]
-    if not first_residue is None:
-        command += ['--first-residue', str(first_residue)]
-    print(command)
-    exe = subprocess.Popen(command,
-                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = exe.communicate()
-    print(out)
-    print(err)
-    return exe.returncode
-
-
-def _run_PBclust(input_files, output, clusters=None, compare=False):
-    command = ['./PBclust.py', '-o', output]
-    for input_file in input_files:
-        command += ['-f', os.path.join(REFDIR, input_file)]
-    if not clusters is None:
-        command += ['-c', str(clusters)]
-    if compare:
-        command += ['--compare']
-    print(command)
-    exe = subprocess.Popen(command,
-                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = exe.communicate()
-    print(out)
-    print(err)
-    return exe.returncode
 
 
 if __name__ == '__main__':
