@@ -70,6 +70,84 @@ def _failure_test(method):
     return wrapped
 
 
+class TemplateTestCase(unittest.TestCase):
+    """
+    Template TestCase class for the other TestCase class to inherit from.
+
+    Children class must overload the `_build_command_line` and the
+    `_validate_output` methods.
+    """
+    def setUp(self):
+        """
+        Run before each test.
+
+        Make sure that the output directory exists. And create a temporary
+        directory to work in.
+        """
+        if not path.isdir(OUTDIR):
+            os.mkdir(OUTDIR)
+        self._temp_directory = os.path.join(OUTDIR, str(uuid1()))
+        os.mkdir(self._temp_directory)
+
+    def tearDown(self):
+        """
+        Run after each test.
+
+        Delete the temporary directory except if the test failed. Note that, on
+        python 3, the temporary directory is always deleted.
+        """
+        if ((sys.version_info[0] == 2
+                 and sys.exc_info() == (None, None, None))
+                or sys.version_info[0] == 3):
+            # On python 2, sys.exc_info() is (None, None, None) only when a
+            # test pass. On python 3, however, there is no difference in 
+            # sys.exc_info() between a passing and a failing test. Here, on
+            # python 2, we delete the temporary directory only is the test
+            # passes; on python 3 we always delete the temporary directory.
+            shutil.rmtree(self._temp_directory)
+
+    def _run_program_and_validate(self, reference, **kwargs):
+        """
+        Run the program to test and validate its outputs.
+        """
+        # Build the command line to run. This relies on the _build_command_line
+        # method that is a virtual method, which must be overloaded by the
+        # child class.
+        command = self._build_command_line(**kwargs)
+        print(command)
+
+        # Run the command.
+        exe = subprocess.Popen(command,
+                               stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = exe.communicate()
+        print(out.decode('utf-8'))
+        print(err.decode('utf-8'))
+
+        # The return code should be 0.
+        assert exe.returncode == 0, 'Program exited with a {} code.'.format(
+            exe.returncode)
+
+        # Validate the output files. This relies on the _validate_output
+        # virtual method.
+        self._validate_output(reference, **kwargs)
+
+    def _build_command_line(self, **kwargs):
+        """
+        Build the command line to run.
+
+        This is a virtual method. It must be overloaded by the child class.
+        """
+        raise NotImplementedError
+
+    def _validate_output(self, reference, **kwargs):
+        """
+        Validate the output files.
+
+        This is a virtual method. It must be overloaded by the child class.
+        """
+        raise NotImplementedError
+
+
 class TestPBAssign(unittest.TestCase):
     """
     Regression tests for PBAssign.py
