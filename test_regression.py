@@ -398,8 +398,9 @@ class TestPBcount(TemplateTestCase):
         input_files = ['count_multi1.PB.fasta',]
         output = 'output'
         reference = 'count_multi1_first-20.PB.count'
-        self._run_PBcount_test(input_files, output, reference,
-                               first_residue=-20)
+        self._run_program_and_validate(reference,
+                                       input_files=input_files, output=output,
+                                       first_residue=-20)
 
 
 class TestPBclust(TemplateTestCase):
@@ -410,7 +411,7 @@ class TestPBclust(TemplateTestCase):
         for input_file in input_files:
             command += ['-f', os.path.join(REFDIR, input_file)]
         if not clusters is None:
-            command += ['--clusters', str(clusters)]
+            command += ['-c', str(clusters)]
         if compare:
             command += ['--compare']
         return command
@@ -443,7 +444,7 @@ class TestPBclust(TemplateTestCase):
                                        output='output', clusters=3)
 
     def test_nclusters(self):
-        self._run_program_and_validate(reference='psi_md_traj_all_3',
+        self._run_program_and_validate(reference='psi_md_traj_all_c5',
                                        input_files=['psi_md_traj_all.PB.fasta',],
                                        output='output',
                                        clusters=5)
