@@ -41,12 +41,12 @@ except NameError:
 
 def user_input():
     """
-    Handle the user parameters for PBcount.
+    Handle the user parameters for PBcount.py.
 
     Returns
     -------
-
-    The parsed arguments as parsed by `argparse`.
+    options : the parsed arguments as parsed by `argparse`.
+    
     """
     parser = argparse.ArgumentParser(
         description='Compute PB frequency along protein sequence.')
@@ -64,8 +64,8 @@ def user_input():
     options = parser.parse_args()
 
     # check options
-    if options.first_residue and options.first_residue < 1:
-        parser.error("first residue must be >= 1")
+    if options.first_residue and options.first_residue < 0:
+        print("Warning: first residue is < 1.")
 
     # check input files
     for name in options.f:
