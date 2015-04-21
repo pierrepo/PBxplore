@@ -336,8 +336,8 @@ class TestPBclust(unittest.TestCase):
             # passes; on python 3 we always delete the temporary directory.
             shutil.rmtree(self._temp_directory)
 
-    def _run_PBclust_test(self, input_files, output, reference,
-                          clusters=None, compare=False):
+    def _run_PBclust_test(self, input_files, output, reference, clusters, 
+                          compare=False):
         output = os.path.join(self._temp_directory, output)
         status = _run_PBclust(input_files, output, clusters, compare)
         assert status == 0, 'PBclust exited with code {}'.format(status)
@@ -354,22 +354,31 @@ class TestPBclust(unittest.TestCase):
             _assert_identical_files(output_full_path, reference_full_path)
 
     def test_default_single_input(self):
-        self._run_PBclust_test(['psi_md_traj_all.PB.fasta',], 'output',
-                               'psi_md_traj_all')
+        self._run_PBclust_test(['psi_md_traj_all.PB.fasta',], 
+                               'output',
+                               'psi_md_traj_all',
+                               3)
 
     def test_default_multi_input(self):
         self._run_PBclust_test(['psi_md_traj_1.PB.fasta',
                                 'psi_md_traj_2.PB.fasta',
-                                'psi_md_traj_3.PB.fasta'], 'output',
-                               'psi_md_traj_all')
+                                'psi_md_traj_3.PB.fasta'], 
+                               'output',
+                               'psi_md_traj_all',
+                               3)
 
     def test_nclusters(self):
-        self._run_PBclust_test(['psi_md_traj_all.PB.fasta',], 'output',
-                               'psi_md_traj_all_3', clusters=3)
+        self._run_PBclust_test(['psi_md_traj_all.PB.fasta',], 
+                               'output',
+                               'psi_md_traj_all_c5', 
+                               5)
 
     def test_compare(self):
-        self._run_PBclust_test(['psi_md_traj_1.PB.fasta',], 'output',
-                               'psi_md_traj_1', compare=True)
+        self._run_PBclust_test(['psi_md_traj_1.PB.fasta',], 
+                               'output',
+                               'psi_md_traj_1', 
+                               3,
+                               compare=True)
 
 
 def _same_file_content(file_a, file_b):
@@ -494,7 +503,7 @@ def _run_PBclust(input_files, output, clusters=None, compare=False):
     for input_file in input_files:
         command += ['-f', os.path.join(REFDIR, input_file)]
     if not clusters is None:
-        command += ['--clusters', str(clusters)]
+        command += ['-c', str(clusters)]
     if compare:
         command += ['--compare']
     print(command)

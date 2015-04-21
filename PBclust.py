@@ -71,10 +71,10 @@ parser.add_argument("-f", action="append", required=True,
     help="name(s) of the PBs file (in fasta format)")
 parser.add_argument("-o", action="store", required=True,
     help="name for results")
+parser.add_argument("-c", action="store", required=True, type=int,
+    help="number of wanted clusters")  
 
 # optional arguments
-parser.add_argument("--clusters", action="store", type=int,
-    dest="clusters_nb", help="number of wanted clusters")  
 parser.add_argument("--compare", action="store_true", default=False,
     dest="compare", help="compare the first sequence versus all others")
 
@@ -84,13 +84,9 @@ options = parser.parse_args()
 #-------------------------------------------------------------------------------
 # check options
 #-------------------------------------------------------------------------------
-if options.clusters_nb and options.clusters_nb <= 0:
-    parser.error("number of clusters must be strictly positive")
+if options.c <= 0:
+    parser.error("number of clusters must be > 0.")
 
-if not options.clusters_nb:
-    # set default clusters number to 5
-    options.clusters_nb = 5
-    
 #-------------------------------------------------------------------------------
 # check input files
 #-------------------------------------------------------------------------------
@@ -121,6 +117,7 @@ substitution_mat = PB.load_substitution_matrix(PB.SUBSTITUTION_MATRIX_NAME)
 #-------------------------------------------------------------------------------
 if options.compare:
     compare_file_name = options.o + ".PB.compare.fasta"
+    PB.clean_file(compare_file_name)
     ref_name = pb_seq[0,0]
     ref_seq = pb_seq[0,1]
     mini = numpy.min(substitution_mat)
@@ -227,7 +224,7 @@ medoids = sapply(unique(clusters), clust.medoid, distances, clusters)
 cat("seq_id", names(clusters), "\n")
 cat("cluster_id", clusters, "\n")
 cat("medoid_id", medoids)
-""".format( matrix=output_mat_str, clusters=options.clusters_nb )
+""".format( matrix=output_mat_str, clusters=options.c )
 R_script = R_script.encode('utf-8')
 
 

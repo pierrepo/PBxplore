@@ -259,7 +259,7 @@ Once converted to PB sequences, conformations of a same protein can be clustered
 
 Example: 
 
-    ./PBclust.py -f demo2/psi_md_traj_all.PB.fasta -o psi_md_traj_all
+    ./PBclust.py -f demo2/psi_md_traj_all.PB.fasta -o psi_md_traj_all -c 5
 
 Output:
 
@@ -307,39 +307,17 @@ Content of `psi_md_traj_all.PB.clust` (clustering results):
 
 ### Usage
 
-    usage: PBclust.py [-h] -f F -o O [--clusters CLUSTERS_NB] [--compare]
+    usage: PBclust.py [-h] -f F -o O -c C [--compare]
 
     Cluster protein structures based on their PB sequences.
 
     optional arguments:
-      -h, --help            show this help message and exit
-      -f F                  name(s) of the PBs file (in fasta format)
-      -o O                  name for results
-      --clusters CLUSTERS_NB
-                            number of wanted clusters
-      --compare             compare the first sequence versus all others
+      -h, --help  show this help message and exit
+      -f F        name(s) of the PBs file (in fasta format)
+      -o O        name for results
+      -c C        number of wanted clusters
+      --compare   compare the first sequence versus all others
 
-
-### `--clusters` option
-
-defines the number of wanted clusters (5 by default)
-
-Example:
-
-    ./PBclust.py -f demo2/psi_md_traj_all.PB.fasta -o psi_md_traj_all_3 --clusters 3
-
-Output:
-
-    read 270 sequences in demo2/psi_md_traj_all.PB.fasta
-    read substitution matrix
-    Building distance matrix
-    100%
-    wrote psi_md_traj_all_3.PB.dist
-    R clustering: OK
-    cluster 1: 90 sequences (33%)
-    cluster 2: 90 sequences (33%)
-    cluster 3: 90 sequences (33%)
-    wrote psi_md_traj_all_3.PB.clust
 
 ### `--compare` option
 
@@ -347,7 +325,7 @@ compares, position by position, the first sequence found in the fasta file again
 
 Example:
 
-    ./PBclust.py -f demo2/psi_md_traj_all.PB.fasta -o psi_md_traj_all --compare
+    ./PBclust.py -f demo2/psi_md_traj_all.PB.fasta -o psi_md_traj_all -c 5 --compare
 
 Output:
 
