@@ -293,39 +293,23 @@ class TestPBAssign(unittest.TestCase):
                                tmp_dir=self._temp_directory)
 
 
-class TestPBcount(unittest.TestCase):
+class TestPBcount(TemplateTestCase):
     """
     Test running PBcount.
     """
-    def setUp(self):
-        """
-        Run before each test.
+    def _build_command_line(self, input_files, output, first_residue=None):
+        output_full_path = os.path.join(self._temp_directory, output)
+        command = ['./PBcount.py', '-o', output_full_path]
+        for input_file in input_files:
+            command += ['-f', os.path.join(REFDIR, input_file)]
+        if not first_residue is None:
+            command += ['--first-residue', str(first_residue)]
+        return command
 
-        Make sure that the output directory exists.
-        """
-        if not path.isdir(OUTDIR):
-            os.mkdir(OUTDIR)
-        self._temp_directory = os.path.join(OUTDIR, str(uuid1()))
-        os.mkdir(self._temp_directory)
-
-    def tearDown(self):
-        if ((sys.version_info[0] == 2
-                 and sys.exc_info() == (None, None, None))
-                or sys.version_info[0] == 3):
-            # On python 2, sys.exc_info() is (None, None, None) only when a test
-            # pass. On python 3, however, there is no difference in
-            # sys.exc_info() between a passing and a failing test. Here, on
-            # python 2, we delete the temporary directory only is the test
-            # passes; on python 3 we always delete the temporary directory.
-            shutil.rmtree(self._temp_directory)
-
-    def _run_PBcount_test(self, input_files, output, reference,
-                          first_residue=None):
-        output = os.path.join(self._temp_directory, output)
-        status = _run_PBcount(input_files, output, first_residue)
-        assert status == 0, 'PBcount exited with code {}'.format(status)
+    def _validate_output(self, reference, output, **kwargs):
         reference_full_path = os.path.join(REFDIR, reference)
-        output_full_path = output + '.PB.count'
+        output_full_path = os.path.join(self._temp_directory,
+                                        output + '.PB.count')
         _assert_identical_files(output_full_path, reference_full_path)
 
     def test_single_file_single_model(self):
@@ -335,7 +319,8 @@ class TestPBcount(unittest.TestCase):
         input_files = ['count_single1.PB.fasta',]
         output = 'output'
         reference = 'count_single1.PB.count'
-        self._run_PBcount_test(input_files, output, reference)
+        self._run_program_and_validate(reference,
+                                       input_files=input_files, output=output)
 
     def test_single_file_multiple_models(self):
         """
@@ -344,7 +329,8 @@ class TestPBcount(unittest.TestCase):
         input_files = ['count_multi1.PB.fasta',]
         output = 'output'
         reference = 'count_multi1.PB.count'
-        self._run_PBcount_test(input_files, output, reference)
+        self._run_program_and_validate(reference,
+                                       input_files=input_files, output=output)
 
     def test_multiple_files_single_model(self):
         """
@@ -355,7 +341,8 @@ class TestPBcount(unittest.TestCase):
                        'count_single3.PB.fasta']
         output = 'output'
         reference = 'count_single123.PB.count'
-        self._run_PBcount_test(input_files, output, reference)
+        self._run_program_and_validate(reference,
+                                       input_files=input_files, output=output)
 
     def test_multiple_files_multiple_models(self):
         """
@@ -366,7 +353,8 @@ class TestPBcount(unittest.TestCase):
                        'count_multi3.PB.fasta']
         output = 'output'
         reference = 'count_multi123.PB.count'
-        self._run_PBcount_test(input_files, output, reference)
+        self._run_program_and_validate(reference,
+                                       input_files=input_files, output=output)
 
     def test_first_residue_positive(self):
         """
@@ -375,8 +363,9 @@ class TestPBcount(unittest.TestCase):
         input_files = ['count_multi1.PB.fasta',]
         output = 'output'
         reference = 'count_multi1_first20.PB.count'
-        self._run_PBcount_test(input_files, output, reference,
-                               first_residue=20)
+        self._run_program_and_validate(reference,
+                                       input_files=input_files, output=output,
+                                       first_residue=20)
 
     def test_first_residue_negative(self):
         """
