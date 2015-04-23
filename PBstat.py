@@ -12,6 +12,9 @@ Compute Neq, PBs distribution and draw logo representation of PBs.
 #===============================================================================
 # Modules
 #===============================================================================
+## Use print as a function for python 3 compatibility
+from __future__ import print_function
+
 ## standard modules
 import os
 import sys
@@ -26,6 +29,19 @@ import numpy
 import PBlib as PB
 
 #===============================================================================
+# Python2/Python3 compatibility
+#===============================================================================
+
+# The range function in python 3 behaves as the range function in python 2
+# and returns a generator rather than a list. To produce a list in python 3,
+# one should use list(range). Here we change range to behave the same in
+# python 2 and in python 3. In both cases, range will return a generator.
+try:
+    range = xrange
+except NameError:
+    pass
+
+#===============================================================================
 # Functions
 #===============================================================================
 def array_to_string(ar):
@@ -36,6 +52,7 @@ def array_to_string(ar):
     #  max_line_width : big enough to avoid unneeded newline
     #  precision : float with 4 digits
     return numpy.array_str(ar, max_line_width = 100000, precision = 4).translate(None, '[]')
+
 
 #===============================================================================
 # MAIN - program starts here
@@ -174,16 +191,12 @@ ynames = c('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
     R_script += """
 png(filename='%s', width = log(length(xnames))*500, height = 1000)
 par(
-    # default margins are: 5.1 4.1 4.1 2.1
-    # extend bottom margin for text (+5 line)
-    mar = c(5.1, 5.1, 4.1, 2.1),
-    oma = c(2,0,0,0), # 2 lines for comments: 0 to 4
     lwd=3,            # line width
     bty = 'o',        # type of box around graphic
     font.lab = 2,     # axis label font (bold)
     font.axis = 2,    # axis font (bold)
-    cex.lab=1.9,      # axis label width
-    cex.axis=1.5      # axis width
+    cex.lab=2,      # axis label width
+    cex.axis=2.0      # axis text width
 )
     """ % (map_file_name)
 
@@ -221,23 +234,23 @@ colorpal = rgb(grad[,1]/255,grad[,2]/255,grad[,3]/255)
     R_script += """
 layout(matrix(1:2, 1, 2), width=c(log(length(xnames))*3, 1))
 
-par(mar = c(5.1, 7.1, 4.1, 1.1))
-image(as.matrix(freq), axes=FALSE, xlab="Residue number", col=colorpal, zlim = c(0, 1))
+par(mar = c(7.1, 8.1, 4.1, 1.1))
+image(as.matrix(freq), axes=FALSE, col=colorpal, zlim = c(0, 1))
 box()
 axis(1, seq(0, 1, 1/(length(xnames)-1)), xnames)
 axis(2, seq(0, 1, 1/(length(ynames)-1)), ynames, font = 4)
-mtext('PBs', side = 2, line = 5, cex=1.9, font=2)
-mtext(bquote(beta~'strand'), side = 2, line = 3, at = 3*1/15, cex=1.5)
+mtext('Residue number', side = 1, line = 5, cex=3.0, font=2)
+mtext('PBs', side = 2, line = 5, cex=3.0, font=2)
+mtext(bquote(beta~'strand'), side = 2, line = 3, at = 3*1/15, cex=1.8)
 mtext('coil', side = 2, line = 3, at = 7*1/15, cex=1.5)
 mtext(bquote(alpha~'helix'), side = 2, line = 3, at = 12*1/15, cex=1.5)
 
-par(mar = c(5.1, 1.1, 4.1, 5.1))
+par(mar = c(7.1, 1.1, 4.1, 7.1))
 image(t(seq(1, 848)), col=colorpal, axes=FALSE)
 axis(4, seq(0, 1, 0.2), seq(0, 1, 0.2))
-mtext("intensity", side = 4, line = 3, cex = 1.7, font = 2)
+mtext("Intensity", side = 4, line = 5, cex = 3, font = 2)
 box()
     """
-
 
 import matplotlib.pyplot as plt
 freq = numpy.loadtxt(options.f, dtype=int, skiprows=1)
@@ -272,9 +285,9 @@ if options.neq:
     #-------------------------------------------------------------------------------
     neq_array = numpy.zeros((len(residue_lst), 2))
     neq_array[:, 0] = residue_lst
-    for idx in xrange(len(residue_lst)):
+    for idx in range(len(residue_lst)):
         H = 0.0
-        for b in xrange(PB.NUMBER):
+        for b in range(PB.NUMBER):
             f = freq[idx, b] 
             if f != 0:
                 H += f * math.log(f)
@@ -327,8 +340,9 @@ cex.axis=2.0      # axis width
     # plot data
     R_script += """
 plot(neq, type= 'l', 
-xlab = 'Residue number', ylab = 'Neq', 
-ylim=c(1,max(round(neq[,2]))+2))
+    xlab = 'Residue number', ylab = 'Neq', 
+    ylim=c(1,max(round(neq[,2]))+2)
+)
     """
 
     # execute R script
@@ -366,18 +380,7 @@ if options.logo:
 
     # convert a table of PB frequencies into transfac format as required by weblogo
     # http://meme.sdsc.edu/meme/doc/transfac-format.html
-    #-------------------------------------------------------------------------------
-    residue_lst = []
-    transfac_content  = "ID %s\n" % options.f
-    transfac_content += "BF unknown\n"
-    transfac_content += "P0" + count_content[0][2:]
-    for line in count_content[1:]:
-        item = line.split()
-        residue = int(item[0])
-        residue_lst.append(residue)
-        transfac_content += "%05d" % residue + line[5:-1] +  "    X" + "\n"
-    transfac_content += "XX\n"
-    transfac_content += "//"
+    transfac_content = PB.count_to_transfac(options.f, count_content)
 
     # write transfac file (debug only)
     #-------------------------------------------------------------------------------
@@ -400,7 +403,7 @@ if options.logo:
     command = """weblogo \
 --format pdf \
 --errorbars NO \
---fineprint "PBlogo" \
+--fineprint "" \
 --title %s \
 --color "#1240AB" d      "strand main" \
 --color "#1240AB" abcdef "strand others" \

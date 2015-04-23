@@ -31,16 +31,25 @@ echo "|                                                                        |
 echo "#------------------------------------------------------------------------#"
 
 echo  -e "\n"
-echo "Test with the 225 conformations of the beta3 integrin"
-echo "../PBassign.py -p md_traj.pdb -o md_traj"
+echo "Test with the PSI domain of the human beta3 integrin"
+echo "90 conformations issued from 1 molecular dynamics simulation" 
+echo "../PBassign.py -p psi_md_traj_1.pdb -o psi_md_traj_1"
 pause
-../PBassign.py -p md_traj.pdb -o md_traj
+../PBassign.py -p psi_md_traj_1.pdb -o psi_md_traj_1
 
 echo  -e "\n"
-echo "Test with the 201 conformations from molecular dynamic of the Barstar protein"
-echo "../PBassign.py -x md_traj_4.xtc -g md_traj_4.gro -o md_traj_4"
+echo "Test with the PSI domain of the human beta3 integrin"
+echo "270 conformations issued from 3 molecular dynamics simulation" 
+echo "../PBassign.py -p psi_md_traj_1.pdb -p psi_md_traj_2.pdb -p psi_md_traj_3.pdb -o psi_md_traj_all"
 pause
-../PBassign.py -x md_traj_4.xtc -g md_traj_4.gro -o md_traj_4
+../PBassign.py -p psi_md_traj_1.pdb -p psi_md_traj_2.pdb -p psi_md_traj_3.pdb -o psi_md_traj_all
+
+echo  -e "\n"
+echo "Test with the Barstar protein"
+echo "51 conformations issued from 1 molecular dynamics simulation"
+echo "../PBassign.py -x barstar_md_traj.xtc -g barstar_md_traj.gro -o barstar_md_traj"
+pause
+../PBassign.py -x barstar_md_traj.xtc -g barstar_md_traj.gro -o barstar_md_traj
 
 
 echo "#---------------------------------------------------------------------------#"
@@ -51,24 +60,21 @@ echo "#-------------------------------------------------------------------------
 
 echo  -e "\n"
 echo "with one input file"
-echo "../PBcount.py -f md_traj.PB.fasta -o md_traj"
+echo "../PBcount.py -f psi_md_traj_1.PB.fasta -o psi_md_traj_1"
 pause
-../PBcount.py -f md_traj.PB.fasta -o md_traj
-
+../PBcount.py -f psi_md_traj_1.PB.fasta -o psi_md_traj_1
 
 echo  -e "\n"
 echo "with several input files"
-echo "../PBcount.py -f md_traj_1.PB.fasta -f md_traj_2.PB.fasta -f md_traj_3.PB.fasta -o test_output"
+echo "../PBcount.py -f psi_md_traj_1.PB.fasta -f psi_md_traj_2.PB.fasta -f psi_md_traj_3.PB.fasta -o psi_md_traj_all"
 pause
-../PBcount.py -f md_traj_1.PB.fasta -f md_traj_2.PB.fasta -f md_traj_3.PB.fasta -o test_output
-
-
+../PBcount.py -f psi_md_traj_1.PB.fasta -f psi_md_traj_2.PB.fasta -f psi_md_traj_3.PB.fasta -o psi_md_traj_all
 
 echo  -e "\n"
-echo "with one input file and the --residue-shift option"
-echo "../PBcount.py -f md_traj.PB.fasta -o md_traj2 --residue-shift 20"
+echo "with one input file and the --first-residue option"
+echo "../PBcount.py -f psi_md_traj_1.PB.fasta -o psi_md_traj_1_shifted --first-residue 20"
 pause
-../PBcount.py -f md_traj.PB.fasta -o md_traj2 --residue-shift 20
+../PBcount.py -f psi_md_traj_1.PB.fasta -o psi_md_traj_1_shifted --first-residue 20
 
 
 echo  -e "\n"
@@ -80,16 +86,40 @@ echo "|                                                                        |
 echo "#------------------------------------------------------------------------#"
 
 echo  -e "\n"
-echo "../PBstat.py -f md_traj.PB.count -o md_traj --map --neq --logo"
+echo "../PBstat.py -f psi_md_traj.PB.count -o psi_md_traj --map --neq --logo"
 pause
-../PBstat.py -f md_traj.PB.count -o md_traj --map --neq --logo
+../PBstat.py -f psi_md_traj_all.PB.count -o psi_md_traj --map --neq --logo
+
+echo  -e "\n"
+echo "Define a residue frame (--residue-min and --residue-max options)"
+echo "../PBstat.py -f psi_md_traj.PB.count -o psi_md_traj --map --neq --logo --residue-min 10 --residue-max 30"
+pause
+../PBstat.py -f psi_md_traj_all.PB.count -o psi_md_traj --map --neq --logo --residue-min 10 --residue-max 30
 
 
 echo  -e "\n"
-echo "Test with --residue-min and --residue-max options"
-echo "../PBstat.py -f md_traj.PB.count -o md_traj --map --neq --logo --residue-min 10 --residue-max 30"
+echo "#------------------------------------------------------------------------#"
+echo "|                                                                        |"
+echo "|  Cluster structures                                                    |"
+echo "|                                                                        |"
+echo "#------------------------------------------------------------------------#"
+
+echo  -e "\n"
+echo "../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all"
 pause
-../PBstat.py -f md_traj.PB.count -o md_traj --map --neq --logo --residue-min 10 --residue-max 30
+../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all
+
+echo  -e "\n"
+echo "Produce only 3 clusters (--clusters option)"
+echo "../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all_3  --clusters 3"
+pause
+../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all_3  --clusters 3
+
+echo  -e "\n"
+echo "Compare only sequence against the first one (--compare option)"
+echo "../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all --compare"
+pause
+../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all --compare
 
 
 echo  -e "\n"
@@ -99,7 +129,8 @@ echo "|  Demo completed!                                                       |
 echo "|                                                                        |"
 echo "#------------------------------------------------------------------------#"
 echo 
-echo "Look at *.PB.* files in the demo directory."
+echo "Look at *.PB.* files in the demo2_tmp directory."
 pwd
 ls -lh 
+echo "Do not forget to delete demo2_tmp directory when you will be done with this demo." 
 

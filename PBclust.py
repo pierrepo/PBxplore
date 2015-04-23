@@ -10,6 +10,9 @@ Cluster protein structures based on their PB sequences.
 #===============================================================================
 # Modules
 #===============================================================================
+## Use print as a function for python 3 compatibility
+from __future__ import print_function
+
 ## standard modules
 import sys
 import os
@@ -23,11 +26,26 @@ import numpy
 import PBlib as PB
 
 #===============================================================================
+# Python2/Python3 compatibility
+#===============================================================================
+
+# The range function in python 3 behaves as the range function in python 2
+# and returns a generator rather than a list. To produce a list in python 3,
+# one should use list(range). Here we change range to behave the same in
+# python 2 and in python 3. In both cases, range will return a generator.
+try:
+    range = xrange
+except NameError:
+    pass
+
+#===============================================================================
 # Functions
 #===============================================================================
 def compute_score_by_position(score_mat, seq1, seq2):
-    """computes similarity score between two sequences"""
-    assert len(seq1) == len(seq2), "sequences have different sizes\n%s\n%s" %(seq1, seq2)
+    """
+    Computes similarity score between two sequences
+    """
+    assert len(seq1) == len(seq2), "sequences have different sizes:\n{}\nvs\n{}".format(seq1, seq2)
     score = []
     for pb1, pb2 in zip(seq1, seq2):
         # score is 0 for Z (dummy PB)
@@ -53,12 +71,10 @@ parser.add_argument("-f", action="append", required=True,
     help="name(s) of the PBs file (in fasta format)")
 parser.add_argument("-o", action="store", required=True,
     help="name for results")
+parser.add_argument("-c", action="store", required=True, type=int,
+    help="number of wanted clusters")  
 
 # optional arguments
-parser.add_argument("--residue-shift", action="store", type=int,
-    dest="residue_shift", help="shift to adjust residue number")
-parser.add_argument("--clusters", action="store", type=int,
-    dest="clusters_nb", help="number of wanted clusters")  
 parser.add_argument("--compare", action="store_true", default=False,
     dest="compare", help="compare the first sequence versus all others")
 
@@ -68,20 +84,9 @@ options = parser.parse_args()
 #-------------------------------------------------------------------------------
 # check options
 #-------------------------------------------------------------------------------
-if options.residue_shift and options.residue_shift < 0:
-	parser.error("residue shift must be positive")
-if options.residue_shift:
-    residue_shift = options.residue_shift
-else:
-    residue_shift = 0
+if options.c <= 0:
+    parser.error("number of clusters must be > 0.")
 
-if options.clusters_nb and options.clusters_nb <= 0:
-    parser.error("number of clusters must be strictly positive")
-
-if not options.clusters_nb:
-    # set default clusters number to 5
-    options.clusters_nb = 5
-    
 #-------------------------------------------------------------------------------
 # check input files
 #-------------------------------------------------------------------------------
@@ -99,7 +104,7 @@ for name in options.f:
     header_lst += header
     seq_lst += seq
 
-pb_seq = numpy.array( zip(header_lst, seq_lst) )
+pb_seq = numpy.array(list(zip(header_lst, seq_lst)))
 
 #-------------------------------------------------------------------------------
 # load subtitution matrix
@@ -112,6 +117,7 @@ substitution_mat = PB.load_substitution_matrix(PB.SUBSTITUTION_MATRIX_NAME)
 #-------------------------------------------------------------------------------
 if options.compare:
     compare_file_name = options.o + ".PB.compare.fasta"
+    PB.clean_file(compare_file_name)
     ref_name = pb_seq[0,0]
     ref_seq = pb_seq[0,1]
     mini = numpy.min(substitution_mat)
@@ -123,10 +129,10 @@ if options.compare:
     substitution_mat_modified = 9 * (1 - substitution_mat_modified)
     substitution_mat_modified = substitution_mat_modified.astype(int)
     # set diagonal to 0
-    for idx in xrange(len(substitution_mat_modified)):
+    for idx in range(len(substitution_mat_modified)):
         substitution_mat_modified[idx,idx] = 0
     print( "Normalized substitution matrix (between 0 and 9)" )
-    print substitution_mat_modified
+    print(substitution_mat_modified)
     print( "Compare first sequence ({0}) with others".format(ref_name) )
     for target in pb_seq[1:,]:
         header = "%s vs %s" % (ref_name, target[0])
@@ -134,17 +140,11 @@ if options.compare:
         seq = "".join([str(s) for s in score_lst])
         PB.write_fasta(compare_file_name, seq, header)
     print( "wrote {0}".format(compare_file_name) )
-    # name = options.o + ".PB.compare.data"
-    # f = open(name, "w")
-    # for idx, score in enumerate(score_lst):
-    #     f.write( "%4d  %d\n" % (idx + 1 + residue_shift, score) )
-    # f.close()
-    # print "wrote %s" % (name)
     sys.exit(0)
 
 # change sequence name for a better input in R
 seq_names = {}
-for i in xrange(len(pb_seq)):
+for i in range(pb_seq.shape[0]):
     new_name = "seq%d" % i
     seq_names[new_name] = pb_seq[i, 0]
     pb_seq[i, 0] = new_name
@@ -156,18 +156,18 @@ distance_mat = numpy.empty((len(pb_seq), len(pb_seq)), dtype='float')
 
 print( "Building distance matrix" )
 # get similarity score
-for i in xrange(len(pb_seq)):
+for i in range(len(pb_seq)):
     sys.stdout.write("\r%.f%%" % (float(i+1)/len(pb_seq)*100))
     sys.stdout.flush()
-    for j in xrange(i, len(pb_seq)):
+    for j in range(i, len(pb_seq)):
         score = sum( compute_score_by_position(substitution_mat, pb_seq[i, 1], pb_seq[j, 1]) )
         distance_mat[i, j] = score
         distance_mat[j, i] = score 
 print( "" )
 
 # set equal the diagonal
-diag_mini =  numpy.min([distance_mat[i, i] for i in xrange(len(pb_seq))])
-for i in xrange(len(pb_seq)):
+diag_mini =  numpy.min([distance_mat[i, i] for i in range(len(pb_seq))])
+for i in range(len(pb_seq)):
     distance_mat[i, i] = diag_mini
 
 # convert similarity score to normalized distance between 0 and 1
@@ -180,7 +180,7 @@ maxi = numpy.max(distance_mat)
 distance_mat = 1 - (distance_mat + abs(mini))/(maxi - mini)
 
 numpy.set_printoptions(threshold=numpy.inf, precision = 3, linewidth = 100000)
-output_mat_str = numpy.array_str(distance_mat).translate(None, '[]')
+output_mat_str = numpy.array_str(distance_mat).replace('[', '').replace(']', '')
 
 # add sequence labels
 output_mat_str = " ".join(pb_seq[:,0])+"\n"+output_mat_str
@@ -224,7 +224,8 @@ medoids = sapply(unique(clusters), clust.medoid, distances, clusters)
 cat("seq_id", names(clusters), "\n")
 cat("cluster_id", clusters, "\n")
 cat("medoid_id", medoids)
-""".format( matrix=output_mat_str, clusters=options.clusters_nb )
+""".format( matrix=output_mat_str, clusters=options.c )
+R_script = R_script.encode('utf-8')
 
 
 # execute R script
@@ -233,6 +234,8 @@ command="R --vanilla --slave"
 proc = subprocess.Popen(command, shell = True, 
 stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
 (out, err) = proc.communicate(R_script)
+out = out.decode('utf-8')
+err = err.decode('utf-8')
 if err:
     print( "ERROR: {0}".format(err) )
 code = proc.wait()
@@ -256,14 +259,14 @@ cluster_count = {}
 for idx in cluster_id:
     cluster_count[idx] = cluster_count.get(idx, 0) + 1
 for idx in sorted(cluster_count):
-    print "cluster %3s: %5d sequences (%3d%%)" %(idx, cluster_count[idx], 1.0*cluster_count[idx]/len(seq_lst)*100)
+    print("cluster {}: {} sequences ({:>2.0f}%)".format(idx, cluster_count[idx], 1.0*cluster_count[idx]/len(seq_lst)*100))
 
 
 name = options.o + ".PB.clust"
 f = open(name, "w")
 for seq, cluster in zip(seq_id, cluster_id):
-    f.write('SEQ_CLU  "%s"  %s \n' %(seq_names[seq], cluster))
+    f.write('SEQ_CLU  "{}"  {} \n'.format(seq_names[seq], cluster))
 for idx, med in enumerate(medoid_id):
-    f.write('MED_CLU  "%s"  %d \n' %(seq_names[med], idx+1))
+    f.write('MED_CLU  "{}"  {} \n'.format(seq_names[med], idx+1))
 f.close()
 print( "wrote {0}".format(name) )
