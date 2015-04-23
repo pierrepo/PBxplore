@@ -253,29 +253,51 @@ box()
     """
 
 import matplotlib.pyplot as plt
+
 freq = numpy.loadtxt(options.f, dtype=int, skiprows=1)
-xticks = freq[:, 0][::50]
+xticks = freq[:, 0][::5]-1
+xticks[0] += 1
+print(xticks)
 yticks = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p')
 
 freq = freq[:, 1:]/ float(sequence_number)
 
-fig = plt.figure(figsize=(8, 6))
-ax = fig.add_axes([0.1, 0.1, 0.6, 0.8])
+import math
+fig = plt.figure(figsize=(2*math.log(len(freq[:, 0])), 4))
+ax = fig.add_axes([0.1, 0.1, 0.75, 0.8])
 
-img = ax.imshow(numpy.transpose(freq[: , :]), interpolation='none', vmin=0, vmax=1, origin='lower', aspect='auto')
-
+# truncate defined colormap
+# http://stackoverflow.com/questions/18926031/how-to-extract-a-subset-of-a-colormap-as-a-new-colormap-in-matplotlib?rq=1
+def truncate_colormap(cmap, minval=0.0, maxval=1.0, n=100):
+    import matplotlib.colors as colors
+    import numpy as np
+    new_cmap = colors.LinearSegmentedColormap.from_list(
+        'trunc({n},{a:.2f},{b:.2f})'.format(n=cmap.name, a=minval, b=maxval),
+        cmap(np.linspace(minval, maxval, n)))
+    return new_cmap
+cmap =  plt.get_cmap('jet')
+cmap = truncate_colormap(cmap, 0.1, 0.9)
+img = ax.imshow(numpy.transpose(freq[: , :]), interpolation='none', vmin=0, vmax=1, origin='lower', aspect='auto', cmap=cmap)
+# nice color schemes
+# http://matplotlib.org/examples/color/colormaps_reference.html
+# color schemes: bwr cool jet
 ax.set_xticks(xticks - 1)
 ax.set_xticklabels(xticks)
 ax.set_yticks(range(len(yticks)))
 ax.set_yticklabels(yticks, style='italic', weight='bold')
-colorbar_ax = fig.add_axes([0.75, 0.1, 0.03, 0.8])
+colorbar_ax = fig.add_axes([0.87, 0.1, 0.03, 0.8])
 fig.colorbar(img, cax=colorbar_ax)
-fig.text(0.05, 4.0/16, r"$\beta$-strand", rotation = 90, size = 'smaller', va = 'center', transform=ax.transAxes)
-fig.text(0.05, 8.0/16*0.8, r"coil", rotation = 90, size = 'smaller', va = 'center')
-fig.text(0.05, 13.0/16, r"$\alpha$-helix", rotation = 90, size = 'smaller', va = 'center', transform=ax.transAxes)
-fig.text(0.02, 0.5, "PBs", rotation = 90, weight='bold', size = 'larger', transform=ax.transAxes)
+# center alpha-helix: PB m (13th out of 16 PBs)
+# center coil: PB h and i (8th and 9th out of 16 PBs)
+# center beta-sheet: PB d (4th out of 16 PBs) 
+fig.text(0.05, 4.0/16*0.8+0.075, r"$\beta$-strand", rotation = 90,  va = 'center', transform=ax.transAxes)
+fig.text(0.05, 8.5/16*0.8+0.075, r"coil", rotation = 90, va = 'center')
+fig.text(0.05, 13.0/16*0.8+0.075, r"$\alpha$-helix", rotation = 90, va = 'center', transform=ax.transAxes)
+fig.text(0.01, 0.5, "PBs", rotation = 90, weight='bold', size = 'larger', transform=ax.transAxes)
+fig.text(0.4, 0.01, "Residue number", weight="bold")
+fig.text(0.95, 0.6, "Intensity", rotation = 90, weight="bold")
 #fig.show()
-fig.savefig(options.o)
+fig.savefig(options.o, dpi=300)
 
 #-------------------------------------------------------------------------------
 # computes Neq and generates neq plot along protein sequence
