@@ -11,9 +11,10 @@ Cluster protein structures based on their PB sequences.
 # Modules
 #===============================================================================
 ## Use print as a function for python 3 compatibility
-from __future__ import print_function
+from __future__ import print_function, division
 
 ## standard modules
+import collections
 import sys
 import os
 import subprocess
@@ -37,9 +38,9 @@ except NameError:
 
 
 def user_input():
-    #-------------------------------------------------------------------------------
-    # get arguments
-    #-------------------------------------------------------------------------------
+    """
+    Handle PBclust command line arguments
+    """
     parser = argparse.ArgumentParser(
         description="Cluster protein structures based on their PB sequences.")
 
@@ -58,15 +59,11 @@ def user_input():
     # get all parameters
     options = parser.parse_args()
 
-    #-------------------------------------------------------------------------------
-    # check options
-    #-------------------------------------------------------------------------------
+    # test the validity of the arguments
     if options.c <= 0:
         parser.error("number of clusters must be > 0.")
 
-    #-------------------------------------------------------------------------------
-    # check input files
-    #-------------------------------------------------------------------------------
+    # check if the input files exist
     for name in options.f:
         if not os.path.isfile(name):
             sys.exit( "{0}: not a valid file. Bye".format(name) )
@@ -75,14 +72,17 @@ def user_input():
 
 
 def display_clust_report(cluster_id):
-    # count number of sequences in clusters
-    cluster_count = {}
-    for idx in cluster_id:
-        cluster_count[idx] = cluster_count.get(idx, 0) + 1
-    for idx in sorted(cluster_count):
+    """
+    Display a quick report on the clustering
+
+    Display the number of structures in each cluster, and the fraction of the
+    overall sequence set they represent.
+    """
+    nclusters = len(cluster_id)
+    cluster_count = collections.Counter(cluster_id)
+    for cluster, count in cluster_count.most_common():
         print("cluster {}: {} sequences ({:>2.0f}%)"
-              .format(idx, cluster_count[idx],
-                      1.0*cluster_count[idx]/len(cluster_id)*100))
+              .format(cluster, count, 100*count/nclusters))
 
 
 def write_clusters(fname, seq_id, cluster_id, medoid_id, seq_names):
