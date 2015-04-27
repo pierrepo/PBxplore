@@ -113,33 +113,32 @@ def compare(header_lst, seq_lst, substitution_mat, fname):
 
 
 def pbclust_cli():
+    """
+    Run the PBclust command line
+    """
+    # Read user inputs
     options = user_input()
-    #-------------------------------------------------------------------------------
-    # read PBs files
-    #-------------------------------------------------------------------------------
     header_lst, seq_lst = PB.read_several_fasta(options.f)
 
-    #-------------------------------------------------------------------------------
-    # load subtitution matrix
-    #-------------------------------------------------------------------------------
+    # Load subtitution matrix
     substitution_mat = PB.load_substitution_matrix(PB.SUBSTITUTION_MATRIX_NAME)
 
-    #-------------------------------------------------------------------------------
     # --compare option
     # compare the first sequence (in the fasta file) versus all others
-    #-------------------------------------------------------------------------------
     if options.compare:
         compare_file_name = options.o + ".PB.compare.fasta"
         compare(header_lst, seq_lst, substitution_mat, compare_file_name)
         sys.exit(0)
 
+    # Compute the distance matrix for the clustering
     distance_mat = PB.distance_matrix(seq_lst, substitution_mat)
-    seq_id, cluster_id, medoid_id = PB.hclust(distance_mat, nclusters=options.c)
     distance_fname = options.o + ".PB.dist"
     write_distance_matrix(distance_mat, distance_fname)
     print("wrote {0}".format(distance_fname))
-    display_clust_report(cluster_id)
 
+    # Carry out the clustering
+    seq_id, cluster_id, medoid_id = PB.hclust(distance_mat, nclusters=options.c)
+    display_clust_report(cluster_id)
     output_fname = options.o + ".PB.clust"
     write_clusters(output_fname, seq_id, cluster_id, medoid_id, header_lst)
     print("wrote {0}".format(output_fname))
