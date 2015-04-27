@@ -93,12 +93,8 @@ def write_clusters(fname, seq_id, cluster_id, medoid_id, seq_names):
             outfile.write('MED_CLU  "{}"  {} \n'.format(seq_names[med], idx+1))
 
 
-def write_distance_matrix(distance_matrix, pb_seq, fname):
-    output_mat_str = PB.matrix_to_str(distance_matrix, pb_seq)
-    # write distance matrix
-    f = open(fname, "w")
-    f.write(output_mat_str)
-    f.close()
+def write_distance_matrix(distance_matrix, fname):
+    numpy.savetxt(fname, distance_matrix)
 
 
 def compare(header_lst, seq_lst, substitution_mat, fname):
@@ -138,18 +134,11 @@ def pbclust_cli():
         compare(header_lst, seq_lst, substitution_mat, compare_file_name)
         sys.exit(0)
 
-    # change sequence name for a better input in R
-    seq_names = {}
-    for i in range(pb_seq.shape[0]):
-        new_name = "seq%d" % i
-        seq_names[new_name] = pb_seq[i, 0]
-        pb_seq[i, 0] = new_name
-
     similarity_mat = PB.distance_matrix(pb_seq, substitution_mat, PB.substitution_score)
     distance_mat = PB.similarity_to_distance(similarity_mat)
-    seq_id, cluster_id, medoid_id = PB.hclust(distance_mat, nclusters=options.c, pb_seq=pb_seq)
+    seq_id, cluster_id, medoid_id = PB.hclust(distance_mat, nclusters=options.c)
     distance_fname = options.o + ".PB.dist"
-    write_distance_matrix(distance_mat, pb_seq, distance_fname)
+    write_distance_matrix(distance_mat, distance_fname)
     print("wrote {0}".format(distance_fname))
     display_clust_report(cluster_id)
 

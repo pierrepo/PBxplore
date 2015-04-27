@@ -551,16 +551,14 @@ def similarity_to_distance(similarity_mat):
     return 1 - (similarity_mat + abs(mini))/(maxi - mini)
 
 
-def matrix_to_str(distance_mat, pb_seq):
+def _matrix_to_str(distance_mat):
     numpy.set_printoptions(threshold=numpy.inf, precision = 3, linewidth = 100000)
     output_mat_str = numpy.array_str(distance_mat).replace('[', '').replace(']', '')
-    # add sequence labels
-    output_mat_str = " ".join(pb_seq[:,0])+"\n"+output_mat_str
     return output_mat_str
 
 
-def hclust(distance_mat, nclusters, pb_seq):
-    output_mat_str = matrix_to_str(distance_mat, pb_seq)
+def hclust(distance_mat, nclusters):
+    output_mat_str = _matrix_to_str(distance_mat)
     # build R script
     #-------------------------------------------------------------------------------
     # https://github.com/alevchuk/hclust-fasta/blob/master/003-hclust
@@ -570,7 +568,7 @@ def hclust(distance_mat, nclusters, pb_seq):
     R_script="""
     connector = textConnection("{matrix}")
 
-    distances = read.table(connector, header = TRUE)
+    distances = read.table(connector, header = FALSE)
     rownames(distances) = colnames(distances)
 
     clusters = cutree(hclust(as.dist(distances), method = "ward"), k = {clusters})
@@ -619,9 +617,15 @@ def hclust(distance_mat, nclusters, pb_seq):
         sys.exit("ERROR: wrong R ouput")
 
     seq_id, cluster_id, medoid_id = out.split("\n")
-    seq_id = [int(x[3:]) for x in seq_id.split()[1:]]
+    # As the input table is provided without headers, the sequences are named
+    # V1, V2... with indices starting at 1. To get a integer index starting at
+    # 0 from a sequence name, we need to remove the V prefix and to substract 1
+    # from the remaining number. This applies to seq_id and medoid_id that
+    # rely on the sequence name, but not to cluster_id that is already a list
+    # of integers.
+    seq_id = [int(x[1:]) - 1 for x in seq_id.split()[1:]]
     cluster_id = [int(x) for x in cluster_id.split()[1:]]
-    medoid_id = [int(x[3:]) for x in medoid_id.split()[1:]]
+    medoid_id = [int(x[1:]) - 1 for x in medoid_id.split()[1:]]
 
     return seq_id, cluster_id, medoid_id
 
