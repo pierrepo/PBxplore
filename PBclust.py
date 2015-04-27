@@ -105,7 +105,7 @@ def compare(header_lst, seq_lst, substitution_mat, fname):
     PB.clean_file(fname)
     ref_name = header_lst[0]
     ref_seq = seq_lst[0]
-    substitution_mat_modified = PB.normalize_matrix(substitution_mat)
+    substitution_mat_modified = PB.matrix_to_single_digit(substitution_mat)
     print("Normalized substitution matrix (between 0 and 9)")
     print(substitution_mat_modified)
     print("Compare first sequence ({0}) with others".format(ref_name))

@@ -441,7 +441,20 @@ def write_count_matrix(pb_count, outfile, first=1):
 
 def compute_score_by_position(score_mat, seq1, seq2):
     """
-    Computes similarity score between two sequences
+    Computes substitution score between two sequences position per position
+
+    The substitution score can represent a similarity or a distance depending
+    on the score matrix provided. The score matrix should be provided as a 2D
+    numpy array with score[i, j] the score to swich the PB at the i-th position
+    in PB.NAMES to the PB at the j-th position in PB.NAMES.
+
+    The function returns the result as a list of substitution scores to go from
+    `seq1` to `seq2` for each position. Both sequences must have the same
+    length.
+
+    ..note:
+
+        The score to move from or to a Z block (dummy block) is always 0.
     """
     assert len(seq1) == len(seq2), "sequences have different sizes:\n{}\nvs\n{}".format(seq1, seq2)
     score = []
@@ -454,16 +467,33 @@ def compute_score_by_position(score_mat, seq1, seq2):
     return score
 
 
-def normalize_matrix(matrix):
+def matrix_to_single_digit(matrix):
+    """
+    Convert a similarity substitution matrix to a single digit distance
+    substitution matrix
+
+    This function takes a substitution matrix expressed as similarity scores,
+    and expresses it as integer distances in the range [0; 9]. Where 0 means
+    similar PBs, and 9 means different PBs.
+
+    Such single digit substitution matrix is convenient to display sequences
+    of substitution scores.
+
+    ..note:
+
+            If a substitution matrix expressed with distances is provided
+            rather than a matrix expressed with similarity scores, then the
+            returned matrix is expressed with similarity scores.
+    """
     mini = numpy.min(matrix)
     maxi = numpy.max(matrix)
-    # normalize substitution matrix between 0 and 9
-    # 0 -> similar PBs
-    # 9 -> different PBs
+    # Normalize between 0 and 1
     mat_modified = (matrix + abs(mini))/(maxi - mini)
+    # Convert similarity scores to distances and change the range to [0; 9]
     mat_modified = 9 * (1 - mat_modified)
+    # Convert to integers
     mat_modified = mat_modified.astype(int)
-    # set diagonal to 0
+    # Set diagonal to 0
     for idx in range(len(mat_modified)):
         mat_modified[idx,idx] = 0
     return mat_modified
@@ -471,7 +501,7 @@ def normalize_matrix(matrix):
 
 def distance_matrix(pb_seq, substitution_mat, distance_func):
     """
-    Compute distance of all sequences against all
+    Compute distances of all sequences against all the others
     """
     distance_mat = numpy.empty((len(pb_seq), len(pb_seq)), dtype='float')
 
@@ -484,7 +514,7 @@ def distance_matrix(pb_seq, substitution_mat, distance_func):
             score = distance_func(substitution_mat, pb_seq[i, 1], pb_seq[j, 1])
             distance_mat[i, j] = score
             distance_mat[j, i] = score 
-    print( "" )
+    print("")
 
     # set equal the diagonal
     diag_mini =  numpy.min([distance_mat[i, i] for i in range(len(pb_seq))])
@@ -494,15 +524,28 @@ def distance_matrix(pb_seq, substitution_mat, distance_func):
 
 
 def substitution_score(substitution_matrix, seqA, seqB):
+    """
+    Compute the substitution score to go from `seqA` to `seqB`
+
+    Both sequences must have the same length.
+
+    The score is either expressed as a similarity or a distance depending on
+    the substitution matrix.
+    """
     return sum(compute_score_by_position(substitution_matrix, seqA, seqB))
 
 
 def similarity_to_distance(similarity_mat):
-    # convert similarity score to normalized distance between 0 and 1
+    """
+    Convert a substitution matrix from similarity scores to distances
+
+    The resulting substitution matrix is expressed as normalized distances
+    between 0 and 1, where 0 means the blocks are identical, and 1 means the
+    block are the most different.
+    """
     # dist = 1 means sequences are very different
     # dist = 0 means sequences are identical
     # dist = 1 - (score + abs(min)/(max - min)
-
     mini = numpy.min(similarity_mat)
     maxi = numpy.max(similarity_mat)
     return 1 - (similarity_mat + abs(mini))/(maxi - mini)
