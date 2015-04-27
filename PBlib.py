@@ -481,9 +481,9 @@ def matrix_to_single_digit(matrix):
 
     ..note:
 
-            If a substitution matrix expressed with distances is provided
-            rather than a matrix expressed with similarity scores, then the
-            returned matrix is expressed with similarity scores.
+        If a substitution matrix expressed with distances is provided
+        rather than a matrix expressed with similarity scores, then the
+        returned matrix is expressed with similarity scores.
     """
     mini = numpy.min(matrix)
     maxi = numpy.max(matrix)
@@ -499,28 +499,32 @@ def matrix_to_single_digit(matrix):
     return mat_modified
 
 
-def distance_matrix(pb_seq, substitution_mat, distance_func):
+def distance_matrix(sequences, substitution_mat):
     """
     Compute distances of all sequences against all the others
-    """
-    distance_mat = numpy.empty((len(pb_seq), len(pb_seq)), dtype='float')
 
-    print( "Building distance matrix" )
-    # get similarity score
-    for i in range(len(pb_seq)):
-        sys.stdout.write("\r%.f%%" % (float(i+1)/len(pb_seq)*100))
+    The substitution matrix is expected to be expressed as similarity scores.
+    """
+    distance_mat = numpy.empty((len(sequences), len(sequences)), dtype='float')
+
+    print("Building distance matrix")
+    # Get similarity score
+    for i, seqA in enumerate(sequences):
+        sys.stdout.write("\r%.f%%" % (float(i+1)/len(sequences)*100))
         sys.stdout.flush()
-        for j in range(i, len(pb_seq)):
-            score = distance_func(substitution_mat, pb_seq[i, 1], pb_seq[j, 1])
+        for j, seqB in enumerate(sequences[i:], start=i):
+            score = substitution_score(substitution_mat, seqA, seqB)
             distance_mat[i, j] = score
             distance_mat[j, i] = score 
     print("")
-
-    # set equal the diagonal
-    diag_mini =  numpy.min([distance_mat[i, i] for i in range(len(pb_seq))])
-    for i in range(len(pb_seq)):
+    # Set equal the diagonal
+    diag_mini =  numpy.min(distance_mat.diagonal())
+    for i in range(len(sequences)):
         distance_mat[i, i] = diag_mini
-    return distance_mat
+    # Convert similarity score into a distance
+    mini = numpy.min(distance_mat)
+    maxi = numpy.max(distance_mat)
+    return 1 - (distance_mat + abs(mini))/(maxi - mini)
 
 
 def substitution_score(substitution_matrix, seqA, seqB):
@@ -533,22 +537,6 @@ def substitution_score(substitution_matrix, seqA, seqB):
     the substitution matrix.
     """
     return sum(compute_score_by_position(substitution_matrix, seqA, seqB))
-
-
-def similarity_to_distance(similarity_mat):
-    """
-    Convert a substitution matrix from similarity scores to distances
-
-    The resulting substitution matrix is expressed as normalized distances
-    between 0 and 1, where 0 means the blocks are identical, and 1 means the
-    block are the most different.
-    """
-    # dist = 1 means sequences are very different
-    # dist = 0 means sequences are identical
-    # dist = 1 - (score + abs(min)/(max - min)
-    mini = numpy.min(similarity_mat)
-    maxi = numpy.max(similarity_mat)
-    return 1 - (similarity_mat + abs(mini))/(maxi - mini)
 
 
 def _matrix_to_str(distance_mat):

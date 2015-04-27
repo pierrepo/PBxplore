@@ -118,7 +118,6 @@ def pbclust_cli():
     # read PBs files
     #-------------------------------------------------------------------------------
     header_lst, seq_lst = PB.read_several_fasta(options.f)
-    pb_seq = numpy.array(list(zip(header_lst, seq_lst)))
 
     #-------------------------------------------------------------------------------
     # load subtitution matrix
@@ -134,8 +133,7 @@ def pbclust_cli():
         compare(header_lst, seq_lst, substitution_mat, compare_file_name)
         sys.exit(0)
 
-    similarity_mat = PB.distance_matrix(pb_seq, substitution_mat, PB.substitution_score)
-    distance_mat = PB.similarity_to_distance(similarity_mat)
+    distance_mat = PB.distance_matrix(seq_lst, substitution_mat)
     seq_id, cluster_id, medoid_id = PB.hclust(distance_mat, nclusters=options.c)
     distance_fname = options.o + ".PB.dist"
     write_distance_matrix(distance_mat, distance_fname)
