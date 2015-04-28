@@ -37,9 +37,6 @@ except NameError:
 #===============================================================================
 # Data
 #===============================================================================
-# real module directory
-__location__ = os.path.realpath(
-               os.path.join(os.getcwd(), os.path.dirname(sys.argv[0])) )
 
 # Protein Blocks reference angles
 # taken from A. G. de Brevern, C. Etchebest and S. Hazout. 
@@ -71,7 +68,8 @@ NAMES = ["a", "b", "c", "d", "e", "f", "g", "h",
            "i", "j", "k", "l", "m", "n", "o", "p"]
 NUMBER = len(NAMES)
 
-SUBSTITUTION_MATRIX_NAME = os.path.join(__location__, "PBs_substitution_matrix.dat")
+SUBSTITUTION_MATRIX_NAME = os.path.join(os.path.dirname(__file__),
+                                        "PBs_substitution_matrix.dat")
 
 
 # line width for fasta format
