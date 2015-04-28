@@ -16,6 +16,7 @@ from __future__ import print_function
 import os
 import subprocess
 import sys
+import textwrap
 
 ## third-party modules
 import numpy
@@ -267,6 +268,25 @@ def write_fasta(name, seq, comment):
     f_out = open(name, "a")
     f_out.write(fasta_content)
     f_out.close()
+
+
+def write_fasta_entry(outfile, sequence, comment, width=FASTA_WIDTH):
+    """
+    Write a fasta entry (header + sequence) in an open file
+
+    Parameters
+    ----------
+    name : file descriptor
+        The file descriptor to write in. It must allow writing.
+    sequence : str
+        Sequence to format.
+    comment : str
+        Comment to make header of sequence.
+    width : int
+        The width of a line. `FASTA_WIDTH` by default.
+    """
+    print('>' + comment, file=outfile)
+    print(textwrap.fill(sequence, width=width), file=outfile)
 
 
 def count_to_transfac(identifier, count_content):
