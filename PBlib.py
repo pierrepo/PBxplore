@@ -596,7 +596,6 @@ def hclust(distance_mat, nclusters):
 
     medoids = sapply(unique(clusters), clust.medoid, distances, clusters)
 
-    cat("seq_id", names(clusters), "\n")
     cat("cluster_id", clusters, "\n")
     cat("medoid_id", medoids)
     """.format(matrix=output_mat_str, clusters=nclusters)
@@ -620,22 +619,20 @@ def hclust(distance_mat, nclusters):
     else:
         print( "R clustering: OK" )
 
-    # only 3 lines of output are expected
-    if len(out.split("\n")) != 3:
+    # only 2 lines of output are expected
+    if len(out.split("\n")) != 2:
         sys.exit("ERROR: wrong R ouput")
 
-    seq_id, cluster_id, medoid_id = out.split("\n")
+    cluster_id, medoid_id = out.split("\n")
     # As the input table is provided without headers, the sequences are named
     # V1, V2... with indices starting at 1. To get a integer index starting at
     # 0 from a sequence name, we need to remove the V prefix and to substract 1
-    # from the remaining number. This applies to seq_id and medoid_id that
-    # rely on the sequence name, but not to cluster_id that is already a list
-    # of integers.
-    seq_id = [int(x[1:]) - 1 for x in seq_id.split()[1:]]
+    # from the remaining number. This applies to medoid_id that relies on the
+    # sequence name, but not to cluster_id that is already a list of integers.
     cluster_id = [int(x) for x in cluster_id.split()[1:]]
     medoid_id = [int(x[1:]) - 1 for x in medoid_id.split()[1:]]
 
-    return seq_id, cluster_id, medoid_id
+    return cluster_id, medoid_id
 
 
 def compare_to_first_sequence(headers, sequences, substitution_mat):

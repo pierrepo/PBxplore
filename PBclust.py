@@ -85,12 +85,36 @@ def display_clust_report(cluster_id):
               .format(cluster, count, 100*count/nclusters))
 
 
-def write_clusters(fname, seq_id, cluster_id, medoid_id, seq_names):
+def write_clusters(fname, cluster_id, medoid_id, seq_names):
+    """
+    Write the result of a clustering in a file
+
+    The output file contains two types of lines:
+
+    * first, lines that start with SEQ_CLU link each sequence header to a
+      cluster ID; these lines are written n the same order as the input fasta
+      file(s)
+    * then, lines that start with MED_CLU link an input sequence to a cluster
+      as its medoid; these lines are ordered as the cluster IDs so the first
+      medoid is the medoid of the first cluster. The sequence index given in
+      these lines start at 1.
+
+    Parameters
+    ----------
+    fname : str
+        The path to the file to write in
+    cluster_id : list of int
+        The cluster ID for each sequence ordered like the sequences
+    medoid_id : list of int
+        The index of the medoid for each group in the list of sequences
+    seq_names: list of str
+        The header for each sequence
+    """
     with open(fname, "w") as outfile:
-        for seq, cluster in zip(seq_id, cluster_id):
-            outfile.write('SEQ_CLU  "{}"  {} \n'.format(seq_names[seq], cluster))
-        for idx, med in enumerate(medoid_id):
-            outfile.write('MED_CLU  "{}"  {} \n'.format(seq_names[med], idx+1))
+        for name, cluster in zip(seq_names, cluster_id):
+            outfile.write('SEQ_CLU  "{}"  {} \n'.format(name, cluster))
+        for idx, med in enumerate(medoid_id, start=1):
+            outfile.write('MED_CLU  "{}"  {} \n'.format(seq_names[med], idx))
 
 
 def write_distance_matrix(distance_matrix, fname):
@@ -169,10 +193,10 @@ def pbclust_cli():
     print("wrote {0}".format(distance_fname))
 
     # Carry out the clustering
-    seq_id, cluster_id, medoid_id = PB.hclust(distance_mat, nclusters=options.c)
+    cluster_id, medoid_id = PB.hclust(distance_mat, nclusters=options.c)
     display_clust_report(cluster_id)
     output_fname = options.o + ".PB.clust"
-    write_clusters(output_fname, seq_id, cluster_id, medoid_id, header_lst)
+    write_clusters(output_fname, cluster_id, medoid_id, header_lst)
     print("wrote {0}".format(output_fname))
 
 
