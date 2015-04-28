@@ -94,6 +94,16 @@ def write_clusters(fname, seq_id, cluster_id, medoid_id, seq_names):
 
 
 def write_distance_matrix(distance_matrix, fname):
+    """
+    Write a distance matrix in a file
+
+    Parameters
+    ----------
+    distance_matrix : 2D numpy array
+        The matrix to write
+    fname : str
+        The path to the file to write in
+    """
     numpy.savetxt(fname, distance_matrix)
 
 
