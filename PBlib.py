@@ -102,6 +102,13 @@ class InvalidBlockError(ValueError):
         else:
             return "Ivalid block '{}'".format(self.block)
 
+
+class RError(RuntimeError):
+    """
+    Exception raised when something fails with a R script.
+    """
+    pass
+
 #===============================================================================
 # Functions
 #===============================================================================
@@ -565,24 +572,40 @@ def _matrix_to_str(distance_mat):
     return output_mat_str
 
 
-def hclust(distance_mat, nclusters):
+def hclust(distance_mat, nclusters, method='ward'):
+    """
+    Hierachical clustering using R
+
+    Parameters
+    ----------
+    distance_mat : 2D numpy array
+        Distance matrix
+    nclusters : int
+        Number of cluster to build
+    method : str
+        Aggregation method for the clustering algorithm; must be a value
+        valid for R hclust function
+
+    Returns
+    -------
+    cluster_id : list of int
+        Cluster ID for each item; starts at 1
+    medoid_id : list of int
+        Index of the medoid for each cluster
+    """
+    # Convert the distance matrix into a string readable by R
     output_mat_str = _matrix_to_str(distance_mat)
-    # build R script
-    #-------------------------------------------------------------------------------
-    # https://github.com/alevchuk/hclust-fasta/blob/master/003-hclust
-    # and 
-    # http://www.biostars.org/p/11987/
-    # data
+    # Build the R script
     R_script="""
     connector = textConnection("{matrix}")
-
-    distances = read.table(connector, header = FALSE)
+    distances = read.table(connector, header=FALSE)
     rownames(distances) = colnames(distances)
 
-    clusters = cutree(hclust(as.dist(distances), method = "ward"), k = {clusters})
+    clusters = cutree(hclust(as.dist(distances), method="{method}"), k={clusters})
     distances = as.matrix(distances)
 
     # function to find medoid in cluster i
+    # http://www.biostars.org/p/11987/
     clust.medoid = function(i, distmat, clusters) {{
         ind = (clusters == i)
 
@@ -598,31 +621,25 @@ def hclust(distance_mat, nclusters):
 
     cat("cluster_id", clusters, "\n")
     cat("medoid_id", medoids)
-    """.format(matrix=output_mat_str, clusters=nclusters)
-    R_script = R_script.encode('utf-8')
+    """.format(matrix=output_mat_str, clusters=nclusters, method=method)
 
-
-    # execute R script
-    #-------------------------------------------------------------------------------
+    # Execute the R script
     command="R --vanilla --slave"
     proc = subprocess.Popen(command, shell = True, 
-    stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
-    (out, err) = proc.communicate(R_script)
+    stdout = subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+    (out, err) = proc.communicate(R_script.encode('utf-8'))
     out = out.decode('utf-8')
     err = err.decode('utf-8')
     if err:
-        print( "ERROR: {0}".format(err) )
+        raise RError("{0}".format(err))
     code = proc.wait()
     if code:
-        print( "ERROR: exit code != 0" )
-        print( "exit code: {0}".format(code) )
-    else:
-        print( "R clustering: OK" )
+        raise RError("R returned with code {}".format(code))
 
-    # only 2 lines of output are expected
+    # Extract the output of the R script
+    # only 2 lines are expected
     if len(out.split("\n")) != 2:
-        sys.exit("ERROR: wrong R ouput")
-
+        raise RError("unexpected R ouput")
     cluster_id, medoid_id = out.split("\n")
     # As the input table is provided without headers, the sequences are named
     # V1, V2... with indices starting at 1. To get a integer index starting at

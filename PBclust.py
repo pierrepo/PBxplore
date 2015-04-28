@@ -193,7 +193,10 @@ def pbclust_cli():
     print("wrote {0}".format(distance_fname))
 
     # Carry out the clustering
-    cluster_id, medoid_id = PB.hclust(distance_mat, nclusters=options.c)
+    try:
+        cluster_id, medoid_id = PB.hclust(distance_mat, nclusters=options.c)
+    except PB.RError as e:
+        sys.exit('Error with R:\n' + str(e))
     display_clust_report(cluster_id)
     output_fname = options.o + ".PB.clust"
     write_clusters(output_fname, cluster_id, medoid_id, header_lst)
