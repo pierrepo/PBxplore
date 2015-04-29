@@ -213,6 +213,8 @@ def assert_same_size(sequences):
 def load_substitution_matrix(name):
     """
     Load PB substitution matrix.
+
+    The matrix must be 16x16.
     
     Parameters
     ----------
@@ -224,19 +226,12 @@ def load_substitution_matrix(name):
     mat : numpy array
         Array of floats.
     """
-    try:
-        mat = numpy.loadtxt(name, dtype=float, skiprows=2)
-    except:
-        sys.exit("ERROR: cannot read %s" % name)
-    assert len(mat) == 16, 'wrong substitution matrix size'
-    assert len(mat[0]) == 16, 'wrong substitution matrix size'
+    mat = numpy.loadtxt(name, dtype=float, skiprows=2)
+    assert mat.shape == (16, 16), 'wrong substitution matrix size'
     for i in range(len(mat)):
         for j in range(len(mat[0])):
             if mat[i][j] != mat[j][i]:
-                print(i, j)
-                print(mat[i][j], mat[j][i])
-                sys.exit("ERROR: matrix is not symetric - idx %i and %i" % (i, j))
-    print("read substitution matrix")
+                raise ValueError("Matrix is not symetric - idx %i and %i" % (i, j))
     return mat
 
 #-------------------------------------------------------------------------------

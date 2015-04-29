@@ -177,7 +177,12 @@ def pbclust_cli():
     header_lst, seq_lst = PB.read_several_fasta(options.f)
 
     # Load subtitution matrix
-    substitution_mat = PB.load_substitution_matrix(PB.SUBSTITUTION_MATRIX_NAME)
+    try:
+        substitution_mat = PB.load_substitution_matrix(PB.SUBSTITUTION_MATRIX_NAME)
+    except ValueError:
+        sys.exit("Substitution matrix is not symetric.")
+    except IOError:
+        sys.exit("Error reading the substitution matrix.")
 
     # --compare option
     # compare the first sequence (in the fasta file) versus all others
