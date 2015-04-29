@@ -262,16 +262,19 @@ class TestPBAssign(TemplateTestCase):
         PBassign should fail as MDanalysis is not available.
         """
         name = 'barstar_md_traj'
-        out_run_dir = path.join(OUTDIR, str(uuid1()))
+        out_run_dir = self._temp_directory
         output_fname = name + '.PB.fasta'
         call_list = ['./PBassign.py',
                      '-x', os.path.join(REFDIR, name + '.xtc'),
                      '-g', os.path.join(REFDIR, name + '.gro'),
                      '-o', os.path.join(out_run_dir, name)]
-        os.mkdir(out_run_dir)
-        status = subprocess.call(call_list,
-                                 stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE)
+        exe = subprocess.Popen(call_list,
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+        out, err = exe.communicate()
+        status = exe.wait()
+        print(out.decode('utf-8'))
+        print(err.decode('utf-8'))
         if IS_MDANALYSIS:
             # MDanalysis is available, PBassign should run and produce the
             # correct output
@@ -281,7 +284,7 @@ class TestPBAssign(TemplateTestCase):
         else:
             # MDanalysis is not available, PBassign should fail
             assert status != 0, 'PBassign shoud not have exited with a 0 code'
-        shutil.rmtree(out_run_dir)
+
 
     @_failure_test
     def test_missing_output(self):
