@@ -103,7 +103,7 @@ except:
 
 # check format
 # 17 columns (residue number + 16 PBs) should be present
-if len(freq[0,:]) != (PB.NUMBER + 1):
+if len(freq[0,:]) != (len(PB.NAMES) + 1):
     sys.exit( "ERROR: {0}: wrong data format".format(options.f) )
 
 # read residue numbers
@@ -278,7 +278,7 @@ if options.neq:
     neq_array[:, 0] = residue_lst
     for idx in range(len(residue_lst)):
         H = 0.0
-        for b in range(PB.NUMBER):
+        for b in range(len(PB.NAMES)):
             f = freq[idx, b] 
             if f != 0:
                 H += f * math.log(f)
