@@ -54,6 +54,98 @@ def array_to_string(ar):
     return numpy.array_str(ar, max_line_width = 100000, precision = 4).translate(None, '[]')
 
 
+def cmd_exists(cmd):
+    """
+    Check whether a command/program exists and can be executed.
+
+    It uses the subprocess library to call the command.
+    The return boolean is based on the ENOENT (No such file or directory) symbol.
+
+
+    Parameters
+    ----------
+    cmd : list of str
+        The list of the command and its arguments
+
+    Returns
+    -------
+        bool
+            True if the command can be executed, False otherwise.
+    """
+    try:
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
+        proc.communicate()
+        proc.wait()
+    except OSError as e:
+        if e.errno == os.errno.ENOENT:
+            return False
+    return True
+
+
+class CommandAction(argparse.Action):
+    """Handle command line argument which will call an external program.
+
+    It means to check wether the external program is available and
+    can be executed before running the main program. The check is
+    performed through the `cmd_exists` function.
+
+    It behaves the same way as the "store_true" action but it:
+        - doesn't require the `default` keyword (always at False)
+        - add a new keyword `command`
+
+    Keyword argument
+    ----------------
+    command: str
+        The name of the external programm to call.
+        It can contains arguments of the external programm (like --help).
+        The string will be split to satisfy the `cmd_exists` function.
+
+    Raise
+    -----
+    ValueError: when the command value is not str.
+
+    argparse.ArgumentError: when the external programm can not be executed.
+    This exception will be handle automatically by argparse during the
+    parsing step.
+
+    Examples
+    --------
+    parser = argparse.ArgumentParser()
+
+    # External programm with its own argument
+    parser.add_argument("--logo", action=CommandAction,
+                        command="weblogo --help", dest="logo")
+
+    # External programm withput argument
+    parser.add_argument("--ls", action=CommandAction, command="ls", dest="ls")
+    """
+
+    def __init__(self, option_strings, command, dest, help=None):
+        if not isinstance(command, str):
+            raise ValueError("command must be a string")
+
+        self.command = command.split()
+        super(CommandAction, self).__init__(
+            option_strings=option_strings,
+            dest=dest,
+            nargs=0,
+            const=True,
+            default=False,
+            help=help)
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        if not cmd_exists(self.command):
+            # Special exception so argparse can handle it himself
+            # during the parsing step
+            raise argparse.ArgumentError(
+                self,
+                "{0} was not found".format(self.command[0]))
+
+        # Set with the self.const (which is for argument without value)
+        # and not with values     (which is for argument with value)
+        setattr(namespace, self.dest, self.const)
+
 #===============================================================================
 # MAIN - program starts here
 #===============================================================================
@@ -75,7 +167,7 @@ parser.add_argument("--map", action="store_true", default=False, dest="mapdist",
     help="generate map of the distribution of PBs along protein sequence")
 parser.add_argument("--neq", action="store_true", default=False, dest="neq", 
     help="compute Neq and generate Neq plot along protein sequence")
-parser.add_argument("--logo", action="store_true", default=False, dest="logo", 
+parser.add_argument("--logo", action=CommandAction, command="weblogo --help", dest="logo", 
     help="generate logo representation of PBs frequency along protein sequence")
 parser.add_argument("--residue-min", action="store", type=int,
     dest="residue_min", help="defines lower bound of residue frame")
