@@ -95,7 +95,7 @@ class InvalidBlockError(ValueError):
         self.block = block
 
     def __repr__(self):
-        if block is None:
+        if self.block is None:
             return "Invald block"
         else:
             return "Ivalid block '{}'".format(self.block)
