@@ -4,12 +4,10 @@
 """
 Cluster protein structures based on their PB sequences.
 
-2013 - P. Poulain, A. G. de Brevern 
+2013 - P. Poulain, A. G. de Brevern
 """
 
-#===============================================================================
 # Modules
-#===============================================================================
 ## Use print as a function for python 3 compatibility
 from __future__ import print_function, division
 
@@ -17,7 +15,6 @@ from __future__ import print_function, division
 import collections
 import sys
 import os
-import subprocess
 import argparse
 
 ## third-party module
@@ -45,16 +42,16 @@ def user_input():
         description="Cluster protein structures based on their PB sequences.")
 
     # mandatory arguments
-    parser.add_argument("-f", action="append", required=True, 
-        help="name(s) of the PBs file (in fasta format)")
+    parser.add_argument("-f", action="append", required=True,
+                        help="name(s) of the PBs file (in fasta format)")
     parser.add_argument("-o", action="store", required=True,
-        help="name for results")
+                        help="name for results")
     parser.add_argument("-c", action="store", required=True, type=int,
-        help="number of wanted clusters")  
+                        help="number of wanted clusters")
 
     # optional arguments
     parser.add_argument("--compare", action="store_true", default=False,
-        dest="compare", help="compare the first sequence versus all others")
+                        help="compare the first sequence versus all others")
 
     # get all parameters
     options = parser.parse_args()
@@ -66,7 +63,7 @@ def user_input():
     # check if the input files exist
     for name in options.f:
         if not os.path.isfile(name):
-            sys.exit( "{0}: not a valid file. Bye".format(name) )
+            sys.exit("{0}: not a valid file. Bye".format(name))
 
     return options
 
@@ -133,7 +130,7 @@ def write_distance_matrix(distance_matrix, fname):
 
 def compare(header_lst, seq_lst, substitution_mat, fname):
     """
-    Wrap, for the command line, the comparison of all sequences with the first one
+    Command line wrapper for the comparison of all sequences with the first one
 
     When the --compare option is given to the command line, the program
     compares all the sequences to the first one and writes these comparison as
@@ -192,7 +189,10 @@ def pbclust_cli():
         sys.exit(0)
 
     # Compute the distance matrix for the clustering
-    distance_mat = PB.distance_matrix(seq_lst, substitution_mat)
+    try:
+        distance_mat = PB.distance_matrix(seq_lst, substitution_mat)
+    except PB.InvalidBlockError as e:
+        sys.exit('Unexpected PB in the input ({})'.format(e.block))
     distance_fname = options.o + ".PB.dist"
     write_distance_matrix(distance_mat, distance_fname)
     print("wrote {0}".format(distance_fname))
