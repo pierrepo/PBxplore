@@ -88,13 +88,13 @@ echo "#------------------------------------------------------------------------#
 echo  -e "\n"
 echo "../PBstat.py -f psi_md_traj.PB.count -o psi_md_traj --map --neq --logo"
 pause
-../PBstat.py -f psi_md_traj_all.PB.count -o psi_md_traj --map --neq --logo
+../PBstat.py -f psi_md_traj_all.PB.count -o psi_md_traj --map --neq --logo || echo 'The command failed, is weblogo installed?'
 
 echo  -e "\n"
 echo "Define a residue frame (--residue-min and --residue-max options)"
 echo "../PBstat.py -f psi_md_traj.PB.count -o psi_md_traj --map --neq --logo --residue-min 10 --residue-max 30"
 pause
-../PBstat.py -f psi_md_traj_all.PB.count -o psi_md_traj --map --neq --logo --residue-min 10 --residue-max 30
+../PBstat.py -f psi_md_traj_all.PB.count -o psi_md_traj --map --neq --logo --residue-min 10 --residue-max 30 || echo 'The command failed, is weblogo installed?'
 
 
 echo  -e "\n"
