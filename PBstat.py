@@ -54,6 +54,115 @@ def array_to_string(ar):
     return numpy.array_str(ar, max_line_width = 100000, precision = 4).translate(None, '[]')
 
 
+def cmd_exists(cmd):
+    """
+    Check whether a command/program exists and can be executed.
+
+    It uses the subprocess library to call the command.
+    The return boolean is based on the ENOENT (No such file or directory) symbol.
+
+
+    Parameters
+    ----------
+    cmd : list of str
+        The list of the command and its arguments
+
+    Returns
+    -------
+        bool
+            True if the command can be executed, False otherwise.
+    """
+    try:
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
+        proc.communicate()
+        proc.wait()
+    except OSError as e:
+        if e.errno == os.errno.ENOENT:
+            return False
+    return True
+
+
+class CommandAction(argparse.Action):
+    """Handle command line argument which will call an external program.
+
+    It means to check wether the external program is available and
+    can be executed before running the main program. The check is
+    performed through the `cmd_exists` function.
+
+    It behaves the same way as the "store_true" action but it:
+        - doesn't require the `default` keyword (always at False)
+        - add a new keyword `command`
+        - add a new optional keyword `cmd_help`
+
+    Keyword argument
+    ----------------
+    command: str
+        The name of the external program to call.
+        It can contains arguments of the external program (like --help).
+        The string will be split to satisfy the `cmd_exists` function.
+
+    cmd_help: str (optional)
+        A useful information to help the user to install the external program.
+        It could be the right command line or a link to a documentation.
+        This string will be part of the argparse.ArgumentError message.
+
+    Raise
+    -----
+    ValueError: when the command value is not str.
+
+    argparse.ArgumentError: when the external program can not be executed.
+    This exception will be handle automatically by argparse during the
+    parsing step.
+
+    Examples
+    --------
+    parser = argparse.ArgumentParser()
+
+    # External program with its own argument
+    parser.add_argument("--logo", action=CommandAction,
+                        command="weblogo --help", dest="logo")
+
+    # External program without argument
+    parser.add_argument("--ls", action=CommandAction, command="ls", dest="ls")
+
+    # External program with a help message
+    parser.add_argument("--logo", dest="logo", action=CommandAction,
+                        command="weblogo --help",
+                        cmd_help="Use 'pip install weblogo' to install")
+    """
+
+    def __init__(self, option_strings, command, dest, cmd_help=None, help=None):
+        if not isinstance(command, str):
+            raise ValueError("command must be a string")
+
+        if cmd_help is not None and not isinstance(cmd_help, str):
+            raise ValueError("cmd_help must be a string")
+
+        self.command = command.split()
+        self.cmd_help = cmd_help
+        super(CommandAction, self).__init__(
+            option_strings=option_strings,
+            dest=dest,
+            nargs=0,
+            const=True,
+            default=False,
+            help=help)
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        if not cmd_exists(self.command):
+            msg="{0} was not found.".format(self.command[0])
+            if self.cmd_help is not None:
+                msg += " {0}".format(self.cmd_help)
+            # Special exception so argparse can handle it himself
+            # during the parsing step
+            raise argparse.ArgumentError(self,msg)
+
+        # Set with the self.const (which is for argument without value)
+        # and not with values     (which is for argument with value)
+        setattr(namespace, self.dest, self.const)
+
+
 #===============================================================================
 # MAIN - program starts here
 #===============================================================================
@@ -75,7 +184,8 @@ parser.add_argument("--map", action="store_true", default=False, dest="mapdist",
     help="generate map of the distribution of PBs along protein sequence")
 parser.add_argument("--neq", action="store_true", default=False, dest="neq", 
     help="compute Neq and generate Neq plot along protein sequence")
-parser.add_argument("--logo", action="store_true", default=False, dest="logo", 
+parser.add_argument("--logo", action=CommandAction, command="weblogo --help", dest="logo",
+    cmd_help="(See https://github.com/pierrepo/PBxplore/blob/master/doc/installation.md)",
     help="generate logo representation of PBs frequency along protein sequence")
 parser.add_argument("--residue-min", action="store", type=int,
     dest="residue_min", help="defines lower bound of residue frame")
