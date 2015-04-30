@@ -105,21 +105,16 @@ echo "|                                                                        |
 echo "#------------------------------------------------------------------------#"
 
 echo  -e "\n"
-echo "../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all"
+echo "Produce with 3 clusters (-c option is mandatory)"
+echo "../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all_3 -c 3"
 pause
-../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all
-
-echo  -e "\n"
-echo "Produce only 3 clusters (--clusters option)"
-echo "../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all_3  --clusters 3"
-pause
-../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all_3  --clusters 3
+../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all_3 -c 3
 
 echo  -e "\n"
 echo "Compare only sequence against the first one (--compare option)"
-echo "../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all --compare"
+echo "../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all -c 3 --compare"
 pause
-../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all --compare
+../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all -c 3 --compare
 
 
 echo  -e "\n"
