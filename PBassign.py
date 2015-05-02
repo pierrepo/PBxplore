@@ -75,7 +75,7 @@ def user_inputs():
     # arguments
     parser.add_argument("-p", action="append",
                         help=("name of a pdb file "
-                              "or name of a directory containing pdb files")
+                              "or name of a directory containing pdb files"))
     parser.add_argument("-o", action="store", required=True,
                         help="name for results")
     # arguments for MDanalysis
