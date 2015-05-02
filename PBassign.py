@@ -42,6 +42,9 @@ except NameError:
 
 
 class _NullContext(object):
+    """
+    Dummy context manager that does nothing
+    """
     def __enter__(self):
         pass
 
@@ -50,21 +53,27 @@ class _NullContext(object):
 
 
 def PB_assign(pb_ref, structure, comment,
-              fasta_file, flat_file=_NullContext(), phipsi_file=_NullContext()):
-    """assign Protein Blocks (PB) from phi and psi angles
+              fasta_file=None, flat_file=None, phipsi_file=None):
+    """
+    Assign Protein Blocks (PB) from phi and psi angles
+
+    `fasta_file`, `flat_file`, and `phipsi_file` should be set to an open file
+    if an entry should be written is the file or to None or an instance of
+    _NullContext if no entry should be written.
     """
     dihedrals = structure.get_phi_psi_angles()
     pb_seq = PB.assign(dihedrals, pb_ref)
 
     # write PBs in fasta file
-    PB.write_fasta_entry(fasta_file, pb_seq, comment)
+    if not (isinstance(fasta_file, _NullContext) or fasta_file is None):
+        PB.write_fasta_entry(fasta_file, pb_seq, comment)
     # write phi and psi angles
-    if not isinstance(phipsi_file, _NullContext):
+    if not (isinstance(phipsi_file, _NullContext) or phipsi_file is None):
         PB.write_phipsi_entry(phipsi_file, dihedrals, comment)
     # write PBs in flat file
-    if not isinstance(flat_file, _NullContext):
+    if not (isinstance(flat_file, _NullContext) or flat_file is None):
         print(pb_seq, file=flat_file)
- 
+
     print("PBs assigned for {0}".format(comment))
 
 
