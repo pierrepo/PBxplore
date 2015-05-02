@@ -78,6 +78,11 @@ def PB_assign(pb_ref, structure, comment,
 
 
 def user_inputs():
+    """
+    Handle the user parameter from the command line
+
+    Parse the command line parameter and build the list of input files.
+    """
     parser = argparse.ArgumentParser(
         description='Read PDB structures and assign protein blocs (PBs).')
 
@@ -139,6 +144,9 @@ def user_inputs():
 
 
 def pbassign_cli():
+    """
+    PBassign command line.
+    """
     options, pdb_name_lst = user_inputs()
 
     if options.p:
