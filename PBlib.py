@@ -390,6 +390,19 @@ def write_phipsi(name, torsion, com):
     f_out.close()
 
 
+def write_phipsi_entry(outfile, torsion, comment):
+    for res in sorted(torsion):
+        try:
+            phi = "%8.2f" % torsion[res]["phi"]
+        except TypeError:
+            phi = "    None"
+        try:
+            psi = "%8.2f" % torsion[res]["psi"]
+        except TypeError:
+            psi = "    None"
+        print("{} {:6d} {} {} ".format(comment, res, phi, psi), file=outfile)
+
+
 def write_flat(name, seq):
     """
     Write flat sequence to file

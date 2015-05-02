@@ -21,6 +21,11 @@ import gzip
 ## third-party modules
 import numpy
 
+try:
+    import MDAnalysis
+except ImportError:
+    pass
+
 #===============================================================================
 # Data
 #===============================================================================
@@ -503,3 +508,33 @@ class PDB:
         for chain in self.chains:
             yield chain
             
+
+def chains_from_files(path_list):
+    for pdb_name in path_list:
+        pdb = PDB(pdb_name)
+        for chain in pdb.get_chains():
+            # build comment 
+            comment = pdb_name 
+            if chain.model:
+                comment += " | model %s" % (chain.model)
+            if chain.name:
+                comment += " | chain %s" % (chain.name)
+            yield comment, chain
+
+
+def chains_from_trajectory(trajectory, topology):
+    comment = ""
+    universe = MDAnalysis.Universe(topology, trajectory)
+    for ts in universe.trajectory:
+        structure = Chain()
+        selection = universe.selectAtoms("backbone")
+        for atm in selection:
+            atom = Atom()
+            atom.read_from_xtc(atm)
+            # append structure with atom
+            structure.add_atom(atom)
+            # define structure comment
+            # when the structure contains 1 atom
+            if structure.size() == 1:
+                comment = "%s | frame %s" % (trajectory, ts.frame)
+        yield comment, structure
