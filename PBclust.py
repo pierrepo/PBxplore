@@ -2,21 +2,19 @@
 # -*- coding: utf-8 -*-
 
 """
-Cluster protein structures based on their PB sequences. 
+Cluster protein structures based on their PB sequences.
 
-2013 - P. Poulain, A. G. de Brevern 
+2013 - P. Poulain, A. G. de Brevern
 """
 
-#===============================================================================
 # Modules
-#===============================================================================
 ## Use print as a function for python 3 compatibility
-from __future__ import print_function
+from __future__ import print_function, division
 
 ## standard modules
+import collections
 import sys
 import os
-import subprocess
 import argparse
 
 ## third-party module
@@ -25,10 +23,7 @@ import numpy
 ## local module
 import PBlib as PB
 
-#===============================================================================
-# Python2/Python3 compatibility
-#===============================================================================
-
+## Python2/Python3 compatibility
 # The range function in python 3 behaves as the range function in python 2
 # and returns a generator rather than a list. To produce a list in python 3,
 # one should use list(range). Here we change range to behave the same in
@@ -38,235 +33,180 @@ try:
 except NameError:
     pass
 
-#===============================================================================
-# Functions
-#===============================================================================
-def compute_score_by_position(score_mat, seq1, seq2):
+
+def user_input():
     """
-    Computes similarity score between two sequences
+    Handle PBclust command line arguments
     """
-    assert len(seq1) == len(seq2), "sequences have different sizes:\n{}\nvs\n{}".format(seq1, seq2)
-    score = []
-    for pb1, pb2 in zip(seq1, seq2):
-        # score is 0 for Z (dummy PB)
-        if "z" in [pb1.lower(), pb2.lower()]:
-            score.append(0)
-        else:
-            score.append( score_mat[PB.NAMES.index(pb1)][PB.NAMES.index(pb2)] )
-    return score
+    parser = argparse.ArgumentParser(
+        description="Cluster protein structures based on their PB sequences.")
+
+    # mandatory arguments
+    parser.add_argument("-f", action="append", required=True,
+                        help="name(s) of the PBs file (in fasta format)")
+    parser.add_argument("-o", action="store", required=True,
+                        help="name for results")
+    parser.add_argument("-c", action="store", required=True, type=int,
+                        help="number of wanted clusters")
+
+    # optional arguments
+    parser.add_argument("--compare", action="store_true", default=False,
+                        help="compare the first sequence versus all others")
+
+    # get all parameters
+    options = parser.parse_args()
+
+    # test the validity of the arguments
+    if options.c <= 0:
+        parser.error("number of clusters must be > 0.")
+
+    # check if the input files exist
+    for name in options.f:
+        if not os.path.isfile(name):
+            sys.exit("{0}: not a valid file. Bye".format(name))
+
+    return options
 
 
-#===============================================================================
-# main - program starts here
-#===============================================================================
+def display_clust_report(cluster_id):
+    """
+    Display a quick report on the clustering
 
-#-------------------------------------------------------------------------------
-# get arguments
-#-------------------------------------------------------------------------------
-parser = argparse.ArgumentParser(
-    description="Cluster protein structures based on their PB sequences.")
+    Display the number of structures in each cluster, and the fraction of the
+    overall sequence set they represent.
+    """
+    nclusters = len(cluster_id)
+    cluster_count = collections.Counter(cluster_id)
+    for cluster, count in cluster_count.most_common():
+        print("cluster {}: {} sequences ({:>2.0f}%)"
+              .format(cluster, count, 100*count/nclusters))
 
-# mandatory arguments
-parser.add_argument("-f", action="append", required=True, 
-    help="name(s) of the PBs file (in fasta format)")
-parser.add_argument("-o", action="store", required=True,
-    help="name for results")
-parser.add_argument("-c", action="store", required=True, type=int,
-    help="number of wanted clusters")  
 
-# optional arguments
-parser.add_argument("--compare", action="store_true", default=False,
-    dest="compare", help="compare the first sequence versus all others")
+def write_clusters(fname, cluster_id, medoid_id, seq_names):
+    """
+    Write the result of a clustering in a file
 
-# get all parameters
-options = parser.parse_args()
+    The output file contains two types of lines:
 
-#-------------------------------------------------------------------------------
-# check options
-#-------------------------------------------------------------------------------
-if options.c <= 0:
-    parser.error("number of clusters must be > 0.")
+    * first, lines that start with SEQ_CLU link each sequence header to a
+      cluster ID; these lines are written n the same order as the input fasta
+      file(s)
+    * then, lines that start with MED_CLU link an input sequence to a cluster
+      as its medoid; these lines are ordered as the cluster IDs so the first
+      medoid is the medoid of the first cluster. The sequence index given in
+      these lines start at 1.
 
-#-------------------------------------------------------------------------------
-# check input files
-#-------------------------------------------------------------------------------
-for name in options.f:
-    if not os.path.isfile(name):
-        sys.exit( "{0}: not a valid file. Bye".format(name) )
+    Parameters
+    ----------
+    fname : str
+        The path to the file to write in
+    cluster_id : list of int
+        The cluster ID for each sequence ordered like the sequences
+    medoid_id : list of int
+        The index of the medoid for each group in the list of sequences
+    seq_names: list of str
+        The header for each sequence
+    """
+    with open(fname, "w") as outfile:
+        for name, cluster in zip(seq_names, cluster_id):
+            outfile.write('SEQ_CLU  "{}"  {} \n'.format(name, cluster))
+        for idx, med in enumerate(medoid_id, start=1):
+            outfile.write('MED_CLU  "{}"  {} \n'.format(seq_names[med], idx))
 
-#-------------------------------------------------------------------------------
-# read PBs files
-#-------------------------------------------------------------------------------
-header_lst = []
-seq_lst = []
-for name in options.f:
-    header, seq =  PB.read_fasta(name)
-    header_lst += header
-    seq_lst += seq
 
-pb_seq = numpy.array(list(zip(header_lst, seq_lst)))
+def write_distance_matrix(distance_matrix, fname):
+    """
+    Write a distance matrix in a file
 
-#-------------------------------------------------------------------------------
-# load subtitution matrix
-#-------------------------------------------------------------------------------
-substitution_mat = PB.load_substitution_matrix(PB.SUBSTITUTION_MATRIX_NAME)
+    Parameters
+    ----------
+    distance_matrix : 2D numpy array
+        The matrix to write
+    fname : str
+        The path to the file to write in
+    """
+    numpy.savetxt(fname, distance_matrix)
 
-#-------------------------------------------------------------------------------
-# --compare option
-# compare the first sequence (in the fasta file) versus all others
-#-------------------------------------------------------------------------------
-if options.compare:
-    compare_file_name = options.o + ".PB.compare.fasta"
-    PB.clean_file(compare_file_name)
-    ref_name = pb_seq[0,0]
-    ref_seq = pb_seq[0,1]
-    mini = numpy.min(substitution_mat)
-    maxi = numpy.max(substitution_mat)
-    # normalize substitution matrix between 0 and 9
-    # 0 -> similar PBs
-    # 9 -> different PBs
-    substitution_mat_modified = (substitution_mat + abs(mini))/(maxi - mini)
-    substitution_mat_modified = 9 * (1 - substitution_mat_modified)
-    substitution_mat_modified = substitution_mat_modified.astype(int)
-    # set diagonal to 0
-    for idx in range(len(substitution_mat_modified)):
-        substitution_mat_modified[idx,idx] = 0
-    print( "Normalized substitution matrix (between 0 and 9)" )
+
+def compare(header_lst, seq_lst, substitution_mat, fname):
+    """
+    Command line wrapper for the comparison of all sequences with the first one
+
+    When the --compare option is given to the command line, the program
+    compares all the sequences to the first one and writes these comparison as
+    sequences of digits. These digits represent the distance between the PB
+    in the target and the one in the reference at the same position. The digits
+    are normalized in the [0; 9] range.
+
+    This function run the comparison, write the result in a fasta file, and
+    display on screen informations about the process.
+
+    Parameters
+    ----------
+    header_lst: list of strings
+        The list of sequence headers ordered as the sequences
+    seq_lst: list of strings
+        The list of sequences ordered as the headers
+    substitution_mat: numpy.array
+        A substitution matrix expressed as similarity scores
+    fname: str
+        The output file name
+    """
+    ref_name = header_lst[0]
+    substitution_mat_modified = PB.matrix_to_single_digit(substitution_mat)
+    print("Normalized substitution matrix (between 0 and 9)")
     print(substitution_mat_modified)
-    print( "Compare first sequence ({0}) with others".format(ref_name) )
-    for target in pb_seq[1:,]:
-        header = "%s vs %s" % (ref_name, target[0])
-        score_lst = compute_score_by_position(substitution_mat_modified, ref_seq, target[1] )
-        seq = "".join([str(s) for s in score_lst])
-        PB.write_fasta(compare_file_name, seq, header)
-    print( "wrote {0}".format(compare_file_name) )
-    sys.exit(0)
-
-# change sequence name for a better input in R
-seq_names = {}
-for i in range(pb_seq.shape[0]):
-    new_name = "seq%d" % i
-    seq_names[new_name] = pb_seq[i, 0]
-    pb_seq[i, 0] = new_name
-
-#-------------------------------------------------------------------------------
-# compute distance of all sequences against all
-#-------------------------------------------------------------------------------
-distance_mat = numpy.empty((len(pb_seq), len(pb_seq)), dtype='float')
-
-print( "Building distance matrix" )
-# get similarity score
-for i in range(len(pb_seq)):
-    sys.stdout.write("\r%.f%%" % (float(i+1)/len(pb_seq)*100))
-    sys.stdout.flush()
-    for j in range(i, len(pb_seq)):
-        score = sum( compute_score_by_position(substitution_mat, pb_seq[i, 1], pb_seq[j, 1]) )
-        distance_mat[i, j] = score
-        distance_mat[j, i] = score 
-print( "" )
-
-# set equal the diagonal
-diag_mini =  numpy.min([distance_mat[i, i] for i in range(len(pb_seq))])
-for i in range(len(pb_seq)):
-    distance_mat[i, i] = diag_mini
-
-# convert similarity score to normalized distance between 0 and 1
-# dist = 1 means sequences are very different
-# dist = 0 means sequences are identical
-# dist = 1 - (score + abs(min)/(max - min)
-
-mini = numpy.min(distance_mat)
-maxi = numpy.max(distance_mat)
-distance_mat = 1 - (distance_mat + abs(mini))/(maxi - mini)
-
-numpy.set_printoptions(threshold=numpy.inf, precision = 3, linewidth = 100000)
-output_mat_str = numpy.array_str(distance_mat).replace('[', '').replace(']', '')
-
-# add sequence labels
-output_mat_str = " ".join(pb_seq[:,0])+"\n"+output_mat_str
-
-# write distance matrix
-name = options.o + ".PB.dist"
-f = open(name, "w")
-f.write(output_mat_str)
-f.close()
-print( "wrote {0}".format(name) )
-
-# build R script
-#-------------------------------------------------------------------------------
-# https://github.com/alevchuk/hclust-fasta/blob/master/003-hclust
-# and 
-# http://www.biostars.org/p/11987/
-# data
-R_script="""
-connector = textConnection("{matrix}")
-
-distances = read.table(connector, header = TRUE)
-rownames(distances) = colnames(distances)
-
-clusters = cutree(hclust(as.dist(distances), method = "ward"), k = {clusters})
-distances = as.matrix(distances)
-
-# function to find medoid in cluster i
-clust.medoid = function(i, distmat, clusters) {{
-    ind = (clusters == i)
-
-    if(length(distmat[ind, ind]) == 1){{
-        names(clusters[ind])
-    }} else {{
-        names(which.min(rowSums( distmat[ind, ind] )))
-        # c(min(rowMeans( distmat[ind, ind] )))
-    }}
-}}
-
-medoids = sapply(unique(clusters), clust.medoid, distances, clusters)
-
-cat("seq_id", names(clusters), "\n")
-cat("cluster_id", clusters, "\n")
-cat("medoid_id", medoids)
-""".format( matrix=output_mat_str, clusters=options.c )
-R_script = R_script.encode('utf-8')
+    print("Compare first sequence ({0}) with others".format(ref_name))
+    with open(fname, 'w') as outfile:
+        for header, score_lst in PB.compare_to_first_sequence(header_lst, seq_lst,
+                                                              substitution_mat_modified):
+            seq = "".join([str(s) for s in score_lst])
+            PB.write_fasta_entry(outfile, seq, header)
+    print("wrote {0}".format(fname))
 
 
-# execute R script
-#-------------------------------------------------------------------------------
-command="R --vanilla --slave"
-proc = subprocess.Popen(command, shell = True, 
-stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
-(out, err) = proc.communicate(R_script)
-out = out.decode('utf-8')
-err = err.decode('utf-8')
-if err:
-    print( "ERROR: {0}".format(err) )
-code = proc.wait()
-if code:
-    print( "ERROR: exit code != 0" )
-    print( "exit code: {0}".format(code) )
-else:
-    print( "R clustering: OK" )
+def pbclust_cli():
+    """
+    Run the PBclust command line
+    """
+    # Read user inputs
+    options = user_input()
+    header_lst, seq_lst = PB.read_several_fasta(options.f)
 
-# only 3 lines of output are expected
-if len(out.split("\n")) != 3:
-    sys.exit("ERROR: wrong R ouput")
+    # Load subtitution matrix
+    try:
+        substitution_mat = PB.load_substitution_matrix(PB.SUBSTITUTION_MATRIX_NAME)
+    except ValueError:
+        sys.exit("Substitution matrix is not symetric.")
+    except IOError:
+        sys.exit("Error reading the substitution matrix.")
 
-seq_id, cluster_id, medoid_id = out.split("\n")
-seq_id = seq_id.split()[1:]
-cluster_id = cluster_id.split()[1:]
-medoid_id = medoid_id.split()[1:]
+    # --compare option
+    # compare the first sequence (in the fasta file) versus all others
+    if options.compare:
+        compare_file_name = options.o + ".PB.compare.fasta"
+        compare(header_lst, seq_lst, substitution_mat, compare_file_name)
+        sys.exit(0)
 
-# count number of sequences in clusters
-cluster_count = {}
-for idx in cluster_id:
-    cluster_count[idx] = cluster_count.get(idx, 0) + 1
-for idx in sorted(cluster_count):
-    print("cluster {}: {} sequences ({:>2.0f}%)".format(idx, cluster_count[idx], 1.0*cluster_count[idx]/len(seq_lst)*100))
+    # Compute the distance matrix for the clustering
+    try:
+        distance_mat = PB.distance_matrix(seq_lst, substitution_mat)
+    except PB.InvalidBlockError as e:
+        sys.exit('Unexpected PB in the input ({})'.format(e.block))
+    distance_fname = options.o + ".PB.dist"
+    write_distance_matrix(distance_mat, distance_fname)
+    print("wrote {0}".format(distance_fname))
+
+    # Carry out the clustering
+    try:
+        cluster_id, medoid_id = PB.hclust(distance_mat, nclusters=options.c)
+    except PB.RError as e:
+        sys.exit('Error with R:\n' + str(e))
+    display_clust_report(cluster_id)
+    output_fname = options.o + ".PB.clust"
+    write_clusters(output_fname, cluster_id, medoid_id, header_lst)
+    print("wrote {0}".format(output_fname))
 
 
-name = options.o + ".PB.clust"
-f = open(name, "w")
-for seq, cluster in zip(seq_id, cluster_id):
-    f.write('SEQ_CLU  "{}"  {} \n'.format(seq_names[seq], cluster))
-for idx, med in enumerate(medoid_id):
-    f.write('MED_CLU  "{}"  {} \n'.format(seq_names[med], idx+1))
-f.close()
-print( "wrote {0}".format(name) )
+if __name__ == '__main__':
+    pbclust_cli()
