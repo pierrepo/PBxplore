@@ -179,9 +179,9 @@ def pbassign_cli():
 
     with fasta_file, phipsi_file, flat_file:
         for comment, chain in chains:
-                PB_assign(PB.REFERENCES, chain, comment,
-                          fasta_file=fasta_file, flat_file=flat_file,
-                          phipsi_file=phipsi_file)
+            PB_assign(PB.REFERENCES, chain, comment,
+                      fasta_file=fasta_file, flat_file=flat_file,
+                      phipsi_file=phipsi_file)
 
     print("wrote {0}".format(fasta_name))
     if options.flat:
