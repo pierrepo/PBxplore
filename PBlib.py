@@ -265,7 +265,7 @@ def count_to_transfac(identifier, count_content):
     return transfac_content
 
 
-def assign(dihedrals, pb_ref):
+def assign(dihedrals, pb_ref=REFERENCES):
     """
     Assign Protein Blocks.
 
