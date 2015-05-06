@@ -66,10 +66,10 @@ def PB_assign(pb_ref, structure, comment,
 
     # write PBs in fasta file
     if not (isinstance(fasta_file, _NullContext) or fasta_file is None):
-        PB.write_fasta_entry(fasta_file, pb_seq, comment)
+        PB.write_fasta(fasta_file, pb_seq, comment)
     # write phi and psi angles
     if not (isinstance(phipsi_file, _NullContext) or phipsi_file is None):
-        PB.write_phipsi_entry(phipsi_file, dihedrals, comment)
+        PB.write_phipsi(phipsi_file, dihedrals, comment)
     # write PBs in flat file
     if not (isinstance(flat_file, _NullContext) or flat_file is None):
         print(pb_seq, file=flat_file)
