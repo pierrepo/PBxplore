@@ -215,7 +215,7 @@ def load_substitution_matrix(name):
     return mat
 
 
-def write_fasta(outfile, sequence, comment, width=FASTA_WIDTH):
+def write_fasta_entry(outfile, sequence, comment, width=FASTA_WIDTH):
     """
     Write a fasta entry (header + sequence) in an open file
 
@@ -336,7 +336,7 @@ def angle_modulo_360(angle):
         return angle
 
 
-def write_phipsi(outfile, torsion, comment):
+def write_phipsi_entry(outfile, torsion, comment):
     for res in sorted(torsion):
         try:
             phi = "%8.2f" % torsion[res]["phi"]

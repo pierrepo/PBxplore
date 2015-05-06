@@ -161,7 +161,7 @@ def compare(header_lst, seq_lst, substitution_mat, fname):
         for header, score_lst in PB.compare_to_first_sequence(header_lst, seq_lst,
                                                               substitution_mat_modified):
             seq = "".join([str(s) for s in score_lst])
-            PB.write_fasta(outfile, seq, header)
+            PB.write_fasta_entry(outfile, seq, header)
     print("wrote {0}".format(fname))
 
 
