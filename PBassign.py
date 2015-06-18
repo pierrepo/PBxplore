@@ -155,33 +155,33 @@ def pbassign_cli():
         else:
             print('Nothing to do. Good bye.')
             return
-
-    # prepare fasta file for output
-    fasta_name = options.o + ".PB.fasta"
-    fasta_file = open(fasta_name, 'w')
-    # prepare phi psi file for output
-    phipsi_file = _NullContext()
-    if options.phipsi:
-        phipsi_name = options.o + ".PB.phipsi"
-        phipsi_file = open(phipsi_name, 'w')
-    # prepare flat file for output
-    flat_file = _NullContext()
-    if options.flat:
-        flat_name = options.o + ".PB.flat"
-        flat_file = open(flat_name, 'w')
-
-    if options.p:
         # PB assignement of PDB structures
         chains = PDB.chains_from_files(pdb_name_lst)
     else:
         # PB assignement of a Gromacs trajectory
         chains = PDB.chains_from_trajectory(options.x, options.g)
 
-    with fasta_file, phipsi_file, flat_file:
-        for comment, chain in chains:
-            PB_assign(PB.REFERENCES, chain, comment,
-                      fasta_file=fasta_file, flat_file=flat_file,
-                      phipsi_file=phipsi_file)
+    all_comments = []
+    all_sequences = []
+    all_dihedrals = []
+    for comment, chain in chains:
+        dihedrals = chain.get_phi_psi_angles()
+        sequence = PB.assign(dihedrals)
+        all_comments.append(comment)
+        all_dihedrals.append(dihedrals)
+        all_sequences.append(sequence)
+
+    fasta_name = options.o + ".PB.fasta"
+    with open(fasta_name, 'w') as outfile:
+        PB.write_fasta(outfile, all_sequences, all_comments)
+    if options.flat:
+        flat_name = options.o + ".PB.flat"
+        with open(flat_name, 'w') as outfile:
+            PB.write_flat(outfile, all_sequences)
+    if options.phipsi:
+        phipsi_name = options.o + ".PB.phipsi"
+        with open(phipsi_name, 'w') as outfile:
+            PB.write_phipsi(outfile, all_dihedrals, all_comments)
 
     print("wrote {0}".format(fasta_name))
     if options.flat:

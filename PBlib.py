@@ -234,6 +234,16 @@ def write_fasta_entry(outfile, sequence, comment, width=FASTA_WIDTH):
     print(textwrap.fill(sequence, width=width), file=outfile)
 
 
+def write_fasta(outfile, sequences, comments):
+    for sequence, comment in zip(sequences, comments):
+        write_fasta_entry(outfile, sequence, comment)
+
+
+def write_flat(outfile, sequences):
+    for sequence in sequences:
+        print(sequence, file=outfile)
+
+
 def count_to_transfac(identifier, count_content):
     """
     Convert a table of PB frequencies into transfac format
@@ -347,6 +357,11 @@ def write_phipsi_entry(outfile, torsion, comment):
         except TypeError:
             psi = "    None"
         print("{} {:6d} {} {} ".format(comment, res, phi, psi), file=outfile)
+
+
+def write_phipsi(outfile, torsions, comments):
+    for torsion, comment in zip(torsions, comments):
+        write_phipsi_entry(outfile, torsion, comment)
 
 
 def count_matrix(pb_seq):
