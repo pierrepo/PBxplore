@@ -41,17 +41,6 @@ except NameError:
     pass
 
 
-class _NullContext(object):
-    """
-    Dummy context manager that does nothing
-    """
-    def __enter__(self):
-        pass
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        pass
-
-
 def PB_assign(pb_ref, structure, comment,
               fasta_file=None, flat_file=None, phipsi_file=None):
     """
