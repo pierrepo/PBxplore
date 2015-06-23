@@ -215,42 +215,6 @@ def load_substitution_matrix(name):
     return mat
 
 
-def clean_file(name):
-    """
-    Clean existing file.
-
-    Parameters
-    ----------
-    name : str
-        Name of file to remove.
-    """
-    if os.path.exists(name):
-        os.remove(name)
-
-
-def write_fasta(name, seq, comment):
-    """
-    Format seq and comment to fasta format and write file.
-
-    Parameters
-    ----------
-    name : str
-        Name of file to write.
-    seq : str
-        Sequence to format.
-    comment : str
-        Comment to make header of sequence.
-
-    """
-    fasta_content = ">"+comment+"\n"
-    fasta_content += "\n".join([seq[i:i+FASTA_WIDTH]
-                                for i in range(0, len(seq), FASTA_WIDTH)])
-    fasta_content += "\n"
-    f_out = open(name, "a")
-    f_out.write(fasta_content)
-    f_out.close()
-
-
 def write_fasta_entry(outfile, sequence, comment, width=FASTA_WIDTH):
     """
     Write a fasta entry (header + sequence) in an open file
@@ -268,6 +232,16 @@ def write_fasta_entry(outfile, sequence, comment, width=FASTA_WIDTH):
     """
     print('>' + comment, file=outfile)
     print(textwrap.fill(sequence, width=width), file=outfile)
+
+
+def write_fasta(outfile, sequences, comments):
+    for sequence, comment in zip(sequences, comments):
+        write_fasta_entry(outfile, sequence, comment)
+
+
+def write_flat(outfile, sequences):
+    for sequence in sequences:
+        print(sequence, file=outfile)
 
 
 def count_to_transfac(identifier, count_content):
@@ -301,7 +275,7 @@ def count_to_transfac(identifier, count_content):
     return transfac_content
 
 
-def assign(dihedrals, pb_ref):
+def assign(dihedrals, pb_ref=REFERENCES):
     """
     Assign Protein Blocks.
 
@@ -372,31 +346,22 @@ def angle_modulo_360(angle):
         return angle
 
 
-def write_phipsi(name, torsion, com):
-    """
-    Save phi and psi angles
-    """
-    f_out = open(name, "a")
+def write_phipsi_entry(outfile, torsion, comment):
     for res in sorted(torsion):
         try:
-            phi_str = "%8.2f" % torsion[res]["phi"]
+            phi = "%8.2f" % torsion[res]["phi"]
         except TypeError:
-            phi_str = "    None"
+            phi = "    None"
         try:
-            psi_str = "%8.2f" % torsion[res]["psi"]
+            psi = "%8.2f" % torsion[res]["psi"]
         except TypeError:
-            psi_str = "    None"
-        f_out.write("%s %6d %s %s \n" % (com, res, phi_str, psi_str))
-    f_out.close()
+            psi = "    None"
+        print("{} {:6d} {} {} ".format(comment, res, phi, psi), file=outfile)
 
 
-def write_flat(name, seq):
-    """
-    Write flat sequence to file
-    """
-    f_out = open(name, "a")
-    f_out.write(seq + "\n")
-    f_out.close()
+def write_phipsi(outfile, torsions, comments):
+    for torsion, comment in zip(torsions, comments):
+        write_phipsi_entry(outfile, torsion, comment)
 
 
 def count_matrix(pb_seq):
