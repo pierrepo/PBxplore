@@ -106,20 +106,20 @@ except:
 if len(freq[0,:]) != (PB.NUMBER + 1):
     sys.exit( "ERROR: {0}: wrong data format".format(options.f) )
 
-# read residue numbers
-residue_lst = list(freq[:, 0])
+# read residues
+residues = freq[:, 0]
 
 #-------------------------------------------------------------------------------
 # check / define residue min / max
 if options.residue_min:
     residue_min = options.residue_min
 else:
-    residue_min = min(freq[:,0])
+    residue_min = min(residues)
 
 if options.residue_max:
     residue_max = options.residue_max
 else:
-    residue_max = max(freq[:,0])
+    residue_max = max(residues)
 
 if residue_min < 0:
     sys.exit("ERROR: residue_min must be >= 0")
@@ -130,18 +130,18 @@ if residue_max < 0:
 if residue_min >= residue_max:
     sys.exit("ERROR: residue_min must be > residue_max")
 
-if residue_min not in residue_lst:
+if residue_min not in residues:
     sys.exit( "ERROR: residue_min does not belong to the residue range \
     in {0}".format(options.f) )
 
-if residue_max not in residue_lst:
+if residue_max not in residues:
     sys.exit( "ERROR: residue_max does not belong to the residue range \
     in {0}".format(options.f) )    
 
 
 # get index of first residue
 try:
-    first_residue_index = int(freq[0, 0])
+    first_residue_index = int(residues[0])
 except:
     sys.exit( "ERROR: cannot read index of first residue. \
     Wrong data format in {0}".format(options.f) )
@@ -158,12 +158,13 @@ sequence_number = sum(freq[2, 1:])
 if sequence_number == 0:
     sys.exit("ERROR: counting 0 sequences!")
 
-# update residue numbers
-residue_lst = list(freq[:, 0])
+# update residues
+residues = freq[:, 0]
 
-# remove residue number    
-# extract and normalize PBs frequencies
-freq = freq[:, 1:] / float(sequence_number)
+# remove residue numbers (first column)
+freq = freq[:, 1:]
+# normalize PBs frequencies
+freq = freq / float(sequence_number)
 
 #-------------------------------------------------------------------------------
 # generates map of the distribution of PBs along protein sequence
@@ -252,52 +253,61 @@ mtext("Intensity", side = 4, line = 5, cex = 3, font = 2)
 box()
     """
 
-import matplotlib.pyplot as plt
+    import matplotlib.pyplot as plt
 
-freq = numpy.loadtxt(options.f, dtype=int, skiprows=1)
-xticks = freq[:, 0][::5]-1
-xticks[0] += 1
-print(xticks)
-yticks = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p')
+    # define ticks for x-axis
+    x_step = 5
+    xticks = residues[::x_step]
+    # trying to round ticks: 5, 10, 15 instead of 6, 11, 16...
+    if xticks[0] == 1:
+        xticks = xticks-1
+        xticks[0] += 1
+    print(xticks)
+    yticks = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p')
 
-freq = freq[:, 1:]/ float(sequence_number)
+    import math
+    fig = plt.figure(figsize=(2.0*math.log(len(residues)), 4))
+    ax = fig.add_axes([0.1, 0.1, 0.75, 0.8])
 
-import math
-fig = plt.figure(figsize=(2*math.log(len(freq[:, 0])), 4))
-ax = fig.add_axes([0.1, 0.1, 0.75, 0.8])
-
-# truncate defined colormap
-# http://stackoverflow.com/questions/18926031/how-to-extract-a-subset-of-a-colormap-as-a-new-colormap-in-matplotlib?rq=1
-def truncate_colormap(cmap, minval=0.0, maxval=1.0, n=100):
-    import matplotlib.colors as colors
-    import numpy as np
-    new_cmap = colors.LinearSegmentedColormap.from_list(
-        'trunc({n},{a:.2f},{b:.2f})'.format(n=cmap.name, a=minval, b=maxval),
-        cmap(np.linspace(minval, maxval, n)))
-    return new_cmap
-cmap =  plt.get_cmap('jet')
-cmap = truncate_colormap(cmap, 0.1, 0.9)
-img = ax.imshow(numpy.transpose(freq[: , :]), interpolation='none', vmin=0, vmax=1, origin='lower', aspect='auto', cmap=cmap)
-# nice color schemes
-# http://matplotlib.org/examples/color/colormaps_reference.html
-# color schemes: bwr cool jet
-ax.set_xticks(xticks - 1)
-ax.set_xticklabels(xticks)
-ax.set_yticks(range(len(yticks)))
-ax.set_yticklabels(yticks, style='italic', weight='bold')
-colorbar_ax = fig.add_axes([0.87, 0.1, 0.03, 0.8])
-fig.colorbar(img, cax=colorbar_ax)
-# center alpha-helix: PB m (13th out of 16 PBs)
-# center coil: PB h and i (8th and 9th out of 16 PBs)
-# center beta-sheet: PB d (4th out of 16 PBs) 
-fig.text(0.05, 4.0/16*0.8+0.075, r"$\beta$-strand", rotation = 90,  va = 'center', transform=ax.transAxes)
-fig.text(0.05, 8.5/16*0.8+0.075, r"coil", rotation = 90, va = 'center')
-fig.text(0.05, 13.0/16*0.8+0.075, r"$\alpha$-helix", rotation = 90, va = 'center', transform=ax.transAxes)
-fig.text(0.01, 0.5, "PBs", rotation = 90, weight='bold', size = 'larger', transform=ax.transAxes)
-fig.text(0.4, 0.01, "Residue number", weight="bold")
-fig.text(0.95, 0.6, "Intensity", rotation = 90, weight="bold")
-#fig.show()
-fig.savefig(options.o, dpi=300)
+    def truncate_colormap(cmap, minval=0.0, maxval=1.0, n=100):
+        """
+        Truncate defined colormap.
+        
+        http://stackoverflow.com/questions/18926031/how-to-extract-a-subset-of-a-colormap-as-a-new-colormap-in-matplotlib?rq=1
+        """
+        import matplotlib.colors as colors
+        import numpy as np
+        new_cmap = colors.LinearSegmentedColormap.from_list(
+            'trunc({n},{a:.2f},{b:.2f})'.format(n=cmap.name, a=minval, b=maxval),
+            cmap(np.linspace(minval, maxval, n)))
+        return new_cmap
+    
+    # nice color schemes
+    # http://matplotlib.org/examples/color/colormaps_reference.html
+    cmap =  truncate_colormap(plt.get_cmap('jet'), 0.1, 0.9)
+    #cmap =  plt.get_cmap('afmhot_r')
+    img = ax.imshow(numpy.transpose(freq[: , :]), interpolation='none', vmin=0, vmax=1, origin='lower', aspect='auto', cmap=cmap)
+    
+    ax.set_xticks( xticks - numpy.min(xticks) )
+    ax.set_xticklabels(xticks)
+    ax.set_yticks(range(len(yticks)))
+    ax.set_yticklabels(yticks, style='italic', weight='bold')
+    colorbar_ax = fig.add_axes([0.87, 0.1, 0.03, 0.8])
+    fig.colorbar(img, cax=colorbar_ax)
+    # print "beta-strand", "coil" and "alpha-helix" text 
+    # only if there is more than 20 residues
+    if len(residues) >= 20:
+        # center alpha-helix: PB m (13th out of 16 PBs)
+        # center coil: PB h and i (8th and 9th out of 16 PBs)
+        # center beta-sheet: PB d (4th out of 16 PBs) 
+        fig.text(0.05, 4.0/16*0.8+0.075, r"$\beta$-strand", rotation = 90,  va = 'center', transform=ax.transAxes)
+        fig.text(0.05, 8.5/16*0.8+0.075, r"coil", rotation = 90, va = 'center')
+        fig.text(0.05, 13.0/16*0.8+0.075, r"$\alpha$-helix", rotation = 90, va = 'center', transform=ax.transAxes)
+    fig.text(0.01, 0.5, "PBs", rotation = 90, weight='bold', size = 'larger', transform=ax.transAxes)
+    fig.text(0.4, 0.01, "Residue number", weight="bold")
+    fig.text(0.96, 0.6, "Intensity", rotation = 90, weight="bold")
+    #fig.show()
+    fig.savefig(map_file_name, dpi=300)
 
 #-------------------------------------------------------------------------------
 # computes Neq and generates neq plot along protein sequence
