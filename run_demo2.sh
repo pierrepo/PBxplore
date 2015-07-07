@@ -24,6 +24,7 @@ mkdir demo2_tmp
 cd demo2_tmp
 cp ../demo2/* ./
 
+echo  -e "\n"
 echo "#------------------------------------------------------------------------#"
 echo "|                                                                        |"
 echo "|  Protein Blocks assignment: many conformations of the same protein     |"
@@ -52,6 +53,7 @@ pause
 ../PBassign.py -x barstar_md_traj.xtc -g barstar_md_traj.gro -o barstar_md_traj
 
 
+echo  -e "\n"
 echo "#---------------------------------------------------------------------------#"
 echo "|                                                                           |"
 echo "|  Compute the frequency of PBs at each position along the protein sequence |"
@@ -105,16 +107,16 @@ echo "|                                                                        |
 echo "#------------------------------------------------------------------------#"
 
 echo  -e "\n"
-echo "Produce with 3 clusters (-c option is mandatory)"
-echo "../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all_3 -c 3"
+echo "Produce with 3 clusters (--clusters option)"
+echo "../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all_3 --clusters 3"
 pause
-../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all_3 -c 3
+../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all_3 --clusters 3
 
 echo  -e "\n"
-echo "Compare only sequence against the first one (--compare option)"
-echo "../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all -c 3 --compare"
+echo "Compare all sequences against the first one (--compare option)"
+echo "../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all --compare"
 pause
-../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all -c 3 --compare
+../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all --compare
 
 
 echo  -e "\n"

@@ -259,7 +259,7 @@ Once converted to PB sequences, conformations of a same protein can be clustered
 
 Example: 
 
-    ./PBclust.py -f demo2/psi_md_traj_all.PB.fasta -o psi_md_traj_all -c 5
+    ./PBclust.py -f demo2/psi_md_traj_all.PB.fasta -o psi_md_traj_all --clusters 5
 
 Output:
 
@@ -305,27 +305,28 @@ Content of `psi_md_traj_all.PB.clust` (clustering results):
     MED_CLU  "psi_md_traj_3.pdb | model 0"  4 
     MED_CLU  "psi_md_traj_3.pdb | model 87"  5 
 
+
 ### Usage
 
-    usage: PBclust.py [-h] -f F -o O -c C [--compare]
+    usage: PBclust.py [-h] -f F -o O (--clusters CLUSTERS | --compare)
 
     Cluster protein structures based on their PB sequences.
 
     optional arguments:
-      -h, --help  show this help message and exit
-      -f F        name(s) of the PBs file (in fasta format)
-      -o O        name for results
-      -c C        number of wanted clusters
-      --compare   compare the first sequence versus all others
+      -h, --help           show this help message and exit
+      -f F                 name(s) of the PBs file (in fasta format)
+      -o O                 name for results
+      --clusters CLUSTERS  number of wanted clusters
+      --compare            compare the first sequence versus all others
 
 
 ### `--compare` option
 
-compares, position by position, the first sequence found in the fasta file against all others. The result of the comparison est a score between O (identical) and 9 (different).
+compares, position by position, the first sequence found in the fasta file against all others. The result of the comparison is a score between O (identical) and 9 (different).
 
 Example:
 
-    ./PBclust.py -f demo2/psi_md_traj_all.PB.fasta -o psi_md_traj_all -c 5 --compare
+    ./PBclust.py -f demo2/psi_md_traj_all.PB.fasta -o psi_md_traj_all --compare
 
 Output:
 

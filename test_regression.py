@@ -414,7 +414,7 @@ class TestPBclust(TemplateTestCase):
         for input_file in input_files:
             command += ['-f', os.path.join(REFDIR, input_file)]
         if not clusters is None:
-            command += ['-c', str(clusters)]
+            command += ['--clusters', str(clusters)]
         if compare:
             command += ['--compare']
         return command
@@ -456,7 +456,7 @@ class TestPBclust(TemplateTestCase):
         self._run_program_and_validate(reference='psi_md_traj_1',
                                        input_files=['psi_md_traj_1.PB.fasta',],
                                        output='output',
-                                       compare=True, clusters=3)
+                                       compare=True)
 
 
 def _same_file_content(file_a, file_b):
