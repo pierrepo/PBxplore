@@ -46,21 +46,23 @@ def user_input():
                         help="name(s) of the PBs file (in fasta format)")
     parser.add_argument("-o", action="store", required=True,
                         help="name for results")
-    parser.add_argument("-c", action="store", required=True, type=int,
-                        help="number of wanted clusters")
-
+                        
+    # --clusters or --compare arguments
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--clusters", action="store", type=int,
+                       help="number of wanted clusters")
     # optional arguments
-    parser.add_argument("--compare", action="store_true", default=False,
-                        help="compare the first sequence versus all others")
+    group.add_argument("--compare", action="store_true", default=False,
+                       help="compare the first sequence versus all others")
 
-    # get all parameters
+    # get all arguments
     options = parser.parse_args()
 
-    # test the validity of the arguments
-    if options.c <= 0:
-        parser.error("number of clusters must be > 0.")
+    # test if the number of clusters is valid
+    if options.clusters != None and options.clusters <= 0:
+            parser.error("Number of clusters must be > 0.")
 
-    # check if the input files exist
+    # check if input files exist
     for name in options.f:
         if not os.path.isfile(name):
             sys.exit("{0}: not a valid file. Bye".format(name))
@@ -199,7 +201,7 @@ def pbclust_cli():
 
     # Carry out the clustering
     try:
-        cluster_id, medoid_id = PB.hclust(distance_mat, nclusters=options.c)
+        cluster_id, medoid_id = PB.hclust(distance_mat, nclusters=options.clusters)
     except PB.RError as e:
         sys.exit('Error with R:\n' + str(e))
     display_clust_report(cluster_id)
