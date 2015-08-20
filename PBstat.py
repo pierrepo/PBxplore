@@ -253,6 +253,7 @@ mtext("Intensity", side = 4, line = 5, cex = 3, font = 2)
 box()
     """
 
+    import matplotlib
     import matplotlib.pyplot as plt
 
     # define ticks for x-axis
@@ -269,23 +270,35 @@ box()
     fig = plt.figure(figsize=(2.0*math.log(len(residues)), 4))
     ax = fig.add_axes([0.1, 0.1, 0.75, 0.8])
 
-    def truncate_colormap(cmap, minval=0.0, maxval=1.0, n=100):
-        """
-        Truncate defined colormap.
+    ### legacy color schme
+    #def truncate_colormap(cmap, minval=0.0, maxval=1.0, n=100):
+        #"""
+        #Truncate defined colormap.
         
-        http://stackoverflow.com/questions/18926031/how-to-extract-a-subset-of-a-colormap-as-a-new-colormap-in-matplotlib?rq=1
-        """
-        import matplotlib.colors as colors
-        import numpy as np
-        new_cmap = colors.LinearSegmentedColormap.from_list(
-            'trunc({n},{a:.2f},{b:.2f})'.format(n=cmap.name, a=minval, b=maxval),
-            cmap(np.linspace(minval, maxval, n)))
-        return new_cmap
+        #http://stackoverflow.com/questions/18926031/how-to-extract-a-subset-of-a-colormap-as-a-new-colormap-in-matplotlib?rq=1
+        #"""
+        #import matplotlib.colors as colors
+        #import numpy as np
+        #new_cmap = colors.LinearSegmentedColormap.from_list(
+            #'trunc({n},{a:.2f},{b:.2f})'.format(n=cmap.name, a=minval, b=maxval),
+            #cmap(np.linspace(minval, maxval, n)))
+        #return new_cmap
     
-    # nice color schemes
-    # http://matplotlib.org/examples/color/colormaps_reference.html
-    cmap =  truncate_colormap(plt.get_cmap('jet'), 0.1, 0.9)
-    #cmap =  plt.get_cmap('afmhot_r')
+    ## nice color schemes
+    ## http://matplotlib.org/examples/color/colormaps_reference.html
+    #cmap =  truncate_colormap(plt.get_cmap('jet'), 0.1, 0.9)
+    
+    
+    # Color scheme inspired from ColorBrewer 
+    # http://colorbrewer2.org/?type=diverging&scheme=RdYlBu&n=5
+    # This color scheme is colorblind safe
+    col1 = (44.0 / 255, 123.0 / 255, 182.0 / 255) 
+    col2 = (171.0 / 255, 217.0 / 255, 233.0 / 255)
+    col3 = (255.0 / 255, 255.0 / 255, 191.0 / 255) 
+    col4 = (253.0 / 255, 174.0 / 255, 97.0 / 255) 
+    col5 = (215.0 / 255, 25.0 / 255, 28.0 / 255)
+    cmap = matplotlib.colors.LinearSegmentedColormap.from_list('ColBrewerRdYlBu', [col1, col2, col3, col4, col5])
+    
     img = ax.imshow(numpy.transpose(freq[: , :]), interpolation='none', vmin=0, vmax=1, origin='lower', aspect='auto', cmap=cmap)
     
     ax.set_xticks( xticks - numpy.min(xticks) )
