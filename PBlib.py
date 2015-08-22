@@ -472,14 +472,13 @@ def matrix_to_single_digit(matrix):
     mini = numpy.min(matrix)
     maxi = numpy.max(matrix)
     # Normalize between 0 and 1
-    mat_modified = (matrix + abs(mini))/(maxi - mini)
+    mat_modified = (matrix - mini)/(maxi - mini)
     # Convert similarity scores to distances and change the range to [0; 9]
     mat_modified = 9 * (1 - mat_modified)
     # Convert to integers
     mat_modified = mat_modified.astype(int)
     # Set diagonal to 0
-    for idx in range(len(mat_modified)):
-        mat_modified[idx, idx] = 0
+    numpy.fill_diagonal(mat_modified, 0)
     return mat_modified
 
 
@@ -501,14 +500,19 @@ def distance_matrix(sequences, substitution_mat):
             distance_mat[i, j] = score
             distance_mat[j, i] = score
     print("")
-    # Set equal the diagonal
-    diag_mini = numpy.min(distance_mat.diagonal())
-    for i in range(len(sequences)):
-        distance_mat[i, i] = diag_mini
+    # Set the diagonal equal to its maximum value
+    diag_maxi = numpy.max(distance_mat.diagonal())
+    numpy.fill_diagonal(distance_mat, diag_maxi)
     # Convert similarity score into a distance
     mini = numpy.min(distance_mat)
     maxi = numpy.max(distance_mat)
-    return 1 - (distance_mat + abs(mini))/(maxi - mini)
+    # Compute distance
+    distance_mat = 1 - (distance_mat - mini)/(maxi - mini)
+    # Check distance values are in expected range
+    assert(numpy.min(distance_mat) >= 0.0)
+    assert(numpy.max(distance_mat) <= 1.0)
+    assert(numpy.sum(distance_mat.diagonal()) == 0.0)
+    return distance_mat
 
 
 def substitution_score(substitution_matrix, seqA, seqB):
