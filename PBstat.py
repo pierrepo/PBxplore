@@ -24,6 +24,8 @@ import argparse
 
 ## third-party module
 import numpy 
+import matplotlib
+import matplotlib.pyplot as plt
 
 ## local module
 import PBlib as PB
@@ -173,88 +175,11 @@ if options.mapdist:
     #  convert array to string for further import in R
     freq_string = array_to_string(freq)
 
-    # build R script
-    #-------------------------------------------------------------------------------
-    # data
-    R_script="""
-connector = textConnection("%s")
-freq = read.table(connector, header = FALSE)
-xnames = %d:%d
-ynames = c('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p')
-    """ % (freq_string, residue_min, residue_max)
-
     # define output file name
     map_file_name = options.o + ".PB.map.png"
     if options.residue_min or options.residue_max:
-        map_file_name = options.o + ".PB.map.%i-%i.png" % (residue_min, residue_max)
-
-    #  graphical parameters
-    R_script += """
-png(filename='%s', width = log(length(xnames))*500, height = 1000)
-par(
-    lwd=3,            # line width
-    bty = 'o',        # type of box around graphic
-    font.lab = 2,     # axis label font (bold)
-    font.axis = 2,    # axis font (bold)
-    cex.lab=2,      # axis label width
-    cex.axis=2.0      # axis text width
-)
-    """ % (map_file_name)
-
-    # color gradient goes 
-    # from dark blue (freq = 0) to green/yellow (freq ~ 0.5) to red (freq = 1)
-    R_script += """
-grad = matrix(nrow=848, ncol=3)
-grad[1,1] = 20
-grad[1,2] = 20
-grad[1,3] = 232
-for(i in 2:212){
-grad[i,1] = grad[i-1,1]
-grad[i,2] = grad[i-1,2]+1
-grad[i,3] = grad[i-1,3]
-}
-for(i in 213:424){
-grad[i,1] = grad[i-1,1]
-grad[i,2] = grad[i-1,2]
-grad[i,3] = grad[i-1,3]-1
-}
-for(i in 425:636){
-grad[i,1] = grad[i-1,1]+1
-grad[i,2] = grad[i-1,2]
-grad[i,3] = grad[i-1,3]
-}
-for(i in 637:848){
-grad[i,1] = grad[i-1,1]
-grad[i,2] = grad[i-1,2]-1
-grad[i,3] = grad[i-1,3]
-}
-colorpal = rgb(grad[,1]/255,grad[,2]/255,grad[,3]/255)
-    """
-
-    # plot data map
-    R_script += """
-layout(matrix(1:2, 1, 2), width=c(log(length(xnames))*3, 1))
-
-par(mar = c(7.1, 8.1, 4.1, 1.1))
-image(as.matrix(freq), axes=FALSE, col=colorpal, zlim = c(0, 1))
-box()
-axis(1, seq(0, 1, 1/(length(xnames)-1)), xnames)
-axis(2, seq(0, 1, 1/(length(ynames)-1)), ynames, font = 4)
-mtext('Residue number', side = 1, line = 5, cex=3.0, font=2)
-mtext('PBs', side = 2, line = 5, cex=3.0, font=2)
-mtext(bquote(beta~'strand'), side = 2, line = 3, at = 3*1/15, cex=1.8)
-mtext('coil', side = 2, line = 3, at = 7*1/15, cex=1.5)
-mtext(bquote(alpha~'helix'), side = 2, line = 3, at = 12*1/15, cex=1.5)
-
-par(mar = c(7.1, 1.1, 4.1, 7.1))
-image(t(seq(1, 848)), col=colorpal, axes=FALSE)
-axis(4, seq(0, 1, 0.2), seq(0, 1, 0.2))
-mtext("Intensity", side = 4, line = 5, cex = 3, font = 2)
-box()
-    """
-
-    import matplotlib
-    import matplotlib.pyplot as plt
+        map_file_name = "{}.PB.map.{}-{}.png".format(
+                        options.o, residue_min, residue_max)
 
     # define ticks for x-axis
     x_step = 5
@@ -263,41 +188,24 @@ box()
     if xticks[0] == 1:
         xticks = xticks-1
         xticks[0] += 1
-    print(xticks)
-    yticks = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p')
 
-    import math
+    yticks = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 
+              'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p')
+
     fig = plt.figure(figsize=(2.0*math.log(len(residues)), 4))
     ax = fig.add_axes([0.1, 0.1, 0.75, 0.8])
-
-    ### legacy color schme
-    #def truncate_colormap(cmap, minval=0.0, maxval=1.0, n=100):
-        #"""
-        #Truncate defined colormap.
-        
-        #http://stackoverflow.com/questions/18926031/how-to-extract-a-subset-of-a-colormap-as-a-new-colormap-in-matplotlib?rq=1
-        #"""
-        #import matplotlib.colors as colors
-        #import numpy as np
-        #new_cmap = colors.LinearSegmentedColormap.from_list(
-            #'trunc({n},{a:.2f},{b:.2f})'.format(n=cmap.name, a=minval, b=maxval),
-            #cmap(np.linspace(minval, maxval, n)))
-        #return new_cmap
-    
-    ## nice color schemes
-    ## http://matplotlib.org/examples/color/colormaps_reference.html
-    #cmap =  truncate_colormap(plt.get_cmap('jet'), 0.1, 0.9)
-    
     
     # Color scheme inspired from ColorBrewer 
     # http://colorbrewer2.org/?type=diverging&scheme=RdYlBu&n=5
     # This color scheme is colorblind safe
-    col1 = (44.0 / 255, 123.0 / 255, 182.0 / 255) 
-    col2 = (171.0 / 255, 217.0 / 255, 233.0 / 255)
-    col3 = (255.0 / 255, 255.0 / 255, 191.0 / 255) 
-    col4 = (253.0 / 255, 174.0 / 255, 97.0 / 255) 
-    col5 = (215.0 / 255, 25.0 / 255, 28.0 / 255)
-    cmap = matplotlib.colors.LinearSegmentedColormap.from_list('ColBrewerRdYlBu', [col1, col2, col3, col4, col5])
+    colors = [
+    (44.0 / 255, 123.0 / 255, 182.0 / 255),
+    (171.0 / 255, 217.0 / 255, 233.0 / 255),
+    (255.0 / 255, 255.0 / 255, 191.0 / 255),
+    (253.0 / 255, 174.0 / 255, 97.0 / 255), 
+    (215.0 / 255, 25.0 / 255, 28.0 / 255)
+    ]
+    cmap = matplotlib.colors.LinearSegmentedColormap.from_list('ColBrewerRdYlBu', colors)
     
     img = ax.imshow(numpy.transpose(freq[: , :]), interpolation='none', vmin=0, vmax=1, origin='lower', aspect='auto', cmap=cmap)
     
@@ -310,17 +218,17 @@ box()
     # print "beta-strand", "coil" and "alpha-helix" text 
     # only if there is more than 20 residues
     if len(residues) >= 20:
-        # center alpha-helix: PB m (13th out of 16 PBs)
-        # center coil: PB h and i (8th and 9th out of 16 PBs)
-        # center beta-sheet: PB d (4th out of 16 PBs) 
+        # center alpha-helix: PB m (13th PB out of 16 PBs)
+        # center coil: PB h and i (8th and 9th PBs out of 16 PBs)
+        # center beta-sheet: PB d (4th PB out of 16 PBs) 
         fig.text(0.05, 4.0/16*0.8+0.075, r"$\beta$-strand", rotation = 90,  va = 'center', transform=ax.transAxes)
         fig.text(0.05, 8.5/16*0.8+0.075, r"coil", rotation = 90, va = 'center')
         fig.text(0.05, 13.0/16*0.8+0.075, r"$\alpha$-helix", rotation = 90, va = 'center', transform=ax.transAxes)
     fig.text(0.01, 0.5, "PBs", rotation = 90, weight='bold', size = 'larger', transform=ax.transAxes)
     fig.text(0.4, 0.01, "Residue number", weight="bold")
     fig.text(0.96, 0.6, "Intensity", rotation = 90, weight="bold")
-    #fig.show()
     fig.savefig(map_file_name, dpi=300)
+    print("wrote " + map_file_name)
 
 #-------------------------------------------------------------------------------
 # computes Neq and generates neq plot along protein sequence
@@ -328,9 +236,9 @@ box()
 if options.neq:
     # compute Neq
     #-------------------------------------------------------------------------------
-    neq_array = numpy.zeros((len(residue_lst), 2))
-    neq_array[:, 0] = residue_lst
-    for idx in range(len(residue_lst)):
+    neq_array = numpy.zeros((len(residues), 2))
+    neq_array[:, 0] = residues
+    for idx in range(len(residues)):
         H = 0.0
         for b in range(PB.NUMBER):
             f = freq[idx, b] 
@@ -342,7 +250,8 @@ if options.neq:
     #-------------------------------------------------------------------------------
     neq_file_name = options.o + ".PB.Neq"
     if options.residue_min or options.residue_max:
-        neq_file_name = options.o + ".PB.Neq.%i-%i" % (residue_min, residue_max)
+        neq_file_name = "{}.PB.Neq.{}-{}".format(
+                        options.o, residue_min, residue_max)
     
     # write Neq
     #-------------------------------------------------------------------------------
@@ -354,58 +263,18 @@ if options.neq:
     neq_file.close()
     print( "wrote {0}".format(neq_file_name) )
     
-    #  convert array to string for further import in R
-    neq_array_string = array_to_string(neq_array)
-
-    # build R script
+    # draw Neq
     #-------------------------------------------------------------------------------
+    neq_fig_name = neq_file_name + '.png'
+    fig = plt.figure(figsize=(2.0*math.log(len(residues)), 5))
+    ax = fig.add_subplot(1, 1, 1)
+    ax.set_ylim([0, round(max(neq_array[:, 1]), 0)+1])
+    ax.plot(neq_array[:, 0], neq_array[:, 1])
+    ax.set_xlabel('Residue number', fontsize=18)
+    ax.set_ylabel('Neq', fontsize=18, style='italic')
+    fig.savefig(neq_fig_name)
+    print("wrote {}".format(neq_fig_name))
 
-    R_script="""
-connector = textConnection("%s")
-neq = read.table(connector, header = FALSE)
-    """ % (neq_array_string)
-
-    #  graphical parameters
-    R_script += """
-png(filename='%s', width = 1600, height = 1200)
-par(
-# default margins are: 5.1 4.1 4.1 2.1
-# extend bottom margin for text (+5 line)
-mar = c(5.1, 5.1, 4.1, 2.1),
-oma = c(2,0,0,0), # 2 lines for comments: 0 to 4
-lwd=3,            # line width
-bty = 'o',        # type of box around graphic
-font.lab = 2,     # axis label font (bold)
-font.axis = 2,    # axis font (bold)
-cex.lab=2.5,      # axis label width
-cex.axis=2.0      # axis width
-)
-    """ % (neq_file_name + ".png")
-
-    # plot data
-    R_script += """
-plot(neq, type= 'l', 
-    xlab = 'Residue number', ylab = 'Neq', 
-    ylim=c(1,max(round(neq[,2]))+2)
-)
-    """
-
-    # execute R script
-    #-------------------------------------------------------------------------------
-    command="R --vanilla --slave"
-    proc = subprocess.Popen(command, shell = True, 
-    stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
-    (out, err) = proc.communicate(R_script)
-    if err:
-        print( "ERROR: {0}".format(err) )
-    code = proc.wait()
-    if code:
-        print( "ERROR: exit code != 0" )
-        print( "exit code: {0}".format(code) )
-    else:
-        print( "wrote {0}.png".format(neq_file_name) )
-    
-    print( out )
 
 #-------------------------------------------------------------------------------
 # generates logo representation of PBs frequency along protein sequence
