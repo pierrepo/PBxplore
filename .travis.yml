@@ -13,7 +13,8 @@ addons:
         packages:
             - r-base
 install:
-    - pip install -r dev_requirements.txt --use-mirrors
+    - pip install --upgrade pip
+    - pip install -r dev_requirements.txt
     - if [[ $TRAVIS_PYTHON_VERSION == 2.7 ]]; then pip install mdanalysis; fi
 
 # command to run tests
