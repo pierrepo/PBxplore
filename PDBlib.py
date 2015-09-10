@@ -527,7 +527,7 @@ def chains_from_trajectory(trajectory, topology):
     universe = MDAnalysis.Universe(topology, trajectory)
     for ts in universe.trajectory:
         structure = Chain()
-        selection = universe.selectAtoms("backbone")
+        selection = universe.select_atoms("backbone")
         for atm in selection:
             atom = Atom()
             atom.read_from_xtc(atm)
