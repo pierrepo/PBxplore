@@ -1,3 +1,2 @@
 nose
 coverage
-MDAnalysis>=0.11
