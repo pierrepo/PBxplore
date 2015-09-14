@@ -100,7 +100,7 @@ class TemplateTestCase(unittest.TestCase):
                  and sys.exc_info() == (None, None, None))
                 or sys.version_info[0] == 3):
             # On python 2, sys.exc_info() is (None, None, None) only when a
-            # test pass. On python 3, however, there is no difference in 
+            # test pass. On python 3, however, there is no difference in
             # sys.exc_info() between a passing and a failing test. Here, on
             # python 2, we delete the temporary directory only is the test
             # passes; on python 3 we always delete the temporary directory.
@@ -172,7 +172,7 @@ class TestPBAssign(TemplateTestCase):
                 input_args += ['-p', path.join(REFDIR, basename + extension)]
             out_basename = path.join(out_run_dir, multiple)
 
-        run_list = (['./PBassign.py'] + input_args + 
+        run_list = (['./PBassign.py'] + input_args +
                     ['-o', out_basename + extension] + options)
         print(' '.join(run_list))
         exe = subprocess.Popen(run_list,
@@ -285,7 +285,6 @@ class TestPBAssign(TemplateTestCase):
             # MDanalysis is not available, PBassign should fail
             assert status != 0, 'PBassign shoud not have exited with a 0 code'
 
-
     @_failure_test
     def test_missing_output(self):
         """
@@ -293,7 +292,7 @@ class TestPBAssign(TemplateTestCase):
         """
         references = ["1BTA"]
         extensions = [".pdb"]
-        self._test_PBassign_options(references, extensions, 
+        self._test_PBassign_options(references, extensions,
                                     ['{0}.PB.fasta', '{0}.PB.flat',
                                      '{0}.PB.phipsi', '{0}.missing'],
                                     ['--flat', '--phipsi'])
@@ -305,7 +304,7 @@ class TestPBAssign(TemplateTestCase):
         """
         references = ["1BTA"]
         extensions = [".pdb"]
-        self._test_PBassign_options(references, extensions, 
+        self._test_PBassign_options(references, extensions,
                                     ['{0}.PB.fasta', '{0}.PB.flat'],
                                     ['--flat', '--phipsi'])
 
@@ -408,7 +407,7 @@ class TestPBcount(TemplateTestCase):
 
 class TestPBclust(TemplateTestCase):
     def _build_command_line(self, input_files, output,
-                            clusters=None, compare=False): 
+                            clusters=None, compare=False):
         output_full_path = os.path.join(self._temp_directory, output)
         command = ['./PBclust.py', '-o', output_full_path]
         for input_file in input_files:
@@ -459,6 +458,55 @@ class TestPBclust(TemplateTestCase):
                                        compare=True)
 
 
+class TestPBstat(TemplateTestCase):
+    def _build_command_line(self, input_file, output, mapdist=False, neq=False,
+                            logo=False, residue_min=None, residue_max=None):
+        input_full_path = os.path.join(REFDIR, input_file)
+        output_full_path = os.path.join(self._temp_directory, output)
+        command = ['./PBstat.py', '-f', input_full_path, '-o', output_full_path]
+        if mapdist:
+            command += ['--map']
+        if neq:
+            command += ['--neq']
+        if logo:
+            command += ['--logo']
+        if residue_min is not None:
+            command += ['--residue-min', str(residue_min)]
+        if residue_max is not None:
+            command += ['--residue-max', str(residue_max)]
+
+        return command
+
+    def _validate_output(self, reference, input_file, output, mapdist=False, neq=False,
+                         logo=False, residue_min=None, residue_max=None, **kwargs):
+        output = os.path.join(self._temp_directory, output)
+        if neq:
+            suffix = ''
+            if residue_min or residue_max:
+                suffix = ".{}-{}".format(residue_min, residue_max)
+            reference_full_path = os.path.join(REFDIR,
+                                               reference + '.PB.Neq' + suffix)
+            output_full_path = output + '.PB.Neq' + suffix
+            _assert_identical_files(output_full_path, reference_full_path)
+
+    def test_neq(self):
+        self._run_program_and_validate(reference='count_multi123',
+                                       input_file='count_multi123.PB.count',
+                                       output='output',
+                                       neq=True)
+        self._run_program_and_validate(reference='count_single123',
+                                       input_file='count_single123.PB.count',
+                                       output='output',
+                                       neq=True)
+
+    def test_neq_with_range_residues(self):
+        self._run_program_and_validate(reference='count_multi123',
+                                       input_file='count_multi123.PB.count',
+                                       output='output',
+                                       neq=True,
+                                       residue_min=10, residue_max=30)
+
+
 def _same_file_content(file_a, file_b):
     """
     Return True if two files are identical. Take file path as arguments.
@@ -474,7 +522,7 @@ def _same_file_content(file_a, file_b):
         # file iterator not completely consumed
         for infile in (f1, f2):
             try:
-                next(infile) 
+                next(infile)
             except StopIteration:
                 pass
             else:
