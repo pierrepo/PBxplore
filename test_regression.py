@@ -479,15 +479,35 @@ class TestPBstat(TemplateTestCase):
 
     def _validate_output(self, reference, input_file, output, mapdist=False, neq=False,
                          logo=False, residue_min=None, residue_max=None, **kwargs):
-        output = os.path.join(self._temp_directory, output)
+
+        suffix_residue = ''
+        if residue_min or residue_max:
+            suffix_residue = ".{}-{}".format(residue_min, residue_max)
+
+        suffix_args = ''
+        extension = ''
         if neq:
-            suffix = ''
-            if residue_min or residue_max:
-                suffix = ".{}-{}".format(residue_min, residue_max)
-            reference_full_path = os.path.join(REFDIR,
-                                               reference + '.PB.Neq' + suffix)
-            output_full_path = output + '.PB.Neq' + suffix
+            suffix_args = '.Neq'
+            extension = '.png'
+        if mapdist:
+            suffix_args = '.map'
+            extension = '.png'
+        if logo:
+            suffix_args = '.logo'
+            extension = '.pdf'
+
+        reference_full_path = os.path.join(REFDIR, reference + '.PB'
+                                           + suffix_args + suffix_residue)
+        output = os.path.join(self._temp_directory, output)
+        output_full_path = output + '.PB'+ suffix_args + suffix_residue
+
+        if neq:
+            # Assess the validity of the Neq file
             _assert_identical_files(output_full_path, reference_full_path)
+
+        # Assess the creation of the graph file (png or pdf)
+        value, msg = _file_validity(output_full_path + extension)
+        self.assertTrue(value, msg=msg)
 
     def test_neq(self):
         self._run_program_and_validate(reference='count_multi123',
@@ -505,6 +525,48 @@ class TestPBstat(TemplateTestCase):
                                        output='output',
                                        neq=True,
                                        residue_min=10, residue_max=30)
+
+    def test_mapdist(self):
+        self._run_program_and_validate(reference='count_multi123',
+                                       input_file='count_multi123.PB.count',
+                                       output='output',
+                                       mapdist=True)
+
+    def test_mapdist_with_range_residues(self):
+        self._run_program_and_validate(reference='count_multi123',
+                                       input_file='count_multi123.PB.count',
+                                       output='output',
+                                       mapdist=True,
+                                       residue_min=10, residue_max=30)
+
+    def test_weblogo(self):
+        self._run_program_and_validate(reference='count_multi123',
+                                       input_file='count_multi123.PB.count',
+                                       output='output',
+                                       logo=True)
+
+    def test_weblogo_with_range_residues(self):
+        self._run_program_and_validate(reference='count_multi123',
+                                       input_file='count_multi123.PB.count',
+                                       output='output',
+                                       logo=True,
+                                       residue_min=10, residue_max=30)
+
+def _file_validity(file_a):
+    """
+    Check wether file_a exists and is not empty.
+    Return a tuple containing:
+        - True if all went well, False otherwise
+        - the error message, empty if True is returned
+
+    """
+    if os.path.isfile(file_a):
+        if os.path.getsize(file_a) > 0:
+            return True, ''
+        else:
+            return False, '{0} is empty'.format(file_a)
+    else:
+        return False, '{0} does not exist'.format(file_a)
 
 
 def _same_file_content(file_a, file_b):
