@@ -43,18 +43,6 @@ try:
 except NameError:
     pass
 
-#===============================================================================
-# Functions
-#===============================================================================
-def array_to_string(ar):
-    """
-    Convert numpy array to string for further import in R
-    """
-    numpy.set_printoptions(threshold=numpy.inf)
-    #  max_line_width : big enough to avoid unneeded newline
-    #  precision : float with 4 digits
-    return numpy.array_str(ar, max_line_width = 100000, precision = 4).translate(None, '[]')
-
 
 def cmd_exists(cmd):
     """
@@ -282,8 +270,6 @@ freq = freq / float(sequence_number)
 # generates map of the distribution of PBs along protein sequence
 #-------------------------------------------------------------------------------
 if options.mapdist:
-    #  convert array to string for further import in R
-    freq_string = array_to_string(freq)
 
     # define output file name
     map_file_name = options.o + ".PB.map.png"
@@ -445,7 +431,7 @@ if options.logo:
 
     proc = subprocess.Popen(command, shell = True,
     stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
-    (out, err) = proc.communicate(transfac_content)
+    (out, err) = proc.communicate(transfac_content.encode('UTF-8'))
     if err:
         print( "ERROR: {0}".format(err) )
     code = proc.wait()
