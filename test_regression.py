@@ -580,6 +580,12 @@ class TestPBstat(TemplateTestCase):
                                        output='output',
                                        logo=True, image_format='jpeg')
 
+    def test_weblogo_logo_jpg(self):
+        self._run_program_and_validate(reference='count_multi123',
+                                       input_file='count_multi123.PB.count',
+                                       output='output',
+                                       logo=True, image_format='jpg')
+
     @_failure_test
     def test_weblogo_logo_invalid_format(self):
         self._run_program_and_validate(reference='count_multi123',

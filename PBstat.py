@@ -179,7 +179,7 @@ parser.add_argument("--logo", action=CommandAction, command="weblogo --help", de
     help="generate logo representation of PBs frequency along protein sequence")
 parser.add_argument("--image-format", action='store', type=str,
                     dest='image_format', default='png',
-                    choices=['pdf', 'png', 'jpeg'],
+                    choices=['pdf', 'png', 'jpeg', 'jpg'],
                     help='File format for all image output.')
 parser.add_argument("--residue-min", action="store", type=int,
     dest="residue_min", help="defines lower bound of residue frame")
@@ -416,6 +416,11 @@ if options.logo:
 
     # call weblogo
     #-------------------------------------------------------------------------------
+    # If the output file format is 'jpeg', then the --format argument of
+    # weblogo should be 'jpeg' even if the user said 'jpg'.
+    logo_format = options.image_format
+    if logo_format == 'jpg':
+        logo_format = 'jpeg'
     command = """weblogo \
 --format %s \
 --errorbars NO \
@@ -432,7 +437,7 @@ if options.logo:
 -o %s \
 --lower %i \
 --upper %i 
-    """ % (options.image_format, options.f.replace(".PB.count", ""),
+    """ % (logo_format, options.f.replace(".PB.count", ""),
            logo_file_name, residue_min, residue_max)
 
     proc = subprocess.Popen(command, shell = True,
