@@ -177,11 +177,10 @@ parser.add_argument("--neq", action="store_true", default=False, dest="neq",
 parser.add_argument("--logo", action=CommandAction, command="weblogo --help", dest="logo",
     cmd_help="(See https://github.com/pierrepo/PBxplore/blob/master/doc/installation.md)",
     help="generate logo representation of PBs frequency along protein sequence")
-parser.add_argument("--logo-format", action='store', type=str,
-                    dest='logo_format', default='pdf',
-                    choices=['pdf', 'png', 'jpeg', 'eps'],
-                    help=('Weblogo file format. This option is only relevent '
-                          'the --logo option is used'))
+parser.add_argument("--image-format", action='store', type=str,
+                    dest='image_format', default='png',
+                    choices=['pdf', 'png', 'jpeg'],
+                    help='File format for all image output.')
 parser.add_argument("--residue-min", action="store", type=int,
     dest="residue_min", help="defines lower bound of residue frame")
 parser.add_argument("--residue-max", action="store", type=int,
@@ -277,10 +276,11 @@ freq = freq / float(sequence_number)
 if options.mapdist:
 
     # define output file name
-    map_file_name = options.o + ".PB.map.png"
+    map_file_name = options.o + ".PB.map." + options.image_format
     if options.residue_min or options.residue_max:
-        map_file_name = "{}.PB.map.{}-{}.png".format(
-                        options.o, residue_min, residue_max)
+        map_file_name = "{}.PB.map.{}-{}.{}".format(
+                        options.o, residue_min, residue_max,
+                        options.image_format)
 
     # define ticks for x-axis
     x_step = 5
@@ -366,7 +366,7 @@ if options.neq:
     
     # draw Neq
     #-------------------------------------------------------------------------------
-    neq_fig_name = neq_file_name + '.png'
+    neq_fig_name = neq_file_name + '.' + options.image_format
     fig = plt.figure(figsize=(2.0*math.log(len(residues)), 5))
     ax = fig.add_subplot(1, 1, 1)
     ax.set_ylim([0, round(max(neq_array[:, 1]), 0)+1])
@@ -409,10 +409,10 @@ if options.logo:
 
     # define output file name
     #-------------------------------------------------------------------------------
-    logo_file_name = options.o + ".PB.logo." + options.logo_format
+    logo_file_name = options.o + ".PB.logo." + options.image_format
     if options.residue_min or options.residue_max:
         logo_file_name = "{}.PB.logo.{}-{}.{}".format(
-            options.o, residue_min, residue_max, options.logo_format)
+            options.o, residue_min, residue_max, options.image_format)
 
     # call weblogo
     #-------------------------------------------------------------------------------
@@ -432,7 +432,7 @@ if options.logo:
 -o %s \
 --lower %i \
 --upper %i 
-    """ % (options.logo_format, options.f.replace(".PB.count", ""),
+    """ % (options.image_format, options.f.replace(".PB.count", ""),
            logo_file_name, residue_min, residue_max)
 
     proc = subprocess.Popen(command, shell = True,

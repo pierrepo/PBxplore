@@ -460,7 +460,7 @@ class TestPBclust(TemplateTestCase):
 
 class TestPBstat(TemplateTestCase):
     def _build_command_line(self, input_file, output, mapdist=False, neq=False,
-                            logo=False, logo_format=None,
+                            logo=False, image_format=None,
                             residue_min=None, residue_max=None):
         input_full_path = os.path.join(REFDIR, input_file)
         output_full_path = os.path.join(self._temp_directory, output)
@@ -471,8 +471,8 @@ class TestPBstat(TemplateTestCase):
             command += ['--neq']
         if logo:
             command += ['--logo']
-        if logo_format is not None:
-            command += ['--logo-format', logo_format]
+        if image_format is not None:
+            command += ['--image-format', image_format]
         if residue_min is not None:
             command += ['--residue-min', str(residue_min)]
         if residue_max is not None:
@@ -481,7 +481,7 @@ class TestPBstat(TemplateTestCase):
         return command
 
     def _validate_output(self, reference, input_file, output, mapdist=False,
-                         neq=False, logo=False, logo_format=None,
+                         neq=False, logo=False, image_format=None,
                          residue_min=None, residue_max=None, **kwargs):
 
         suffix_residue = ''
@@ -489,19 +489,17 @@ class TestPBstat(TemplateTestCase):
             suffix_residue = ".{}-{}".format(residue_min, residue_max)
 
         suffix_args = ''
-        extension = ''
+        extension = '.png'
         if neq:
             suffix_args = '.Neq'
-            extension = '.png'
         if mapdist:
             suffix_args = '.map'
-            extension = '.png'
         if logo:
             suffix_args = '.logo'
-            if logo_format is None:
-                extension = '.pdf'
-            else:
-                extension = '.' + logo_format
+        if image_format is None:
+            extension = '.png'
+        else:
+            extension = '.' + image_format
 
         reference_full_path = os.path.join(REFDIR, reference + '.PB'
                                            + suffix_args + suffix_residue)
@@ -533,11 +531,23 @@ class TestPBstat(TemplateTestCase):
                                        neq=True,
                                        residue_min=10, residue_max=30)
 
+    def test_neq_pdf(self):
+        self._run_program_and_validate(reference='count_multi123',
+                                       input_file='count_multi123.PB.count',
+                                       output='output',
+                                       neq=True, image_format='pdf')
+
     def test_mapdist(self):
         self._run_program_and_validate(reference='count_multi123',
                                        input_file='count_multi123.PB.count',
                                        output='output',
                                        mapdist=True)
+
+    def test_mapdist_pdf(self):
+        self._run_program_and_validate(reference='count_multi123',
+                                       input_file='count_multi123.PB.count',
+                                       output='output',
+                                       mapdist=True, image_format='pdf')
 
     def test_mapdist_with_range_residues(self):
         self._run_program_and_validate(reference='count_multi123',
@@ -556,32 +566,26 @@ class TestPBstat(TemplateTestCase):
         self._run_program_and_validate(reference='count_multi123',
                                        input_file='count_multi123.PB.count',
                                        output='output',
-                                       logo=True, logo_format='pdf')
+                                       logo=True, image_format='pdf')
 
     def test_weblogo_logo_png(self):
         self._run_program_and_validate(reference='count_multi123',
                                        input_file='count_multi123.PB.count',
                                        output='output',
-                                       logo=True, logo_format='png')
+                                       logo=True, image_format='png')
 
     def test_weblogo_logo_jpeg(self):
         self._run_program_and_validate(reference='count_multi123',
                                        input_file='count_multi123.PB.count',
                                        output='output',
-                                       logo=True, logo_format='jpeg')
-
-    def test_weblogo_logo_eps(self):
-        self._run_program_and_validate(reference='count_multi123',
-                                       input_file='count_multi123.PB.count',
-                                       output='output',
-                                       logo=True, logo_format='eps')
+                                       logo=True, image_format='jpeg')
 
     @_failure_test
-    def test_weblogo_logo_invalif_format(self):
+    def test_weblogo_logo_invalid_format(self):
         self._run_program_and_validate(reference='count_multi123',
                                        input_file='count_multi123.PB.count',
                                        output='output',
-                                       logo=True, logo_format='invalid')
+                                       logo=True, image_format='invalid')
 
 
     def test_weblogo_with_range_residues(self):

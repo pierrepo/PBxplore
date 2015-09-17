@@ -93,10 +93,10 @@ pause
 ../PBstat.py -f psi_md_traj_all.PB.count -o psi_md_traj --map --neq --logo || echo 'The command failed, is weblogo installed?'
 
 echo  -e "\n"
-echo "Change the file format of the weblogo"
-echo "../PBstat.py -f psi_md_traj.PB.count -o psi_md_traj --logo --logo-format png"
+echo "Change the file format of the images"
+echo "../PBstat.py -f psi_md_traj.PB.count -o psi_md_traj --map --neq --logo --image-format pdf"
 pause
-../PBstat.py -f psi_md_traj_all.PB.count -o psi_md_traj --logo --logo-format png || echo 'The command failed, is weblogo installed?'
+../PBstat.py -f psi_md_traj_all.PB.count -o psi_md_traj --map --neq --logo --image-format pdf || echo 'The command failed, is weblogo installed?'
 
 echo  -e "\n"
 echo "Define a residue frame (--residue-min and --residue-max options)"
