@@ -177,6 +177,11 @@ parser.add_argument("--neq", action="store_true", default=False, dest="neq",
 parser.add_argument("--logo", action=CommandAction, command="weblogo --help", dest="logo",
     cmd_help="(See https://github.com/pierrepo/PBxplore/blob/master/doc/installation.md)",
     help="generate logo representation of PBs frequency along protein sequence")
+parser.add_argument("--logo-format", action='store', type=str,
+                    dest='logo_format', default='pdf',
+                    choices=['pdf', 'png', 'jpeg', 'eps'],
+                    help=('Weblogo file format. This option is only relevent '
+                          'the --logo option is used'))
 parser.add_argument("--residue-min", action="store", type=int,
     dest="residue_min", help="defines lower bound of residue frame")
 parser.add_argument("--residue-max", action="store", type=int,
@@ -404,14 +409,15 @@ if options.logo:
 
     # define output file name
     #-------------------------------------------------------------------------------
-    logo_file_name = options.o + ".PB.logo.pdf"
+    logo_file_name = options.o + ".PB.logo." + options.logo_format
     if options.residue_min or options.residue_max:
-        logo_file_name = options.o + ".PB.logo.%i-%i.pdf" % (residue_min, residue_max)
+        logo_file_name = "{}.PB.logo.{}-{}.{}".format(
+            options.o, residue_min, residue_max, options.logo_format)
 
     # call weblogo
     #-------------------------------------------------------------------------------
     command = """weblogo \
---format pdf \
+--format %s \
 --errorbars NO \
 --fineprint "" \
 --title %s \
@@ -426,8 +432,8 @@ if options.logo:
 -o %s \
 --lower %i \
 --upper %i 
-    """ % (options.f.replace(".PB.count", ""), logo_file_name, 
-    residue_min, residue_max)
+    """ % (options.logo_format, options.f.replace(".PB.count", ""),
+           logo_file_name, residue_min, residue_max)
 
     proc = subprocess.Popen(command, shell = True,
     stdout = subprocess.PIPE, stderr = subprocess.PIPE, stdin = subprocess.PIPE)
