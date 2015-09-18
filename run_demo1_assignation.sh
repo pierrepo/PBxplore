@@ -20,9 +20,9 @@ echo "#------------------------------------------------------------------------#
 pause
 
 # create and move into the demo directory
-mkdir demo1_tmp
-cd demo1_tmp
-cp ../demo1/*pdb ./
+mkdir demo1_assignation_tmp
+cd demo1_assignation_tmp
+cp ../demo1_assignation/*pdb ./
 
 echo "#------------------------------------------------------------------------#"
 echo "|                                                                        |"
@@ -108,8 +108,8 @@ echo "|  Demo completed!                                                       |
 echo "|                                                                        |"
 echo "#------------------------------------------------------------------------#"
 echo 
-echo "Look at *.PB.* files in the demo1_tmp directory."
+echo "Look at *.PB.* files in the demo1_assignation_tmp directory."
 pwd
 ls -lh
-echo "Do not forget to delete demo1_tmp directory when you will be done with this demo." 
+echo "Do not forget to delete demo1_assignation_tmp directory when you will be done with this demo." 
 
