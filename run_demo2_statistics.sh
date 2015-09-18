@@ -50,7 +50,7 @@ echo "Test with the Barstar protein"
 echo "51 conformations issued from 1 molecular dynamics simulation"
 echo "../PBassign.py -x barstar_md_traj.xtc -g barstar_md_traj.gro -o barstar_md_traj"
 pause
-../PBassign.py -x barstar_md_traj.xtc -g barstar_md_traj.gro -o barstar_md_traj
+../PBassign.py -x barstar_md_traj.xtc -g barstar_md_traj.gro -o barstar_md_traj || echo "PBassign failed; is MDAnalysis installed?"
 
 
 echo  -e "\n"
