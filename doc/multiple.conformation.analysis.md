@@ -133,12 +133,13 @@ Output:
     wrote psi_md_traj_all.PB.Neq
     wrote psi_md_traj_all.PB.Neq.png
 
-    wrote psi_md_traj_all.PB.logo.pdf
+    wrote psi_md_traj_all.PB.logo.png
 
 ### Usage
 
     usage: PBstat.py [-h] -f F -o O [--map] [--neq] [--logo]
-                     [--residue-min RESIDUE_MIN] [--residue-max RESIDUE_MAX]
+                     [--image-format {pdf,png,jpg}] [--residue-min RESIDUE_MIN]
+                     [--residue-max RESIDUE_MAX]
 
     Statistical analysis and graphical representations of PBs.
 
@@ -152,6 +153,8 @@ Output:
                             sequence
       --logo                generate logo representation of PBs frequency along
                             protein sequence
+      --image-format {pdf,png,jpg}
+                            File format for all image output.
       --residue-min RESIDUE_MIN
                             defines lower bound of residue frame
       --residue-max RESIDUE_MAX
@@ -217,7 +220,7 @@ Example:
 Output:
 
     Index of first residue is: 1
-    wrote psi_md_traj_all.PB.logo.pdf
+    wrote psi_md_traj_all.PB.logo.png
 
 Graph:
 
@@ -238,7 +241,7 @@ Output:
     wrote psi_md_traj_all_frame.PB.Neq.15-42
     wrote psi_md_traj_all_frame.PB.Neq.15-42.png
 
-    wrote psi_md_traj_all_frame.PB.logo.15-42.pdf
+    wrote psi_md_traj_all_frame.PB.logo.15-42.png
 
 PBs distribution:
 
@@ -252,6 +255,10 @@ Logo representation of PBs frequency:
 
 ![Logo representation of PBs frequency](img/psi_md_traj_all_frame.PB.logo.15-42.jpg)
 
+
+### `--image-format` option
+
+All figure can be produced in either PNG, PDF, or JPEG format. The `--image-format` option allows to control the file format of the image outputs.
 
 ## <a name="cluster"></a>Clustering of protein structures
 
