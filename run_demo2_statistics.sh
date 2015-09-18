@@ -20,8 +20,8 @@ echo "#------------------------------------------------------------------------#
 pause
 
 # create and move into the demo directory
-mkdir demo2_tmp
-cd demo2_tmp
+mkdir demo2_statistics_tmp
+cd demo2_statistics_tmp
 cp ../demo2/* ./
 
 echo  -e "\n"
@@ -50,7 +50,7 @@ echo "Test with the Barstar protein"
 echo "51 conformations issued from 1 molecular dynamics simulation"
 echo "../PBassign.py -x barstar_md_traj.xtc -g barstar_md_traj.gro -o barstar_md_traj"
 pause
-../PBassign.py -x barstar_md_traj.xtc -g barstar_md_traj.gro -o barstar_md_traj
+../PBassign.py -x barstar_md_traj.xtc -g barstar_md_traj.gro -o barstar_md_traj || echo "PBassign failed; is MDAnalysis installed?"
 
 
 echo  -e "\n"
@@ -108,32 +108,12 @@ pause
 echo  -e "\n"
 echo "#------------------------------------------------------------------------#"
 echo "|                                                                        |"
-echo "|  Cluster structures                                                    |"
-echo "|                                                                        |"
-echo "#------------------------------------------------------------------------#"
-
-echo  -e "\n"
-echo "Produce with 3 clusters (--clusters option)"
-echo "../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all_3 --clusters 3"
-pause
-../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all_3 --clusters 3
-
-echo  -e "\n"
-echo "Compare all sequences against the first one (--compare option)"
-echo "../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all --compare"
-pause
-../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all --compare
-
-
-echo  -e "\n"
-echo "#------------------------------------------------------------------------#"
-echo "|                                                                        |"
 echo "|  Demo completed!                                                       |"
 echo "|                                                                        |"
 echo "#------------------------------------------------------------------------#"
 echo 
-echo "Look at *.PB.* files in the demo2_tmp directory."
+echo "Look at *.PB.* files in the demo2_statistics_tmp directory."
 pwd
 ls -lh 
-echo "Do not forget to delete demo2_tmp directory when you will be done with this demo." 
+echo "Do not forget to delete demo2_statistics_tmp directory when you will be done with this demo." 
 
