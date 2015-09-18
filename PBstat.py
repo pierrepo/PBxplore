@@ -179,7 +179,7 @@ parser.add_argument("--logo", action=CommandAction, command="weblogo --help", de
     help="generate logo representation of PBs frequency along protein sequence")
 parser.add_argument("--image-format", action='store', type=str,
                     dest='image_format', default='png',
-                    choices=['pdf', 'png', 'jpeg', 'jpg'],
+                    choices=['pdf', 'png', 'jpg'],
                     help='File format for all image output.')
 parser.add_argument("--residue-min", action="store", type=int,
     dest="residue_min", help="defines lower bound of residue frame")
@@ -416,8 +416,8 @@ if options.logo:
 
     # call weblogo
     #-------------------------------------------------------------------------------
-    # If the output file format is 'jpeg', then the --format argument of
-    # weblogo should be 'jpeg' even if the user said 'jpg'.
+    # If the output file format is 'jpg', then the --format argument of
+    # weblogo should be 'jpeg'.
     logo_format = options.image_format
     if logo_format == 'jpg':
         logo_format = 'jpeg'
