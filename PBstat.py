@@ -470,19 +470,20 @@ def pbstat_cli():
     # normalize PBs frequencies
     freq = freq / float(sequence_number)
 
+    # Handle output file name...
+    output_file_name = options.o + ".PB.{0}"
+    if options.residue_min or options.residue_max:
+        output_file_name = "{0}.{1}-{2}".format(output_file_name, residue_min, residue_max)
+
+    # ... and figure name
+    output_fig_name = output_file_name + "." + options.image_format
+
     # -------------------------------------------------------------------------------
     # generates map of the distribution of PBs along protein sequence
     # -------------------------------------------------------------------------------
     if options.mapdist:
 
-        # define output file name
-        map_file_name = options.o + ".PB.map." + options.image_format
-        if options.residue_min or options.residue_max:
-            map_file_name = "{}.PB.map.{}-{}.{}".format(
-                            options.o, residue_min, residue_max,
-                            options.image_format)
-
-        plot_map(freq, residues, map_file_name)
+        plot_map(freq, residues, output_fig_name.format("map"))
 
     # -------------------------------------------------------------------------------
     # computes Neq and generates neq plot along protein sequence
@@ -491,20 +492,14 @@ def pbstat_cli():
         # compute Neq
         neq_array = compute_neq(freq, residues)
 
-        # define output file name
-        neq_file_name = options.o + ".PB.Neq"
-        if options.residue_min or options.residue_max:
-            neq_file_name = "{}.PB.Neq.{}-{}".format(
-                            options.o, residue_min, residue_max)
-
         # write Neq
+        neq_file_name = output_file_name.format("Neq")
         with open(neq_file_name, "w") as outfile:
             write_neq(outfile, neq_array)
         print("wrote {0}".format(neq_file_name))
 
         # draw Neq
-        neq_fig_name = neq_file_name + '.' + options.image_format
-        plot_neq(neq_array, neq_fig_name)
+        plot_neq(neq_array, output_fig_name.format("Neq"))
 
     # -------------------------------------------------------------------------------
     # generates logo representation of PBs frequency along protein sequence
@@ -517,9 +512,8 @@ def pbstat_cli():
     #  -------------------------------------------------------------------------------
     if options.logo:
         # read count file
-        f_in = open(options.f, 'r')
-        count_content = f_in.readlines()
-        f_in.close()
+        with open(options.f, 'r') as f_in:
+            count_content = f_in.readlines()
 
         # convert a table of PB frequencies into transfac format as required by weblogo
         # http://meme.sdsc.edu/meme/doc/transfac-format.html
@@ -529,21 +523,14 @@ def pbstat_cli():
         debug = False
         if debug:
             transfac_name = options.o + ".PB.transfac"
-            f_out = open(transfac_name, 'w')
-            f_out.write(transfac_content)
-            f_out.close()
+            with open(transfac_name, 'w') as f_out:
+                f_out.write(transfac_content)
             print("wrote {0}".format(transfac_name))
-
-        # define output file name
-        logo_file_name = options.o + ".PB.logo." + options.image_format
-        if options.residue_min or options.residue_max:
-            logo_file_name = "{}.PB.logo.{}-{}.{}".format(
-                options.o, residue_min, residue_max, options.image_format)
 
         # call weblogo
         title = options.f.replace(".PB.count", "")
         call_weblogo(transfac_content, residue_min, residue_max,
-                     title, options.image_format, logo_file_name)
+                     title, options.image_format, output_fig_name.format("logo"))
 
 
 if __name__ == '__main__':
