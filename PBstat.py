@@ -346,25 +346,44 @@ def plot_neq(neq_array, fname):
     print("wrote {}".format(fname))
 
 
-def call_weblogo(transfac, residue_min, residue_max, title, logo_format, fname):
+def generate_weblogo(count_file, residue_min, residue_max, title,
+                     logo_format, outfile, debug=False):
     """
-    Call the binary weblogo to produce the image
+    Generates logo representation of PBs frequency along protein sequence through
+    the weblogo binary
 
     Parameters
     ----------
-    transfac: str
-        The frequency matrix as a string in the transfac format.
+    count_file: str
+        The file containing the PB frequency
     residue_min: int
         the lower bound of residue frame
     residue_max: int
         the upper bound of residue frame
     title: str
-        the title of the image
+        the title of the weblogo
     logo_format: str
         the format of the image output
-    fname : str
+    outfile : str
         The path to the file to write in
+    debug: bool
+        If True, write the transfac object into a file
     """
+
+    with open(count_file, 'r') as f_in:
+        count_content = f_in.readlines()
+
+    # convert a table of PB frequencies into transfac format as required by weblogo
+    # http://meme.sdsc.edu/meme/doc/transfac-format.html
+    transfac_content = PB.count_to_transfac(count_file, count_content)
+
+    # write transfac file (debug only)
+    if debug:
+        # change extension
+        transfac_name = os.path.splitext(outfile)[0] + ".transfac"
+        with open(transfac_name, 'w') as f_out:
+            f_out.write(transfac_content)
+        print("wrote {0}".format(transfac_name))
 
     # If the output file format is 'jpg', then the --format argument of
     # weblogo should be 'jpeg'.
@@ -387,11 +406,11 @@ def call_weblogo(transfac, residue_min, residue_max, title, logo_format, fname):
               -o %s \
               --lower %i \
               --upper %i
-              """ % (logo_format, title, fname, residue_min, residue_max)
+              """ % (logo_format, title, outfile, residue_min, residue_max)
 
     proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-    (out, err) = proc.communicate(transfac.encode('UTF-8'))
+    (out, err) = proc.communicate(transfac_content.encode('UTF-8'))
     if err:
         print("ERROR: {0}".format(err))
     code = proc.wait()
@@ -399,7 +418,7 @@ def call_weblogo(transfac, residue_min, residue_max, title, logo_format, fname):
         print("ERROR: exit code != 0")
         print("exit code: {0}".format(code))
     else:
-        print("wrote {0}".format(fname))
+        print("wrote {0}".format(outfile))
     print(out)
 
 
@@ -482,7 +501,6 @@ def pbstat_cli():
     # generates map of the distribution of PBs along protein sequence
     # -------------------------------------------------------------------------------
     if options.mapdist:
-
         plot_map(freq, residues, output_fig_name.format("map"))
 
     # -------------------------------------------------------------------------------
@@ -511,26 +529,9 @@ def pbstat_cli():
     # http://weblogo.threeplusone.com/
     #  -------------------------------------------------------------------------------
     if options.logo:
-        # read count file
-        with open(options.f, 'r') as f_in:
-            count_content = f_in.readlines()
-
-        # convert a table of PB frequencies into transfac format as required by weblogo
-        # http://meme.sdsc.edu/meme/doc/transfac-format.html
-        transfac_content = PB.count_to_transfac(options.f, count_content)
-
-        # write transfac file (debug only)
-        debug = False
-        if debug:
-            transfac_name = options.o + ".PB.transfac"
-            with open(transfac_name, 'w') as f_out:
-                f_out.write(transfac_content)
-            print("wrote {0}".format(transfac_name))
-
-        # call weblogo
         title = options.f.replace(".PB.count", "")
-        call_weblogo(transfac_content, residue_min, residue_max,
-                     title, options.image_format, output_fig_name.format("logo"))
+        generate_weblogo(options.f, residue_min, residue_max, title,
+                         options.image_format, output_fig_name.format("logo"))
 
 
 if __name__ == '__main__':
