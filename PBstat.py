@@ -206,146 +206,6 @@ def user_inputs():
     return options
 
 
-def plot_map(freq, residues, fname):
-    """
-    Generate a map of the distribution of PBs along protein sequence
-
-    Parameters
-    ----------
-    freq : numpy array
-        an occurence matrix as a 2D numpy array.
-    residues: list of int
-        the lit of residus number
-    fname : str
-        The path to the file to write in
-    """
-
-    # define ticks for x-axis
-    x_step = 5
-    xticks = residues[::x_step]
-    # trying to round ticks: 5, 10, 15 instead of 6, 11, 16...
-    if xticks[0] == 1:
-        xticks = xticks-1
-        xticks[0] += 1
-
-    yticks = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-              'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p')
-
-    fig = plt.figure(figsize=(2.0*math.log(len(residues)), 4))
-    ax = fig.add_axes([0.1, 0.1, 0.75, 0.8])
-
-    # Color scheme inspired from ColorBrewer
-    # http://colorbrewer2.org/?type=diverging&scheme=RdYlBu&n=5
-    # This color scheme is colorblind safe
-    colors = [(44.0 / 255, 123.0 / 255, 182.0 / 255),
-              (171.0 / 255, 217.0 / 255, 233.0 / 255),
-              (255.0 / 255, 255.0 / 255, 191.0 / 255),
-              (253.0 / 255, 174.0 / 255, 97.0 / 255),
-              (215.0 / 255, 25.0 / 255, 28.0 / 255)]
-    cmap = matplotlib.colors.LinearSegmentedColormap.from_list('ColBrewerRdYlBu', colors)
-
-    img = ax.imshow(numpy.transpose(freq[:, :]), interpolation='none', vmin=0, vmax=1,
-                    origin='lower', aspect='auto', cmap=cmap)
-
-    ax.set_xticks(xticks - numpy.min(xticks))
-    ax.set_xticklabels(xticks)
-    ax.set_yticks(range(len(yticks)))
-    ax.set_yticklabels(yticks, style='italic', weight='bold')
-    colorbar_ax = fig.add_axes([0.87, 0.1, 0.03, 0.8])
-    fig.colorbar(img, cax=colorbar_ax)
-    # print "beta-strand", "coil" and "alpha-helix" text
-    # only if there is more than 20 residues
-    if len(residues) >= 20:
-        # center alpha-helix: PB m (13th PB out of 16 PBs)
-        # center coil: PB h and i (8th and 9th PBs out of 16 PBs)
-        # center beta-sheet: PB d (4th PB out of 16 PBs)
-        fig.text(0.05, 4.0/16*0.8+0.075, r"$\beta$-strand", rotation=90,
-                 va='center', transform=ax.transAxes)
-        fig.text(0.05, 8.5/16*0.8+0.075, r"coil", rotation=90,
-                 va='center')
-        fig.text(0.05, 13.0/16*0.8+0.075, r"$\alpha$-helix", rotation=90,
-                 va='center', transform=ax.transAxes)
-
-    fig.text(0.01, 0.5, "PBs", rotation=90, weight="bold",
-             size='larger', transform=ax.transAxes)
-    fig.text(0.4, 0.01, "Residue number", weight="bold")
-    fig.text(0.96, 0.6, "Intensity", rotation=90, weight="bold")
-    fig.savefig(fname, dpi=300)
-    print("wrote " + fname)
-
-
-def compute_neq(freq, residues):
-    """
-    Compute the Neq for each residue.
-
-    Parameters
-    ----------
-    freq : numpy array
-        an occurence matrix as a 2D numpy array.
-    residues: list of int
-        the lit of residus number
-
-    Returns
-    -------
-    neq_array : numpy array
-        a 2D array containing the neq value associated to the residue number
-    """
-
-    neq_array = numpy.zeros((len(residues), 2))
-    neq_array[:, 0] = residues
-    for idx in range(len(residues)):
-        H = 0.0
-        for b in range(len(PB.NAMES)):
-            f = freq[idx, b]
-            if f != 0:
-                H += f * math.log(f)
-        neq_array[idx, 1] = math.exp(-H)
-
-    return neq_array
-
-
-def write_neq(outfile, neq_array):
-    """
-    Write the Neq matrix in an open file
-
-    Parameters
-    ----------
-    outfile : file descriptor
-        The file descriptor to write in. It must allow writing.
-    neq_array : numpy array
-        a 2D array containing the neq value associated to the residue number
-    """
-
-    print("%-6s %8s " % ("resid", "Neq"), file=outfile)
-    for (res, neq) in neq_array:
-        print("%-6d %8.2f " % (res, neq), file=outfile)
-
-
-def plot_neq(neq_array, fname):
-    """
-    Generate the Neq plot along the protein sequence
-
-    Parameters
-    ----------
-    neq_array : numpy array
-        a 2D array containing the neq value associated to the residue number
-    residues: list of int
-        the lit of residus number
-    fname : str
-        The path to the file to write in
-    """
-
-    nb_residues = neq_array.shape[0]
-    fig = plt.figure(figsize=(2.0*math.log(nb_residues), 5))
-    ax = fig.add_subplot(1, 1, 1)
-    ax.set_ylim([0, round(max(neq_array[:, 1]), 0)+1])
-    ax.plot(neq_array[:, 0], neq_array[:, 1])
-    ax.set_xlabel('Residue number', fontsize=18)
-    ax.set_ylabel('Neq', fontsize=18, style='italic')
-    fig.savefig(fname)
-    print("wrote {}".format(fname))
-
-
 def generate_weblogo(count_file, residue_min, residue_max, title,
                      logo_format, outfile, debug=False):
     """
@@ -422,6 +282,95 @@ def generate_weblogo(count_file, residue_min, residue_max, title,
     print(out)
 
 
+def read_occurence_file(name):
+    """
+    Read an occurence matrix from a file.
+    It will return the matrix as a numpy array and the indexes of residues.
+
+    Parameters
+    ----------
+    name : str
+        Name of the file.
+
+    Returns
+    -------
+    count_mat : numpy array
+        the occurence matrix without the residue number
+    residues: list
+        the list of residues indexes
+
+    Exceptions
+    ----------
+    ValueError : when something is wrong about the file
+    """
+
+    # load count file
+    # skip first row that contains PBs labels
+    try:
+        count = numpy.loadtxt(name, dtype=int, skiprows=1)
+    except:
+        raise ValueError("ERROR: {0}: wrong data format".format(name))
+
+    # determine number of sequences compiled
+    # use the sum of all residue at position 3
+    # since positions 1 and 2 have no PBs assignement
+    # and begin at 1 to not sum the index of the line (here is 3)
+    sequence_number = sum(count[2, 1:])
+    if sequence_number == 0:
+        raise ValueError("ERROR: counting 0 sequences!")
+
+    # read residues number
+    residues = count[:, 0]
+    # remove residue numbers (first column)
+    count = count[:, 1:]
+
+    # get index of first residue
+    try:
+        int(residues[0])
+    except:
+        raise ValueError("""ERROR: cannot read index of first residue.
+                         Wrong data format in {0}""".format(name))
+
+    return count, residues
+
+
+def check_residue_range(residues, residue_min, residue_max):
+    """"
+    Ensure that the lower bound and the upper bound parameters are in the range of
+    the list `residues`.
+
+    Parameters
+    ----------
+    residues : list
+        the list of residues indexes
+    residue_min:
+        the lower bound of residue
+    residue_max:
+        the upper bound of residue
+
+    Exceptions
+    ----------
+    IndexError : if `residue_min` or `residue_max` is not in the range
+    """
+
+    if residue_min is None:
+        residue_min = residues[0]
+
+    if residue_max is None:
+        residue_max = residues[-1]
+
+    if residue_min not in residues:
+        raise IndexError("residue_min does not belong to the residue range")
+
+    if residue_max not in residues:
+        raise IndexError("residue_max does not belong to the residue range")
+
+    if residue_min >= residue_max:
+        raise IndexError("Lower bound > upper bound")
+
+    return residue_min, residue_max
+
+
 def pbstat_cli():
     """
     PBstat command line.
@@ -429,71 +378,19 @@ def pbstat_cli():
 
     options = user_inputs()
 
-    # load count file
-    # skip first row that contains PBs labels
     try:
-        freq = numpy.loadtxt(options.f, dtype=int, skiprows=1)
-    except:
-        sys.exit("ERROR: {0}: wrong data format".format(options.f))
+        count, residues = read_occurence_file(options.f)
+        residue_min, residue_max = check_residue_range(residues,
+                                                       options.residue_min, options.residue_max)
+    except Exception as e:
+        sys.exit("ERROR: {0}".format(e))
 
-    # check format
-    # 17 columns (residue number + 16 PBs) should be present
-    if len(freq[0, :]) != (len(PB.NAMES) + 1):
-        sys.exit("ERROR: {0}: wrong data format".format(options.f))
-
-    # read residues
-    residues = freq[:, 0]
-
-    # -------------------------------------------------------------------------------
-    # check / define residue min / max
-    if options.residue_min:
-        residue_min = options.residue_min
-    else:
-        residue_min = min(residues)
-
-    if options.residue_max:
-        residue_max = options.residue_max
-    else:
-        residue_max = max(residues)
-
-    if residue_min not in residues:
-        sys.exit("ERROR: residue_min does not belong to the residue range in {0}".format(options.f))
-
-    if residue_max not in residues:
-        sys.exit("ERROR: residue_max does not belong to the residue range in {0}".format(options.f))
-
-    # get index of first residue
-    try:
-        first_residue_index = int(residues[0])
-    except:
-        sys.exit("""ERROR: cannot read index of first residue.
-                 Wrong data format in {0}""".format(options.f))
-    print("Index of first residue is: {0}".format(first_residue_index))
-
-    #  slice data to the required frame
-    freq = freq[residue_min - first_residue_index: residue_max - first_residue_index + 1, :]
-
-    # determine number of sequences compiled
-    # use the sum of all residue at position 3
-    # since positions 1 and 2 have no PBs assignement
-    # and begin at 1 to not sum the index of the line (here is 3)
-    sequence_number = sum(freq[2, 1:])
-    if sequence_number == 0:
-        sys.exit("ERROR: counting 0 sequences!")
-
-    # update residues
-    residues = freq[:, 0]
-
-    # remove residue numbers (first column)
-    freq = freq[:, 1:]
-    # normalize PBs frequencies
-    freq = freq / float(sequence_number)
+    print("Index of first residue is: {0}".format(residue_min))
 
     # Handle output file name...
     output_file_name = options.o + ".PB.{0}"
     if options.residue_min or options.residue_max:
         output_file_name = "{0}.{1}-{2}".format(output_file_name, residue_min, residue_max)
-
     # ... and figure name
     output_fig_name = output_file_name + "." + options.image_format
 
@@ -501,23 +398,27 @@ def pbstat_cli():
     # generates map of the distribution of PBs along protein sequence
     # -------------------------------------------------------------------------------
     if options.mapdist:
-        plot_map(freq, residues, output_fig_name.format("map"))
+        file_fig_name = output_fig_name.format("map")
+        PB.plot_map(file_fig_name, count, residue_min, residue_max)
+        print("wrote " + file_fig_name)
 
     # -------------------------------------------------------------------------------
     # computes Neq and generates neq plot along protein sequence
     # -------------------------------------------------------------------------------
     if options.neq:
         # compute Neq
-        neq_array = compute_neq(freq, residues)
+        neq = PB.compute_neq(count)
 
         # write Neq
         neq_file_name = output_file_name.format("Neq")
         with open(neq_file_name, "w") as outfile:
-            write_neq(outfile, neq_array)
+            PB.write_neq(outfile, neq, residue_min, residue_max)
         print("wrote {0}".format(neq_file_name))
 
         # draw Neq
-        plot_neq(neq_array, output_fig_name.format("Neq"))
+        file_fig_name = output_fig_name.format("Neq")
+        PB.plot_neq(file_fig_name, neq, residue_min, residue_max)
+        print("wrote {}".format(file_fig_name))
 
     # -------------------------------------------------------------------------------
     # generates logo representation of PBs frequency along protein sequence
