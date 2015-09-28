@@ -15,9 +15,17 @@ import os
 import subprocess
 import sys
 import textwrap
+import math
 
 ## third-party modules
 import numpy
+import matplotlib
+import matplotlib.pyplot as plt
+
+try:
+    import weblogolib
+except ImportError:
+    pass
 
 ## Python2/Python3 compatibility
 # The range function in python 3 behaves as the range function in python 2
@@ -631,6 +639,376 @@ def compare_to_first_sequence(headers, sequences, substitution_mat):
         header = "%s vs %s" % (ref_name, target_header)
         score_lst = compute_score_by_position(substitution_mat, ref_seq, target_seq)
         yield header, score_lst
+
+
+def _slice_matrix(mat, residue_min=1, residue_max=None):
+    """
+    Slice a matrix given the lower and upper bond in parameters.
+    The matrix has to be a numpy array with one row per residue.
+    The slice will occurs on the rows and the sub-matrix is returned.
+
+    Parameters
+    ----------
+    mat : numpy array
+        the matrix to slice
+    residue_min: int
+        the lower bound of residue frame
+    residue_max: int
+        the upper bound of residue frame
+
+    Returns
+    -------
+    sub_mat: numpy 2D array
+        the matrix sliced
+
+    Exceptions
+    ----------
+    IndexError : when something is wrong about the lower/upper bound
+    """
+
+    if residue_max is None:
+        residue_max = mat.shape[0]
+
+    if residue_min <= 0 or residue_max <= 0:
+        raise IndexError("Index start at 1")
+
+    # range of indexes of the matrix
+    residues_idx = range(1, mat.shape[0] + 1)
+
+    if residue_min not in residues_idx or residue_max not in residues_idx:
+        raise IndexError("Index out of range")
+
+    if residue_min >= residue_max:
+        raise IndexError("Lower bound > upper bound")
+
+    return mat[residue_min - 1: residue_max]
+
+
+def compute_freq_matrix(count_mat):
+    """
+    Compute a PB frequency matrix from an occurence matrix.
+
+    The frequency matrix has one row per sequence, and one column per block.
+    The columns are ordered in as PB.NAMES.
+
+    Parameters
+    ----------
+    count_mat : numpy array
+        an occurence matrix returned by `count_matrix`.
+
+    Returns
+    -------
+    freq : numpy array
+        The frequency matrix
+    """
+
+    # Assert the occurence matrix is in the good format
+    nb_pb = count_mat.shape[1]
+    if nb_pb != len(NAMES):
+        raise ValueError("Wrong number of PB({} should be {}".format(nb_pb, len(NAMES)))
+
+    # Retrieve the number of sequences compiled
+    # use the sum of all residue at position 3 since positions 1 and 2 have no PBs assignement
+    nb_sequences = sum(count_mat[2, :])
+
+    return count_mat / float(nb_sequences)
+
+
+def _neq_per_residue(row_freq):
+    """
+    Compute the Neq of a vector of frequencies coresponding to one residue.
+    The vector is a row of the frequency matrix.
+    This function is intended to be called from the `numpy.apply_along_axis` function.
+
+    Parameters
+    ----------
+    row_freq : 1D numpy array
+        vector of frequencies
+
+    Return
+    ------
+        The value of the Neq
+    """
+
+    H = sum([math.log(freq)*freq for freq in row_freq if freq != 0])
+
+    return math.exp(-H)
+
+
+def compute_neq(count_mat):
+    """
+    Compute the Neq for each residue from an occurence matrix.
+
+    Parameters
+    ----------
+    count_mat : numpy array
+        an occurence matrix returned by `count_matrix`.
+
+    Returns
+    -------
+    neq_array : numpy array
+        a 1D array containing the neq values
+    """
+
+    # get the frequency matrix
+    freq = compute_freq_matrix(count_mat)
+
+    # Compute neq
+    neq_array = numpy.apply_along_axis(_neq_per_residue, 1, freq)
+
+    return neq_array
+
+
+def write_neq(outfile, neq_array, residue_min=1, residue_max=None):
+    """
+    Write the Neq matrix in an open file
+
+    Parameters
+    ----------
+    outfile : file descriptor
+        The file descriptor to write in. It must allow writing.
+    neq_array : numpy array
+        a 1D array containing the neq values.
+    residue_min: int
+        the lower bound of residue frame
+    residue_max: int
+        the upper bound of residue frame
+
+    """
+
+    # Slice
+    neq = _slice_matrix(neq_array, residue_min, residue_max)
+
+    print("%-6s %8s " % ("resid", "Neq"), file=outfile)
+    for (res, neq) in enumerate(neq):
+        print("%-6d %8.2f " % (res + residue_min, neq), file=outfile)
+
+
+def plot_neq(fname, neq_array, residue_min=1, residue_max=None):
+    """
+    Generate the Neq plot along the protein sequence
+
+    Parameters
+    ----------
+    neq_array : numpy array
+        an array containing the neq value associated to the residue number
+    fname : str
+        The path to the file to write in
+    residue_min: int
+        the lower bound of the protein sequence
+    residue_max: int
+        the upper bound of the protein sequence
+    """
+
+    neq = _slice_matrix(neq_array, residue_min, residue_max)
+    nb_residues = neq.shape[0]
+
+    # Residue number with good offset given the slice
+    x = numpy.arange(residue_min, residue_min + nb_residues)
+
+    fig = plt.figure(figsize=(2.0*math.log(nb_residues), 5))
+    ax = fig.add_subplot(1, 1, 1)
+    ax.set_ylim([0, round(max(neq), 0)+1])
+    ax.plot(x, neq)
+    ax.set_xlabel('Residue number', fontsize=18)
+    ax.set_ylabel('Neq', fontsize=18, style='italic')
+    fig.savefig(fname)
+
+
+def plot_map(fname, count_mat, residue_min=1, residue_max=None):
+    """
+    Generate a map of the distribution of PBs along protein sequence from
+    an occurence matrix.
+
+    Parameters
+    ----------
+    fname : str
+        The path to the file to write in
+    count_mat : numpy array
+        an occurence matrix returned by `count_matrix`.
+    residue_min: int
+        the lower bound of the protein sequence
+    residue_max: int
+        the upper bound of the protein sequence
+    """
+
+    # Get the frequency matrix
+    freq_mat = compute_freq_matrix(count_mat)
+    # Slice it
+    freq = _slice_matrix(freq_mat, residue_min, residue_max)
+    nb_residues = freq.shape[0]
+    # Residue number with good offset given the slice
+    x = numpy.arange(residue_min, residue_min + nb_residues)
+
+    # define ticks for x-axis
+    x_step = 5
+    xticks = x[::x_step]
+    # trying to round ticks: 5, 10, 15 instead of 6, 11, 16...
+    if xticks[0] == 1:
+        xticks = xticks-1
+        xticks[0] += 1
+
+    yticks = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+              'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p')
+
+    fig = plt.figure(figsize=(2.0*math.log(nb_residues), 4))
+    ax = fig.add_axes([0.1, 0.1, 0.75, 0.8])
+
+    # Color scheme inspired from ColorBrewer
+    # http://colorbrewer2.org/?type=diverging&scheme=RdYlBu&n=5
+    # This color scheme is colorblind safe
+    colors = [(44.0 / 255, 123.0 / 255, 182.0 / 255),
+              (171.0 / 255, 217.0 / 255, 233.0 / 255),
+              (255.0 / 255, 255.0 / 255, 191.0 / 255),
+              (253.0 / 255, 174.0 / 255, 97.0 / 255),
+              (215.0 / 255, 25.0 / 255, 28.0 / 255)]
+    cmap = matplotlib.colors.LinearSegmentedColormap.from_list('ColBrewerRdYlBu', colors)
+
+    img = ax.imshow(numpy.transpose(freq[:, :]), interpolation='none', vmin=0, vmax=1,
+                    origin='lower', aspect='auto', cmap=cmap)
+
+    ax.set_xticks(xticks - numpy.min(xticks))
+    ax.set_xticklabels(xticks)
+    ax.set_yticks(range(len(yticks)))
+    ax.set_yticklabels(yticks, style='italic', weight='bold')
+    colorbar_ax = fig.add_axes([0.87, 0.1, 0.03, 0.8])
+    fig.colorbar(img, cax=colorbar_ax)
+    # print "beta-strand", "coil" and "alpha-helix" text
+    # only if there is more than 20 residues
+    if nb_residues >= 20:
+        # center alpha-helix: PB m (13th PB out of 16 PBs)
+        # center coil: PB h and i (8th and 9th PBs out of 16 PBs)
+        # center beta-sheet: PB d (4th PB out of 16 PBs)
+        fig.text(0.05, 4.0/16*0.8+0.075, r"$\beta$-strand", rotation=90,
+                 va='center', transform=ax.transAxes)
+        fig.text(0.05, 8.5/16*0.8+0.075, r"coil", rotation=90,
+                 va='center')
+        fig.text(0.05, 13.0/16*0.8+0.075, r"$\alpha$-helix", rotation=90,
+                 va='center', transform=ax.transAxes)
+
+    fig.text(0.01, 0.5, "PBs", rotation=90, weight="bold",
+             size='larger', transform=ax.transAxes)
+    fig.text(0.4, 0.01, "Residue number", weight="bold")
+    fig.text(0.96, 0.6, "Intensity", rotation=90, weight="bold")
+    fig.savefig(fname, dpi=300)
+
+
+def read_occurence_file(name):
+    """
+    Read an occurence matrix from a file.
+    It will return the matrix as a numpy array and the indexes of residues.
+
+    Parameters
+    ----------
+    name : str
+        Name of the file.
+
+    Returns
+    -------
+    count_mat : numpy array
+        the occurence matrix without the residue number
+    residues: list
+        the list of residues indexes
+
+    Exceptions
+    ----------
+    ValueError : when something is wrong about the file
+    """
+
+    # load count file
+    # skip first row that contains PBs labels
+    try:
+        count = numpy.loadtxt(name, dtype=int, skiprows=1)
+    except:
+        raise ValueError("ERROR: {0}: wrong data format".format(name))
+
+    # determine number of sequences compiled
+    # use the sum of all residue at position 3
+    # since positions 1 and 2 have no PBs assignement
+    # and begin at 1 to not sum the index of the line (here is 3)
+    sequence_number = sum(count[2, 1:])
+    if sequence_number == 0:
+        raise ValueError("ERROR: counting 0 sequences!")
+
+    # read residues number
+    residues = count[:, 0]
+    # remove residue numbers (first column)
+    count = count[:, 1:]
+
+    # get index of first residue
+    try:
+        int(residues[0])
+    except:
+        raise ValueError("""ERROR: cannot read index of first residue.
+                         Wrong data format in {0}""".format(name))
+
+    return count, residues
+
+
+def generate_weblogo(fname, count_mat, residue_min=1, residue_max=None, title=""):
+    """
+    Generates logo representation of PBs frequency along protein sequence through
+    the weblogo library.
+
+    The weblogo reference:
+    G. E. Crooks, G. Hon, J.-M. Chandonia, and S. E. Brenner.
+    'WebLogo: A Sequence Logo Generator.'
+    Genome Research 14:1188–90 (2004)
+    doi:10.1101/gr.849004.
+    http://weblogo.threeplusone.com/
+
+    Parameters
+    ----------
+    fname : str
+        The path to the file to write in
+    count_mat : numpy array
+        an occurence matrix returned by `count_matrix`.
+    residue_min: int
+        the lower bound of residue frame
+    residue_max: int
+        the upper bound of residue frame
+    title: str
+        the title of the weblogo. Default is empty.
+    """
+
+    # Slice the matrix
+    count = _slice_matrix(count_mat, residue_min, residue_max)
+
+    # Create a custom color scheme for PB
+    colors = weblogolib.ColorScheme([weblogolib.ColorGroup("d", "#1240AB", "strand main"),
+                                     weblogolib.ColorGroup("abcdef", "#1240AB", "strand others"),
+                                     weblogolib.ColorGroup("ghij", "#0BD500", "coil"),
+                                     weblogolib.ColorGroup("m",  "#FD0006", "helix main"),
+                                     weblogolib.ColorGroup("klnop",  "#FD0006", "helix others")])
+
+    # Load data from an occurence matrix
+    data = weblogolib.LogoData.from_counts(NAMES, count)
+
+    # Create options
+    options = weblogolib.LogoOptions(fineprint=False, logo_title=title, color_scheme=colors,
+                                     stack_width=weblogolib.std_sizes["large"],
+                                     first_residue=residue_min)
+
+    # Generate weblogo
+    logo = weblogolib.LogoFormat(data, options)
+
+    # Retrieve image format
+    image_format = os.path.splitext(fname)[1][1:]
+
+    # Retrieve the right function given the image format
+    try:
+        if image_format == 'jpg':
+            image_format = 'jpeg'
+        formatter = weblogolib.formatters[image_format]
+    except KeyError:
+        raise ValueError("Invalid format image '{0}'."
+                         " Valid ones are : eps, png, pdf, jpg/jpeg, svg".format(image_format))
+    # Format the logo
+    image = formatter(data, logo)
+
+    # Write it
+    with open(fname, "w") as f:
+        print(image, file=f)
 
 
 # vertorize function
