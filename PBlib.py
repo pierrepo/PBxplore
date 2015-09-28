@@ -22,6 +22,11 @@ import numpy
 import matplotlib
 import matplotlib.pyplot as plt
 
+try:
+    import weblogolib
+except ImportError:
+    pass
+
 ## Python2/Python3 compatibility
 # The range function in python 3 behaves as the range function in python 2
 # and returns a generator rather than a list. To produce a list in python 3,
@@ -886,6 +891,124 @@ def plot_map(fname, count_mat, residue_min=1, residue_max=None):
     fig.text(0.4, 0.01, "Residue number", weight="bold")
     fig.text(0.96, 0.6, "Intensity", rotation=90, weight="bold")
     fig.savefig(fname, dpi=300)
+
+
+def read_occurence_file(name):
+    """
+    Read an occurence matrix from a file.
+    It will return the matrix as a numpy array and the indexes of residues.
+
+    Parameters
+    ----------
+    name : str
+        Name of the file.
+
+    Returns
+    -------
+    count_mat : numpy array
+        the occurence matrix without the residue number
+    residues: list
+        the list of residues indexes
+
+    Exceptions
+    ----------
+    ValueError : when something is wrong about the file
+    """
+
+    # load count file
+    # skip first row that contains PBs labels
+    try:
+        count = numpy.loadtxt(name, dtype=int, skiprows=1)
+    except:
+        raise ValueError("ERROR: {0}: wrong data format".format(name))
+
+    # determine number of sequences compiled
+    # use the sum of all residue at position 3
+    # since positions 1 and 2 have no PBs assignement
+    # and begin at 1 to not sum the index of the line (here is 3)
+    sequence_number = sum(count[2, 1:])
+    if sequence_number == 0:
+        raise ValueError("ERROR: counting 0 sequences!")
+
+    # read residues number
+    residues = count[:, 0]
+    # remove residue numbers (first column)
+    count = count[:, 1:]
+
+    # get index of first residue
+    try:
+        int(residues[0])
+    except:
+        raise ValueError("""ERROR: cannot read index of first residue.
+                         Wrong data format in {0}""".format(name))
+
+    return count, residues
+
+
+def generate_weblogo(fname, count_mat, residue_min=1, residue_max=None, title=""):
+    """
+    Generates logo representation of PBs frequency along protein sequence through
+    the weblogo library.
+
+    The weblogo reference:
+    G. E. Crooks, G. Hon, J.-M. Chandonia, and S. E. Brenner.
+    'WebLogo: A Sequence Logo Generator.'
+    Genome Research 14:1188–90 (2004)
+    doi:10.1101/gr.849004.
+    http://weblogo.threeplusone.com/
+
+    Parameters
+    ----------
+    fname : str
+        The path to the file to write in
+    count_mat : numpy array
+        an occurence matrix returned by `count_matrix`.
+    residue_min: int
+        the lower bound of residue frame
+    residue_max: int
+        the upper bound of residue frame
+    title: str
+        the title of the weblogo. Default is empty.
+    """
+
+    # Slice the matrix
+    count = _slice_matrix(count_mat, residue_min, residue_max)
+
+    # Create a custom color scheme for PB
+    colors = weblogolib.ColorScheme([weblogolib.ColorGroup("d", "#1240AB", "strand main"),
+                                     weblogolib.ColorGroup("abcdef", "#1240AB", "strand others"),
+                                     weblogolib.ColorGroup("ghij", "#0BD500", "coil"),
+                                     weblogolib.ColorGroup("m",  "#FD0006", "helix main"),
+                                     weblogolib.ColorGroup("klnop",  "#FD0006", "helix others")])
+
+    # Load data from an occurence matrix
+    data = weblogolib.LogoData.from_counts(NAMES, count)
+
+    # Create options
+    options = weblogolib.LogoOptions(fineprint=False, logo_title=title, color_scheme=colors,
+                                     stack_width=weblogolib.std_sizes["large"],
+                                     first_residue=residue_min)
+
+    # Generate weblogo
+    logo = weblogolib.LogoFormat(data, options)
+
+    # Retrieve image format
+    image_format = os.path.splitext(fname)[1][1:]
+
+    # Retrieve the right function given the image format
+    try:
+        if image_format == 'jpg':
+            image_format = 'jpeg'
+        formatter = weblogolib.formatters[image_format]
+    except KeyError:
+        raise ValueError("Invalid format image '{0}'."
+                         " Valid ones are : eps, png, pdf, jpg/jpeg, svg".format(image_format))
+    # Format the logo
+    image = formatter(data, logo)
+
+    # Write it
+    with open(fname, "w") as f:
+        print(image, file=f)
 
 
 # vertorize function
