@@ -7,24 +7,19 @@ Compute PB frequency along protein sequence.
 2013 - P. Poulain, A. G. de Brevern
 """
 
-#==============================================================================
-# Modules
-#==============================================================================
-## Use print as a function for python 3 compatibility
+
+# Use print as a function for python 3 compatibility
 from __future__ import print_function
 
-## standard modules
+# Standard modules
 import os
 import sys
 import argparse
 
-## local module
+# Local module
 import PBlib as PB
 
-#==============================================================================
 # Python2/Python3 compatibility
-#==============================================================================
-
 # The range function in python 3 behaves as the range function in python 2
 # and returns a generator rather than a list. To produce a list in python 3,
 # one should use list(range). Here we change range to behave the same in
@@ -34,10 +29,8 @@ try:
 except NameError:
     pass
 
-#==============================================================================
-# MAIN - program starts here
-#==============================================================================
 
+# MAIN - program starts here
 
 def user_input():
     """
@@ -46,7 +39,7 @@ def user_input():
     Returns
     -------
     options : the parsed arguments as parsed by `argparse`.
-    
+
     """
     parser = argparse.ArgumentParser(
         description='Compute PB frequency along protein sequence.')
@@ -94,7 +87,7 @@ def main():
     count_file_name = options.o + ".PB.count"
     with open(count_file_name, 'w') as outfile:
         PB.write_count_matrix(pb_count, outfile, options.first_residue)
-    print( "wrote {0}".format(count_file_name) )
+    print("wrote {0}".format(count_file_name))
 
 
 if __name__ == '__main__':

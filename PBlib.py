@@ -7,17 +7,17 @@ Python library to handle Protein Blocks
 2013 - P. Poulain, A. G. de Brevern
 """
 
-## Use print as a function for python 3 compatibility
+# Use print as a function for python 3 compatibility
 from __future__ import print_function
 
-## standard modules
+# Standard modules
 import os
 import subprocess
 import sys
 import textwrap
 import math
 
-## third-party modules
+# Third-party modules
 import numpy
 import matplotlib
 import matplotlib.pyplot as plt
@@ -27,7 +27,7 @@ try:
 except ImportError:
     pass
 
-## Python2/Python3 compatibility
+# Python2/Python3 compatibility
 # The range function in python 3 behaves as the range function in python 2
 # and returns a generator rather than a list. To produce a list in python 3,
 # one should use list(range). Here we change range to behave the same in
@@ -37,7 +37,7 @@ try:
 except NameError:
     pass
 
-## Data
+# Data
 # Protein Blocks reference angles
 # taken from A. G. de Brevern, C. Etchebest and S. Hazout.
 # "Bayesian probabilistic approach for predicting backbone structures
@@ -453,7 +453,7 @@ def compute_score_by_position(score_mat, seq1, seq2):
         else:
             invalid = []
             for pb in (pb1, pb2):
-                if not pb in NAMES:
+                if pb not in NAMES:
                     invalid.append(pb)
             raise InvalidBlockError(', '.join(invalid))
     return score

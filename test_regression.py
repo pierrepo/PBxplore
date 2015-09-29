@@ -30,7 +30,6 @@ import subprocess
 import shutil
 import sys
 import warnings
-import contextlib
 
 try:
     import MDAnalysis
@@ -96,8 +95,7 @@ class TemplateTestCase(unittest.TestCase):
         Delete the temporary directory except if the test failed. Note that, on
         python 3, the temporary directory is always deleted.
         """
-        if ((sys.version_info[0] == 2
-                 and sys.exc_info() == (None, None, None))
+        if ((sys.version_info[0] == 2 and sys.exc_info() == (None, None, None))
                 or sys.version_info[0] == 3):
             # On python 2, sys.exc_info() is (None, None, None) only when a
             # test pass. On python 3, however, there is no difference in
@@ -185,7 +183,7 @@ class TestPBAssign(TemplateTestCase):
 
     def _test_PBassign_options(self, basenames, extensions, outfiles, options,
                                multiple=None, expected_exit=0):
-        if not multiple is None:
+        if multiple is not None:
             basenames = [basenames]
             out_name = multiple
         for basename in basenames:
@@ -328,7 +326,7 @@ class TestPBcount(TemplateTestCase):
         command = ['./PBcount.py', '-o', output_full_path]
         for input_file in input_files:
             command += ['-f', os.path.join(REFDIR, input_file)]
-        if not first_residue is None:
+        if first_residue is not None:
             command += ['--first-residue', str(first_residue)]
         return command
 
@@ -342,7 +340,7 @@ class TestPBcount(TemplateTestCase):
         """
         Run PBcount with a single input file that contains a single model.
         """
-        input_files = ['count_single1.PB.fasta',]
+        input_files = ['count_single1.PB.fasta', ]
         output = 'output'
         reference = 'count_single1.PB.count'
         self._run_program_and_validate(reference,
@@ -352,7 +350,7 @@ class TestPBcount(TemplateTestCase):
         """
         Run PBcount with a single input file that contains multiple models.
         """
-        input_files = ['count_multi1.PB.fasta',]
+        input_files = ['count_multi1.PB.fasta', ]
         output = 'output'
         reference = 'count_multi1.PB.count'
         self._run_program_and_validate(reference,
@@ -386,7 +384,7 @@ class TestPBcount(TemplateTestCase):
         """
         Test PBcount on with the --first-residue option and a positive value.
         """
-        input_files = ['count_multi1.PB.fasta',]
+        input_files = ['count_multi1.PB.fasta', ]
         output = 'output'
         reference = 'count_multi1_first20.PB.count'
         self._run_program_and_validate(reference,
@@ -397,7 +395,7 @@ class TestPBcount(TemplateTestCase):
         """
         Test PBcount on with the --first-residue option and a negative value.
         """
-        input_files = ['count_multi1.PB.fasta',]
+        input_files = ['count_multi1.PB.fasta', ]
         output = 'output'
         reference = 'count_multi1_first-20.PB.count'
         self._run_program_and_validate(reference,
@@ -412,7 +410,7 @@ class TestPBclust(TemplateTestCase):
         command = ['./PBclust.py', '-o', output_full_path]
         for input_file in input_files:
             command += ['-f', os.path.join(REFDIR, input_file)]
-        if not clusters is None:
+        if clusters is not None:
             command += ['--clusters', str(clusters)]
         if compare:
             command += ['--compare']
@@ -435,7 +433,7 @@ class TestPBclust(TemplateTestCase):
 
     def test_default_single_input(self):
         self._run_program_and_validate(reference='psi_md_traj_all',
-                                       input_files=['psi_md_traj_all.PB.fasta',],
+                                       input_files=['psi_md_traj_all.PB.fasta', ],
                                        output='output', clusters=3)
 
     def test_default_multi_input(self):
@@ -447,13 +445,13 @@ class TestPBclust(TemplateTestCase):
 
     def test_nclusters(self):
         self._run_program_and_validate(reference='psi_md_traj_all_c5',
-                                       input_files=['psi_md_traj_all.PB.fasta',],
+                                       input_files=['psi_md_traj_all.PB.fasta', ],
                                        output='output',
                                        clusters=5)
 
     def test_compare(self):
         self._run_program_and_validate(reference='psi_md_traj_1',
-                                       input_files=['psi_md_traj_1.PB.fasta',],
+                                       input_files=['psi_md_traj_1.PB.fasta', ],
                                        output='output',
                                        compare=True)
 
@@ -504,7 +502,7 @@ class TestPBstat(TemplateTestCase):
         reference_full_path = os.path.join(REFDIR, reference + '.PB'
                                            + suffix_args + suffix_residue)
         output = os.path.join(self._temp_directory, output)
-        output_full_path = output + '.PB'+ suffix_args + suffix_residue
+        output_full_path = output + '.PB' + suffix_args + suffix_residue
 
         if neq:
             # Assess the validity of the Neq file
@@ -587,13 +585,13 @@ class TestPBstat(TemplateTestCase):
                                        output='output',
                                        logo=True, image_format='invalid')
 
-
     def test_weblogo_with_range_residues(self):
         self._run_program_and_validate(reference='count_multi123',
                                        input_file='count_multi123.PB.count',
                                        output='output',
                                        logo=True,
                                        residue_min=10, residue_max=30)
+
 
 def _file_validity(file_a):
     """
