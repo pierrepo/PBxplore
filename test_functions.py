@@ -9,9 +9,9 @@ Tests functions from different programs.
 2014 - P. Poulain
 """
 
-#===============================================================================
-# load modules
-#===============================================================================
+# =============================================================================
+# Modules
+# =============================================================================
 import unittest
 import collections
 
@@ -19,9 +19,9 @@ import PBlib as PB
 import PDBlib as PDB
 
 
-#===============================================================================
-# classes for tests
-#===============================================================================
+# =============================================================================
+# Classes for tests
+# =============================================================================
 class TestPDBlib(unittest.TestCase):
     """
     Tests for PDBlib
@@ -32,47 +32,47 @@ class TestPDBlib(unittest.TestCase):
         Test for get_dihedral()
         """
         Result = collections.namedtuple('Result', ['A', 'B', 'C', 'D', 'torsion'])
-        results = (Result((-7.28, -9.262, 5.077), 
+        results = (Result((-7.28, -9.262, 5.077),
                           (-7.526, -10.643, 5.529),
                           (-6.221, -11.438, 5.555),
                           (-6.289, -12.685, 5.931),
-                           -179.663656153),
-                   Result((-1.373, -8.817, -4.389), 
+                          -179.663656153),
+                   Result((-1.373, -8.817, -4.389),
                           (-1.203, -8.335, -5.792),
                           (-1.891, -6.977, -5.927),
                           (-1.918, -6.429, -7.107),
-                           -176.048770127),
-                   Result((-0.533, -8.42, -3.47  ), 
+                          -176.048770127),
+                   Result((-0.533, -8.42, -3.47  ),
                           (-1.373, -8.817, -4.389),
                           (-1.203, -8.335, -5.792),
                           (-1.891, -6.977, -5.927),
-                           -84.8356057692),
-                   Result((-1.918, -6.429, -7.107), 
+                          -84.8356057692),
+                   Result((-1.918, -6.429, -7.107),
                           (-2.609, -5.125, -7.305),
                           (-4.108, -5.392, -7.331),
                           (-4.469, -6.494, -7.911),
-                           -36.8942888266),
-                   Result((-11.285, 6.472, -7.44 ), 
+                          -36.8942888266),
+                   Result((-11.285, 6.472, -7.44 ),
                           (-12.62, 5.829, -7.425 ),
                           (-13.585, 6.626, -6.544),
                           (-13.098, 7.621, -5.858),
-                           -6.58786169376),
-                   Result((-11.284, -0.971, -2.679), 
+                          -6.58786169376),
+                   Result((-11.284, -0.971, -2.679),
                           (-12.65, -0.794, -3.226),
                           (-13.665, -1.664, -2.479),
                           (-13.262, -2.363, -1.452),
-                           3.91626706556),
-                   Result((-2.004, -10.892, -2.611), 
+                          3.91626706556),
+                   Result((-2.004, -10.892, -2.611),
                           (-1.87, -9.835, -1.853),
                           (-0.726, -8.877, -2.011),
                           (-0.533, -8.42, -3.47),
-                           50.065196067),
-                   Result((11.174, -6.725, 0.458), 
+                          50.065196067),
+                   Result((11.174, -6.725, 0.458),
                           (10.732, -7.258, -0.86),
                           (9.27, -6.869, -1.096),
                           (8.741, -7.185, -2.245),
-                           175.872397707))
-        
+                          175.872397707))
+
         for res in results:
             torsion = PDB.get_dihedral(res.A, res.B, res.C, res.D)
             self.assertAlmostEqual(torsion, res.torsion)
@@ -100,13 +100,13 @@ class TestAtomClass(unittest.TestCase):
         Tests for read_from_PDBx()
         """
         a = PDB.Atom()
-        fields = ['group_PDB', 'id', 'type_symbol', 'label_atom_id', 
-        'label_alt_id', 'label_comp_id', 'label_asym_id', 'label_entity_id', 
-        'label_seq_id', 'pdbx_PDB_ins_code', 'Cartn_x', 'Cartn_y', 'Cartn_z', 
-        'occupancy', 'B_iso_or_equiv', 'Cartn_x_esd', 'Cartn_y_esd', 
-        'Cartn_z_esd', 'occupancy_esd', 'B_iso_or_equiv_esd', 
-        'pdbx_formal_charge', 'auth_seq_id', 'auth_comp_id', 'auth_asym_id', 
-        'auth_atom_id', 'pdbx_PDB_model_num']
+        fields = ['group_PDB', 'id', 'type_symbol', 'label_atom_id',
+                  'label_alt_id', 'label_comp_id', 'label_asym_id', 'label_entity_id',
+                  'label_seq_id', 'pdbx_PDB_ins_code', 'Cartn_x', 'Cartn_y', 'Cartn_z',
+                  'occupancy', 'B_iso_or_equiv', 'Cartn_x_esd', 'Cartn_y_esd',
+                  'Cartn_z_esd', 'occupancy_esd', 'B_iso_or_equiv_esd',
+                  'pdbx_formal_charge', 'auth_seq_id', 'auth_comp_id', 'auth_asym_id',
+                  'auth_atom_id', 'pdbx_PDB_model_num']
         line = "ATOM 4769  H HB   . ILE A 1 35  ? -20.422 5.104   -0.207  1.00 0.00 ? ? ? ? ? ? 277 ILE A HB   3"
         a.read_from_PDBx(line, fields)
         self.assertAlmostEqual(a.coords(), [-20.422, 5.104, -0.207])
@@ -116,6 +116,7 @@ class TestAtomClass(unittest.TestCase):
         line = "ATOM 23720 H HE2  . HIS A 1 193 ? 13.974  24.297  0.352   1.00 0.00 ? ? ? ? ? ? 435 HIS A HE2  10"
         a.read_from_PDBx(line, fields)
         self.assertAlmostEqual(a.coords(), [13.974, 24.297, 0.352])
+
 
 class TestChainClass(unittest.TestCase):
     """
@@ -135,7 +136,7 @@ class TestChainClass(unittest.TestCase):
         for line in lines:
             at = PDB.Atom()
             at.read_from_PDB(line)
-            ch.add_atom( at )
+            ch.add_atom(at)
         self.assertEqual(ch.size(), 5)
 
     def test_get_phi_psi_angles(self):
@@ -155,7 +156,7 @@ class TestChainClass(unittest.TestCase):
             at = PDB.Atom()
             at.read_from_PDB(line)
             ch.add_atom(at)
-        
+
         self.assertAlmostEqual(ch.get_phi_psi_angles(), results)
 
 
@@ -175,16 +176,16 @@ class TestPBlib(unittest.TestCase):
         """
         Test if the count_to_transfac function works.
         """
-        ref_input = ['         a     b     c     d\n',  # header
-                     '1        0     0     0     0\n', 
-                     '2        2   789 99999    89\n',  # one value is written
-                                                        # on 5 characters
-                     '3    99999  8888     2     2\n',  # the first value is
-                                                        # written on 5 characters
-                     '4       99     0 999999     0\n', # one value is written
-                                                        # on more than 5
-                                                        # characters
-                     '5        0     0     0     0\n', 
+        ref_input = ['         a     b     c     d\n',   # header
+                     '1        0     0     0     0\n',
+                     '2        2   789 99999    89\n',   # one value is written
+                                                         # on 5 characters
+                     '3    99999  8888     2     2\n',   # the first value is
+                                                         # written on 5 characters
+                     '4       99     0 999999     0\n',  # one value is written
+                                                         # on more than 5
+                                                         # characters
+                     '5        0     0     0     0\n',
                     ]
         identifier = 'identifier'
         ref_output = ("ID identifier\n"
@@ -206,8 +207,7 @@ class TestPBlib(unittest.TestCase):
             print('ref:', ref_line)
             print('out:', line)
             self.assertEqual(ref_line, line)
-                                     
+
 if __name__ == '__main__':
     unittest.main()
-
 

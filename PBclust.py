@@ -7,23 +7,23 @@ Cluster protein structures based on their PB sequences.
 2013 - P. Poulain, A. G. de Brevern
 """
 
-# Modules
-## Use print as a function for python 3 compatibility
+
+# Use print as a function for python 3 compatibility
 from __future__ import print_function, division
 
-## standard modules
+# Standard modules
 import collections
 import sys
 import os
 import argparse
 
-## third-party module
+# Third-party module
 import numpy
 
-## local module
+# Local module
 import PBlib as PB
 
-## Python2/Python3 compatibility
+# Python2/Python3 compatibility
 # The range function in python 3 behaves as the range function in python 2
 # and returns a generator rather than a list. To produce a list in python 3,
 # one should use list(range). Here we change range to behave the same in
@@ -46,7 +46,7 @@ def user_input():
                         help="name(s) of the PBs file (in fasta format)")
     parser.add_argument("-o", action="store", required=True,
                         help="name for results")
-                        
+
     # --clusters or --compare arguments
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--clusters", action="store", type=int,
@@ -59,7 +59,7 @@ def user_input():
     options = parser.parse_args()
 
     # test if the number of clusters is valid
-    if options.clusters != None and options.clusters <= 0:
+    if options.clusters is not None and options.clusters <= 0:
             parser.error("Number of clusters must be > 0.")
 
     # check if input files exist

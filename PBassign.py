@@ -8,16 +8,16 @@ Read PDB structures and assign protein blocs (PBs).
 """
 
 
-## Use print as a function for python 3 compatibility
+# Use print as a function for python 3 compatibility
 from __future__ import print_function
 
-## standard modules
+# Standard modules
 import os
 import sys
 import glob
 import argparse
 
-## local module
+# Local modules
 import PBlib as PB
 import PDBlib as PDB
 
@@ -30,7 +30,7 @@ else:
     IS_MDANALYSIS = True
 
 
-## Python2/Python3 compatibility
+# Python2/Python3 compatibility
 # The range function in python 3 behaves as the range function in python 2
 # and returns a generator rather than a list. To produce a list in python 3,
 # one should use list(range). Here we change range to behave the same in
