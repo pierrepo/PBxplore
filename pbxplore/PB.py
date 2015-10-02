@@ -65,6 +65,13 @@ class InvalidBlockError(ValueError):
             return "Ivalid block '{}'".format(self.block)
 
 
+class SizeError(AssertionError):
+    """
+    Exception raised when a sequence does not have the expected length.
+    """
+    pass
+
+
 def load_substitution_matrix(name):
     """
     Load PB substitution matrix.
@@ -92,59 +99,3 @@ def load_substitution_matrix(name):
             if mat[i][j] != mat[j][i]:
                 raise ValueError("Matrix is not symetric - idx {} and {}".format(i, j))
     return mat
-
-
-def write_flat(outfile, sequences):
-    for sequence in sequences:
-        print(sequence, file=outfile)
-
-
-def compute_score_by_position(score_mat, seq1, seq2):
-    """
-    Computes substitution score between two sequences position per position
-
-    The substitution score can represent a similarity or a distance depending
-    on the score matrix provided. The score matrix should be provided as a 2D
-    numpy array with score[i, j] the score to swich the PB at the i-th position
-    in PB.NAMES to the PB at the j-th position in PB.NAMES.
-
-    The function returns the result as a list of substitution scores to go from
-    `seq1` to `seq2` for each position. Both sequences must have the same
-    length.
-
-    ..note:
-
-        The score to move from or to a Z block (dummy block) is always 0.
-
-    Exceptions
-    ----------
-    InvalidBlockError : encountered an unexpected PB
-    """
-    assert len(seq1) == len(seq2), \
-        "sequences have different sizes:\n{}\nvs\n{}".format(seq1, seq2)
-    score = []
-    for pb1, pb2 in zip(seq1, seq2):
-        # score is 0 for Z (dummy PB)
-        if "z" in [pb1.lower(), pb2.lower()]:
-            score.append(0)
-        elif pb1 in NAMES and pb2 in NAMES:
-            score.append(score_mat[NAMES.index(pb1)][NAMES.index(pb2)])
-        else:
-            invalid = []
-            for pb in (pb1, pb2):
-                if pb not in NAMES:
-                    invalid.append(pb)
-            raise InvalidBlockError(', '.join(invalid))
-    return score
-
-
-def substitution_score(substitution_matrix, seqA, seqB):
-    """
-    Compute the substitution score to go from `seqA` to `seqB`
-
-    Both sequences must have the same length.
-
-    The score is either expressed as a similarity or a distance depending on
-    the substitution matrix.
-    """
-    return sum(compute_score_by_position(substitution_matrix, seqA, seqB))

@@ -18,8 +18,9 @@ import glob
 import argparse
 
 # Local modules
-import PBlib as PB
-import PDBlib as PDB
+import pbxplore
+import pbxplore.io
+import pbxplore.structure
 
 # MDAnalysis is an optional requirement
 try:
@@ -93,7 +94,8 @@ def user_inputs():
                 pdb_name_lst.append(name)
             # input is a directory: list and store all PDB and PDBx/mmCIF files
             elif os.path.isdir(name):
-                for extension in (PDB.PDB_EXTENSIONS + PDB.PDBx_EXTENSIONS):
+                for extension in (pbxplore.structure.PDB_EXTENSIONS +
+                                  pbxplore.structure.PDB.PDBx_EXTENSIONS):
                     pdb_name_lst += glob.glob(os.path.join(name, "*" + extension))
             # input is not a file neither a directory: say it
             elif (not os.path.isfile(name) or not os.path.isdir(name)):
@@ -120,32 +122,32 @@ def pbassign_cli():
             print('Nothing to do. Good bye.')
             return
         # PB assignement of PDB structures
-        chains = PDB.chains_from_files(pdb_name_lst)
+        chains = pbxplore.chains_from_files(pdb_name_lst)
     else:
         # PB assignement of a Gromacs trajectory
-        chains = PDB.chains_from_trajectory(options.x, options.g)
+        chains = pbxplore.chains_from_trajectory(options.x, options.g)
 
     all_comments = []
     all_sequences = []
     all_dihedrals = []
     for comment, chain in chains:
         dihedrals = chain.get_phi_psi_angles()
-        sequence = PB.assign(dihedrals)
+        sequence = pbxplore.assign(dihedrals)
         all_comments.append(comment)
         all_dihedrals.append(dihedrals)
         all_sequences.append(sequence)
 
     fasta_name = options.o + ".PB.fasta"
     with open(fasta_name, 'w') as outfile:
-        PB.write_fasta(outfile, all_sequences, all_comments)
+        pbxplore.io.write_fasta(outfile, all_sequences, all_comments)
     if options.flat:
         flat_name = options.o + ".PB.flat"
         with open(flat_name, 'w') as outfile:
-            PB.write_flat(outfile, all_sequences)
+            pbxplore.io.write_flat(outfile, all_sequences)
     if options.phipsi:
         phipsi_name = options.o + ".PB.phipsi"
         with open(phipsi_name, 'w') as outfile:
-            PB.write_phipsi(outfile, all_dihedrals, all_comments)
+            pbxplore.io.write_phipsi(outfile, all_dihedrals, all_comments)
 
     print("wrote {0}".format(fasta_name))
     if options.flat:

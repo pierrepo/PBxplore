@@ -11,7 +11,7 @@ import sys
 import numpy
 
 # Local module
-from ..core import PB
+from . import utils
 
 
 class RError(RuntimeError):
@@ -35,7 +35,7 @@ def distance_matrix(sequences, substitution_mat):
         sys.stdout.write("\r%.f%%" % (float(i+1)/len(sequences)*100))
         sys.stdout.flush()
         for j, seqB in enumerate(sequences[i:], start=i):
-            score = PB.substitution_score(substitution_mat, seqA, seqB)
+            score = utils.substitution_score(substitution_mat, seqA, seqB)
             distance_mat[i, j] = score
             distance_mat[j, i] = score
     print("")

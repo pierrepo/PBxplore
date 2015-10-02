@@ -82,24 +82,6 @@ def assign(dihedrals, pb_ref=PB.REFERENCES):
     return pb_seq
 
 
-def _write_phipsi_entry(outfile, torsion, comment):
-    for res in sorted(torsion):
-        try:
-            phi = "%8.2f" % torsion[res]["phi"]
-        except TypeError:
-            phi = "    None"
-        try:
-            psi = "%8.2f" % torsion[res]["psi"]
-        except TypeError:
-            psi = "    None"
-        print("{} {:6d} {} {} ".format(comment, res, phi, psi), file=outfile)
-
-
-def write_phipsi(outfile, torsions, comments):
-    for torsion, comment in zip(torsions, comments):
-        _write_phipsi_entry(outfile, torsion, comment)
-
-
 # vertorize function
 _angle_modulo_360_vect = numpy.vectorize(_angle_modulo_360)
 _angle_modulo_360_vect.__doc__ = _angle_modulo_360.__doc__

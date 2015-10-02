@@ -13,7 +13,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 # Local modules
-from .core import PB
+from .. import PB
 from . import utils
 
 try:

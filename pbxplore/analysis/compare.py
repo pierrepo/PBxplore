@@ -7,7 +7,7 @@ from __future__ import print_function, absolute_import
 import numpy
 
 # Local module
-from ..core import PB
+from . import utils
 
 
 def matrix_to_single_digit(matrix):
@@ -51,5 +51,5 @@ def compare_to_first_sequence(headers, sequences, substitution_mat):
     ref_seq = next(isequences)
     for target_header, target_seq in zip(iheaders, isequences):
         header = "%s vs %s" % (ref_name, target_header)
-        score_lst = PB.compute_score_by_position(substitution_mat, ref_seq, target_seq)
+        score_lst = utils.compute_score_by_position(substitution_mat, ref_seq, target_seq)
         yield header, score_lst

@@ -21,7 +21,9 @@ import argparse
 import numpy
 
 # Local module
-import PBlib as PB
+import pbxplore
+import pbxplore.io
+import pbxplore.analysis
 
 # Python2/Python3 compatibility
 # The range function in python 3 behaves as the range function in python 2
@@ -155,15 +157,15 @@ def compare(header_lst, seq_lst, substitution_mat, fname):
         The output file name
     """
     ref_name = header_lst[0]
-    substitution_mat_modified = PB.matrix_to_single_digit(substitution_mat)
+    substitution_mat_modified = pbxplore.analysis.matrix_to_single_digit(substitution_mat)
     print("Normalized substitution matrix (between 0 and 9)")
     print(substitution_mat_modified)
     print("Compare first sequence ({0}) with others".format(ref_name))
     with open(fname, 'w') as outfile:
-        for header, score_lst in PB.compare_to_first_sequence(header_lst, seq_lst,
-                                                              substitution_mat_modified):
+        for header, score_lst in pbxplore.analysis.compare_to_first_sequence(header_lst, seq_lst,
+                                                                        substitution_mat_modified):
             seq = "".join([str(s) for s in score_lst])
-            PB.write_fasta_entry(outfile, seq, header)
+            pbxplore.io.write_fasta_entry(outfile, seq, header)
     print("wrote {0}".format(fname))
 
 
@@ -173,11 +175,11 @@ def pbclust_cli():
     """
     # Read user inputs
     options = user_input()
-    header_lst, seq_lst = PB.read_several_fasta(options.f)
+    header_lst, seq_lst = pbxplore.io.read_several_fasta(options.f)
 
     # Load subtitution matrix
     try:
-        substitution_mat = PB.load_substitution_matrix(PB.SUBSTITUTION_MATRIX_NAME)
+        substitution_mat = pbxplore.PB.load_substitution_matrix(pbxplore.PB.SUBSTITUTION_MATRIX_NAME)
     except ValueError:
         sys.exit("Substitution matrix is not symetric.")
     except IOError:
@@ -192,8 +194,8 @@ def pbclust_cli():
 
     # Compute the distance matrix for the clustering
     try:
-        distance_mat = PB.distance_matrix(seq_lst, substitution_mat)
-    except PB.InvalidBlockError as e:
+        distance_mat = pbxplore.analysis.distance_matrix(seq_lst, substitution_mat)
+    except pbxplore.PB.InvalidBlockError as e:
         sys.exit('Unexpected PB in the input ({})'.format(e.block))
     distance_fname = options.o + ".PB.dist"
     write_distance_matrix(distance_mat, distance_fname)
@@ -201,8 +203,8 @@ def pbclust_cli():
 
     # Carry out the clustering
     try:
-        cluster_id, medoid_id = PB.hclust(distance_mat, nclusters=options.clusters)
-    except PB.RError as e:
+        cluster_id, medoid_id = pbxplore.analysis.hclust(distance_mat, nclusters=options.clusters)
+    except pbxplore.analysis.RError as e:
         sys.exit('Error with R:\n' + str(e))
     display_clust_report(cluster_id)
     output_fname = options.o + ".PB.clust"

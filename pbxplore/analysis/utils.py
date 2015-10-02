@@ -5,7 +5,7 @@ from __future__ import print_function, absolute_import
 
 
 # Local module
-from .core import PB
+from .. import PB
 
 # Python2/Python3 compatibility
 # The range function in python 3 behaves as the range function in python 2
@@ -89,3 +89,54 @@ def compute_freq_matrix(count_mat):
     nb_sequences = sum(count_mat[2, :])
 
     return count_mat / float(nb_sequences)
+
+
+def compute_score_by_position(score_mat, seq1, seq2):
+    """
+    Computes substitution score between two sequences position per position
+
+    The substitution score can represent a similarity or a distance depending
+    on the score matrix provided. The score matrix should be provided as a 2D
+    numpy array with score[i, j] the score to swich the PB at the i-th position
+    in PB.NAMES to the PB at the j-th position in PB.NAMES.
+
+    The function returns the result as a list of substitution scores to go from
+    `seq1` to `seq2` for each position. Both sequences must have the same
+    length.
+
+    ..note:
+
+        The score to move from or to a Z block (dummy block) is always 0.
+
+    Exceptions
+    ----------
+    InvalidBlockError : encountered an unexpected PB
+    """
+    assert len(seq1) == len(seq2), \
+        "sequences have different sizes:\n{}\nvs\n{}".format(seq1, seq2)
+    score = []
+    for pb1, pb2 in zip(seq1, seq2):
+        # score is 0 for Z (dummy PB)
+        if "z" in [pb1.lower(), pb2.lower()]:
+            score.append(0)
+        elif pb1 in PB.NAMES and pb2 in PB.NAMES:
+            score.append(score_mat[PB.NAMES.index(pb1)][PB.NAMES.index(pb2)])
+        else:
+            invalid = []
+            for pb in (pb1, pb2):
+                if pb not in PB.NAMES:
+                    invalid.append(pb)
+            raise PB.InvalidBlockError(', '.join(invalid))
+    return score
+
+
+def substitution_score(substitution_matrix, seqA, seqB):
+    """
+    Compute the substitution score to go from `seqA` to `seqB`
+
+    Both sequences must have the same length.
+
+    The score is either expressed as a similarity or a distance depending on
+    the substitution matrix.
+    """
+    return sum(compute_score_by_position(substitution_matrix, seqA, seqB))

@@ -8,14 +8,7 @@ from __future__ import print_function, absolute_import
 import numpy
 
 # Local module
-from . import PB
-
-
-class SizeError(AssertionError):
-    """
-    Exception raised when a sequence does not have the expected length.
-    """
-    pass
+from .. import PB
 
 
 def _assert_same_size(sequences):
@@ -33,7 +26,7 @@ def _assert_same_size(sequences):
     seq_size = len(sequences[0])
     for seq in sequences:
         if len(seq) != seq_size:
-            raise SizeError
+            raise PB.SizeError
 
 
 def count_matrix(pb_seq):
@@ -116,21 +109,3 @@ def read_occurence_file(name):
                          Wrong data format in {0}""".format(name))
 
     return count, residues
-
-
-def write_count_matrix(pb_count, outfile, first=1):
-    """
-    Write a PB occurence matrix in a file.
-
-    Parameters
-    ----------
-    pb_count: an occurence matrix as a 2D numpy array.
-    outfile: an open file where to write the matrix.
-    first: the residue number of the first position.
-    """
-    # write the header (PB names)
-    print("    " + "".join(["%6s" % name for name in PB.NAMES]), file=outfile)
-    # write the data table
-    for residue_idx, residue_pb in enumerate(pb_count):
-        print("%-5d" % (residue_idx + first) +
-              " ".join("%5d" % i for i in residue_pb), file=outfile)
