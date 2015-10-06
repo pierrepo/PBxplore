@@ -15,8 +15,8 @@ Tests functions from different programs.
 import unittest
 import collections
 
-import PBlib as PB
-import PDBlib as PDB
+import pbxplore as pbx
+from pbxplore.structure import structure
 
 
 # =============================================================================
@@ -74,7 +74,7 @@ class TestPDBlib(unittest.TestCase):
                           175.872397707))
 
         for res in results:
-            torsion = PDB.get_dihedral(res.A, res.B, res.C, res.D)
+            torsion = structure.get_dihedral(res.A, res.B, res.C, res.D)
             self.assertAlmostEqual(torsion, res.torsion)
 
 
@@ -87,7 +87,7 @@ class TestAtomClass(unittest.TestCase):
         """
         Tests for read_from_PDB()
         """
-        a = PDB.Atom()
+        a = structure.Atom()
         a.read_from_PDB("ATOM    512  N   GLU A  32      -1.870  -9.835  -1.853  1.00  0.56           N  ")
         self.assertAlmostEqual(a.coords(), [-1.87, -9.835, -1.853])
         a.read_from_PDB("ATOM   1424  CA  SER A  89       7.604  11.308   1.435  1.00  0.62           C  ")
@@ -99,7 +99,7 @@ class TestAtomClass(unittest.TestCase):
         """
         Tests for read_from_PDBx()
         """
-        a = PDB.Atom()
+        a = structure.Atom()
         fields = ['group_PDB', 'id', 'type_symbol', 'label_atom_id',
                   'label_alt_id', 'label_comp_id', 'label_asym_id', 'label_entity_id',
                   'label_seq_id', 'pdbx_PDB_ins_code', 'Cartn_x', 'Cartn_y', 'Cartn_z',
@@ -132,9 +132,9 @@ class TestChainClass(unittest.TestCase):
                  "ATOM    850  CA  SER B  12      22.385  23.396  -1.637  1.00 21.99           C  ",
                  "ATOM    851  C   SER B  12      21.150  24.066  -0.947  1.00 32.67           C  ",
                  "ATOM    855  N   ILE B  13      20.421  23.341  -0.088  1.00 30.25           N  ")
-        ch = PDB.Chain()
+        ch = structure.Chain()
         for line in lines:
-            at = PDB.Atom()
+            at = structure.Atom()
             at.read_from_PDB(line)
             ch.add_atom(at)
         self.assertEqual(ch.size(), 5)
@@ -151,9 +151,9 @@ class TestChainClass(unittest.TestCase):
                  "ATOM    850  CA  SER B  12      22.385  23.396  -1.637  1.00 21.99           C  ",
                  "ATOM    851  C   SER B  12      21.150  24.066  -0.947  1.00 32.67           C  ",
                  "ATOM    855  N   ILE B  13      20.421  23.341  -0.088  1.00 30.25           N  ")
-        ch = PDB.Chain()
+        ch = structure.Chain()
         for line in lines:
-            at = PDB.Atom()
+            at = structure.Atom()
             at.read_from_PDB(line)
             ch.add_atom(at)
 
@@ -166,48 +166,11 @@ class TestPBlib(unittest.TestCase):
     """
 
     def test_read_fasta(self):
-        headers, sequences = PB.read_fasta("test_data/1BTA.pdb.PB.fasta")
+        headers, sequences = pbx.io.read_fasta("test_data/1BTA.pdb.PB.fasta")
         self.assertEqual(headers, ['test_data/1BTA.pdb | chain A'])
         self.assertEqual(sequences, ['ZZdddfklonbfklmmmmmmmmnopafklnoiakl'
                                      'mmmmmnoopacddddddehkllmmmmngoilmmmm'
                                      'mmmmmmmmnopacdcddZZ'])
 
-    def test_count_to_transfac(self):
-        """
-        Test if the count_to_transfac function works.
-        """
-        ref_input = ['         a     b     c     d\n',   # header
-                     '1        0     0     0     0\n',
-                     '2        2   789 99999    89\n',   # one value is written
-                                                         # on 5 characters
-                     '3    99999  8888     2     2\n',   # the first value is
-                                                         # written on 5 characters
-                     '4       99     0 999999     0\n',  # one value is written
-                                                         # on more than 5
-                                                         # characters
-                     '5        0     0     0     0\n',
-                    ]
-        identifier = 'identifier'
-        ref_output = ("ID identifier\n"
-                      "BF unknown\n"
-                      "P0       a     b     c     d\n"
-                      "00001     0     0     0     0    X\n"
-                      "00002     2   789 99999    89    X\n"
-                      "00003 99999  8888     2     2    X\n"
-                      "00004    99     0 999999     0    X\n"
-                      "00005     0     0     0     0    X\n"
-                      "XX\n"
-                      "//")
-        output = PB.count_to_transfac(identifier, ref_input)
-        ref_output_lines = ref_output.split('\n')
-        output_lines = output.split('\n')
-        self.assertEqual(len(ref_output_lines), len(output_lines),
-                         'Not the right number of lines')
-        for ref_line, line in zip(ref_output_lines, output_lines):
-            print('ref:', ref_line)
-            print('out:', line)
-            self.assertEqual(ref_line, line)
-
 if __name__ == '__main__':
     unittest.main()
-

@@ -30,7 +30,7 @@ install:
 
 # command to run tests
 script:
-    - nosetests --with-coverage --cover-package=PBlib,PDBlib test_functions.py test_regression.py
+    - nosetests test_functions.py test_regression.py
     - yes | ./run_demo1_assignation.sh
     - yes | ./run_demo2_statistics.sh
     - yes | ./run_demo2_clusters.sh

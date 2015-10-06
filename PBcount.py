@@ -17,7 +17,7 @@ import sys
 import argparse
 
 # Local module
-import PBlib as PB
+import pbxplore as pbx
 
 # Python2/Python3 compatibility
 # The range function in python 3 behaves as the range function in python 2
@@ -72,21 +72,21 @@ def main():
     options = user_input()
 
     # read PBs files
-    pb_name, pb_seq = PB.read_several_fasta(options.f)
+    pb_name, pb_seq = pbx.io.read_several_fasta(options.f)
 
     # count PBs at each position of the sequence
     try:
-        pb_count = PB.count_matrix(pb_seq)
-    except PB.SizeError:
+        pb_count = pbx.analysis.count_matrix(pb_seq)
+    except pbx.PB.SizeError:
         sys.exit("cannot compute PB frequencies / different sequence lengths")
-    except PB.InvalidBlockError as e:
+    except pbx.PB.InvalidBlockError as e:
         msg = "'{0}' is not a valid protein block (abcdefghijklmnop)".format
         sys.exit(msg(e.block))
 
     # write PBs count file
     count_file_name = options.o + ".PB.count"
     with open(count_file_name, 'w') as outfile:
-        PB.write_count_matrix(pb_count, outfile, options.first_residue)
+        pbx.io.write_count_matrix(pb_count, outfile, options.first_residue)
     print("wrote {0}".format(count_file_name))
 
 

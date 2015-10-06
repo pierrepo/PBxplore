@@ -21,7 +21,8 @@ import argparse
 import numpy
 
 # Local module
-import PBlib as PB
+import pbxplore as pbx
+from pbxplore.PB import SUBSTITUTION_MATRIX_NAME
 
 # Python2/Python3 compatibility
 # The range function in python 3 behaves as the range function in python 2
@@ -130,54 +131,17 @@ def write_distance_matrix(distance_matrix, fname):
     numpy.savetxt(fname, distance_matrix)
 
 
-def compare(header_lst, seq_lst, substitution_mat, fname):
-    """
-    Command line wrapper for the comparison of all sequences with the first one
-
-    When the --compare option is given to the command line, the program
-    compares all the sequences to the first one and writes these comparison as
-    sequences of digits. These digits represent the distance between the PB
-    in the target and the one in the reference at the same position. The digits
-    are normalized in the [0; 9] range.
-
-    This function run the comparison, write the result in a fasta file, and
-    display on screen informations about the process.
-
-    Parameters
-    ----------
-    header_lst: list of strings
-        The list of sequence headers ordered as the sequences
-    seq_lst: list of strings
-        The list of sequences ordered as the headers
-    substitution_mat: numpy.array
-        A substitution matrix expressed as similarity scores
-    fname: str
-        The output file name
-    """
-    ref_name = header_lst[0]
-    substitution_mat_modified = PB.matrix_to_single_digit(substitution_mat)
-    print("Normalized substitution matrix (between 0 and 9)")
-    print(substitution_mat_modified)
-    print("Compare first sequence ({0}) with others".format(ref_name))
-    with open(fname, 'w') as outfile:
-        for header, score_lst in PB.compare_to_first_sequence(header_lst, seq_lst,
-                                                              substitution_mat_modified):
-            seq = "".join([str(s) for s in score_lst])
-            PB.write_fasta_entry(outfile, seq, header)
-    print("wrote {0}".format(fname))
-
-
 def pbclust_cli():
     """
     Run the PBclust command line
     """
     # Read user inputs
     options = user_input()
-    header_lst, seq_lst = PB.read_several_fasta(options.f)
+    header_lst, seq_lst = pbx.io.read_several_fasta(options.f)
 
     # Load subtitution matrix
     try:
-        substitution_mat = PB.load_substitution_matrix(PB.SUBSTITUTION_MATRIX_NAME)
+        substitution_mat = pbx.PB.load_substitution_matrix(SUBSTITUTION_MATRIX_NAME)
     except ValueError:
         sys.exit("Substitution matrix is not symetric.")
     except IOError:
@@ -187,13 +151,13 @@ def pbclust_cli():
     # compare the first sequence (in the fasta file) versus all others
     if options.compare:
         compare_file_name = options.o + ".PB.compare.fasta"
-        compare(header_lst, seq_lst, substitution_mat, compare_file_name)
+        pbx.analysis.compare(header_lst, seq_lst, substitution_mat, compare_file_name)
         sys.exit(0)
 
     # Compute the distance matrix for the clustering
     try:
-        distance_mat = PB.distance_matrix(seq_lst, substitution_mat)
-    except PB.InvalidBlockError as e:
+        distance_mat = pbx.analysis.distance_matrix(seq_lst, substitution_mat)
+    except pbx.PB.InvalidBlockError as e:
         sys.exit('Unexpected PB in the input ({})'.format(e.block))
     distance_fname = options.o + ".PB.dist"
     write_distance_matrix(distance_mat, distance_fname)
@@ -201,8 +165,8 @@ def pbclust_cli():
 
     # Carry out the clustering
     try:
-        cluster_id, medoid_id = PB.hclust(distance_mat, nclusters=options.clusters)
-    except PB.RError as e:
+        cluster_id, medoid_id = pbx.analysis.hclust(distance_mat, nclusters=options.clusters)
+    except pbx.analysis.RError as e:
         sys.exit('Error with R:\n' + str(e))
     display_clust_report(cluster_id)
     output_fname = options.o + ".PB.clust"

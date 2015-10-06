@@ -21,7 +21,7 @@ import sys
 import argparse
 
 # Local module
-import PBlib as PB
+import pbxplore as pbx
 
 # Weblogolib is an optional requirement
 try:
@@ -147,7 +147,7 @@ def pbstat_cli():
     options = user_inputs()
 
     try:
-        count, residues = PB.read_occurence_file(options.f)
+        count, residues = pbx.analysis.read_occurence_file(options.f)
         residue_min, residue_max = check_residue_range(residues,
                                                        options.residue_min, options.residue_max)
     except Exception as e:
@@ -167,7 +167,7 @@ def pbstat_cli():
     # -------------------------------------------------------------------------------
     if options.mapdist:
         file_fig_name = output_fig_name.format("map")
-        PB.plot_map(file_fig_name, count, residue_min, residue_max)
+        pbx.analysis.plot_map(file_fig_name, count, residue_min, residue_max)
         print("wrote " + file_fig_name)
 
     # -------------------------------------------------------------------------------
@@ -175,17 +175,17 @@ def pbstat_cli():
     # -------------------------------------------------------------------------------
     if options.neq:
         # compute Neq
-        neq = PB.compute_neq(count)
+        neq = pbx.analysis.compute_neq(count)
 
         # write Neq
         neq_file_name = output_file_name.format("Neq")
         with open(neq_file_name, "w") as outfile:
-            PB.write_neq(outfile, neq, residue_min, residue_max)
+            pbx.io.write_neq(outfile, neq, residue_min, residue_max)
         print("wrote {0}".format(neq_file_name))
 
         # draw Neq
         file_fig_name = output_fig_name.format("Neq")
-        PB.plot_neq(file_fig_name, neq, residue_min, residue_max)
+        pbx.analysis.plot_neq(file_fig_name, neq, residue_min, residue_max)
         print("wrote {}".format(file_fig_name))
 
     # -------------------------------------------------------------------------------
@@ -194,7 +194,7 @@ def pbstat_cli():
     if options.logo:
         file_fig_name = output_fig_name.format("logo")
         title = options.f.replace(".PB.count", "")
-        PB.generate_weblogo(file_fig_name, count, residue_min, residue_max, title)
+        pbx.analysis.generate_weblogo(file_fig_name, count, residue_min, residue_max, title)
         print("wrote {}".format(file_fig_name))
 
 
