@@ -8,6 +8,7 @@ import numpy
 
 # Local module
 from . import utils
+from ..io import fasta
 
 
 def matrix_to_single_digit(matrix):
@@ -53,3 +54,40 @@ def compare_to_first_sequence(headers, sequences, substitution_mat):
         header = "%s vs %s" % (ref_name, target_header)
         score_lst = utils.compute_score_by_position(substitution_mat, ref_seq, target_seq)
         yield header, score_lst
+
+
+def compare(header_lst, seq_lst, substitution_mat, fname):
+    """
+    Command line wrapper for the comparison of all sequences with the first one
+
+    When the --compare option is given to the command line, the program
+    compares all the sequences to the first one and writes these comparison as
+    sequences of digits. These digits represent the distance between the PB
+    in the target and the one in the reference at the same position. The digits
+    are normalized in the [0; 9] range.
+
+    This function run the comparison, write the result in a fasta file, and
+    display on screen informations about the process.
+
+    Parameters
+    ----------
+    header_lst: list of strings
+        The list of sequence headers ordered as the sequences
+    seq_lst: list of strings
+        The list of sequences ordered as the headers
+    substitution_mat: numpy.array
+        A substitution matrix expressed as similarity scores
+    fname: str
+        The output file name
+    """
+    ref_name = header_lst[0]
+    substitution_mat_modified = matrix_to_single_digit(substitution_mat)
+    print("Normalized substitution matrix (between 0 and 9)")
+    print(substitution_mat_modified)
+    print("Compare first sequence ({0}) with others".format(ref_name))
+    with open(fname, 'w') as outfile:
+        for header, score_lst in compare_to_first_sequence(header_lst, seq_lst,
+                                                           substitution_mat_modified):
+            seq = "".join([str(s) for s in score_lst])
+            fasta._write_fasta_entry(outfile, seq, header)
+    print("wrote {0}".format(fname))
