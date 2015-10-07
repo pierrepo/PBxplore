@@ -19,9 +19,10 @@ def _assert_same_size(sequences):
     ----------
     sequences: a list of sequences
 
-    Exceptions
-    ----------
-    SizeError : not all the sequences are the same length.
+    Raises
+    ------
+    SizeError
+        not all the sequences are the same length.
     """
     seq_size = len(sequences[0])
     for seq in sequences:
@@ -44,9 +45,10 @@ def count_matrix(pb_seq):
     -------
     The occurence matrix.
 
-    Exceptions
-    ----------
-    InvalidBlockError : encountered an unexpected PB
+    Raises
+    ------
+    InvalidBlockError
+        encountered an unexpected PB
     """
     _assert_same_size(pb_seq)
     pb_count = numpy.zeros((len(pb_seq[0]),  len(PB.NAMES)))
@@ -76,9 +78,10 @@ def read_occurence_file(name):
     residues: list
         the list of residues indexes
 
-    Exceptions
-    ----------
-    ValueError : when something is wrong about the file
+    Raises
+    ------
+    ValueError
+        when something is wrong about the file
     """
 
     # load count file

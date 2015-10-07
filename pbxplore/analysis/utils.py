@@ -38,9 +38,10 @@ def _slice_matrix(mat, residue_min=1, residue_max=None):
     sub_mat: numpy 2D array
         the matrix sliced
 
-    Exceptions
-    ----------
-    IndexError : when something is wrong about the lower/upper bound
+    Raises
+    ------
+    IndexError
+        when something is wrong about the lower/upper bound
     """
 
     if residue_max is None:
@@ -108,9 +109,10 @@ def compute_score_by_position(score_mat, seq1, seq2):
 
         The score to move from or to a Z block (dummy block) is always 0.
 
-    Exceptions
-    ----------
-    InvalidBlockError : encountered an unexpected PB
+    Raises
+    ------
+    InvalidBlockError
+        encountered an unexpected PB
     """
     assert len(seq1) == len(seq2), \
         "sequences have different sizes:\n{}\nvs\n{}".format(seq1, seq2)

@@ -118,9 +118,10 @@ def load_substitution_matrix(name):
     mat : numpy array
         Array of floats.
 
-    Exceptions
-    ----------
-    InvalidBlockError : encountered an unexpected PB
+    Raises
+    ------
+    InvalidBlockError
+        encountered an unexpected PB
     """
     mat = numpy.loadtxt(name, dtype=float, skiprows=2)
     assert mat.shape == (16, 16), 'wrong substitution matrix size'
