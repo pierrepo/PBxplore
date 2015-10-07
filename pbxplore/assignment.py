@@ -1,6 +1,13 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""
+Protrein Block assignation --- :mod:`pbxplore.assign`
+=====================================================
+
+.. autofunction:: assign
+"""
+
 from __future__ import print_function, absolute_import
 
 

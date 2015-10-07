@@ -22,7 +22,10 @@ AUTHORS = [u'Pierre Poulain', u'Jonathan Barnoud',
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#sys.path.insert(0, os.path.abspath('.'))
+
+# For now, we need to add pbxplore to the path. This should not be needed
+# anymore when the install procedure will be in place (see issue #21)
+sys.path.insert(0, os.path.abspath('../../'))
 
 # -- General configuration ------------------------------------------------
 

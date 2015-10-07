@@ -1,6 +1,36 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""
+Protein Blocks related data --- :mod:`pbxplore.PB`
+==================================================
+
+Protein blocks definition
+-------------------------
+
+* :data:`REFERENCES`
+  The definition of each block as a dictionary; each key is a block name (as
+  a lower case letter), and each value is a list of the dihedral angle values
+  that define the block.
+* :data:`NAMES`
+  The names of all the protein blocks.
+
+Substitution matrix
+-------------------
+
+* :data:`SUBSTITUTION_MATRIX_NAME`
+  The absolute path to the file that contains the subtitution matrix
+
+.. autofunction:: load_substitution_matrix
+
+Exceptions
+----------
+
+.. autoexception:: SizeError
+
+.. autoexception:: InvalidBlockError
+"""
+
 from __future__ import print_function, absolute_import
 
 # Standard modules

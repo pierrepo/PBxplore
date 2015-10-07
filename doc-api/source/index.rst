@@ -9,8 +9,14 @@ Welcome to PBxplore API's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
+   ./pages/PB
+   ./pages/structure
+   ./pages/assign
+   ./pages/io
+   ./pages/analysis
+   ./pages/pbxplore
 
 
 Indices and tables
