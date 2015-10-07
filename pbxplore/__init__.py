@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from .structure import chains_from_files, chains_from_trajectory
+from .structure.loader import *
 from .assign import assign
 from . import PB
 from . import io
