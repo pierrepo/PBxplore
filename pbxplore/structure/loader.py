@@ -7,11 +7,19 @@ from __future__ import absolute_import
 from .structure import Chain, Atom
 from .PDB import PDB
 
-
+# Conditional import
 try:
     import MDAnalysis
 except ImportError:
-    pass
+    IS_MDANALYSIS = False
+else:
+    IS_MDANALYSIS = True
+
+
+# Create the __all__ keyword according to the conditional import
+__all__ = ['chains_from_files']
+if IS_MDANALYSIS:
+    __all__ += ['chains_from_trajectory']
 
 
 def chains_from_files(path_list):

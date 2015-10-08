@@ -9,17 +9,27 @@ import math
 
 # Third-party modules
 import numpy
-import matplotlib
-import matplotlib.pyplot as plt
+
+# Conditional imports
+try:
+    import matplotlib
+    import matplotlib.pyplot as plt
+except ImportError:
+    IS_MATPLOTLIB = False
+else:
+    IS_MATPLOTLIB = True
+
+try:
+    import weblogolib
+except ImportError:
+    IS_WEBLOGO = False
+else:
+    IS_WEBLOGO = True
 
 # Local modules
 from .. import PB
 from . import utils
 
-try:
-    import weblogolib
-except ImportError:
-    pass
 
 # Python2/Python3 compatibility
 # The range function in python 3 behaves as the range function in python 2
@@ -30,6 +40,13 @@ try:
     range = xrange
 except NameError:
     pass
+
+# Create the __all__ keyword according to the conditional imports
+__all__ = []
+if IS_MATPLOTLIB:
+    __all__ += ['plot_neq', 'plot_map']
+if IS_WEBLOGO:
+    __all__ += ['generate_weblogo']
 
 
 def plot_neq(fname, neq_array, residue_min=1, residue_max=None):
