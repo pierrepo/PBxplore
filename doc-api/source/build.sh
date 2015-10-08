@@ -8,13 +8,13 @@ pip install MDAnalysis
 # Prepare the notebooks
 for notebook in ./notebooks/*.ipynb
 do
-    echo $notebook $name
     name=${notebook%.ipynb}
+    echo $notebook $name
     # Convert the notebook to rst readable by sphinx
     # Jupyter can convert directly to rst, yet there is an issue with the
     # titles <https://github.com/ipython/ipython/issues/8674>.
     # Therefore, we do the conversion in two steps.
-    jupyter-nbconvert --to markdown --ExecutePreprocessor.enabled=True $notebook --output ${name}.md
+    jupyter-nbconvert --to markdown --execute $notebook --output ${name}.md
     pandoc -i ${name}.md -o ${name}_.rst
 
     # Clean and adapt the rst file to have better rendering by sphinx
@@ -39,7 +39,7 @@ EOF
 
     # Make available a direct HTML render of the notebook,
     # and the notebook itself
-    jupyter nbconvert --to html --ExecutePreprocessor.enabled=True $notebook --output $STATIC_NB_DIR/$(basename $name)_.html
+    jupyter nbconvert --to html $notebook --output $STATIC_NB_DIR/$(basename $name)_.html
     cp $notebook $STATIC_NB_DIR
 done
 
