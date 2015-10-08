@@ -6,7 +6,17 @@
 Welcome to PBxplore API's documentation!
 ========================================
 
-Contents:
+PBxplore API cookbook
+---------------------
+
+.. toctree::
+   :maxdepth: 1
+
+   ./notebooks/Assignement
+   ./notebooks/WritePB
+
+PBxplore API reference
+----------------------
 
 .. toctree::
    :maxdepth: 1
@@ -20,7 +30,7 @@ Contents:
 
 
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
