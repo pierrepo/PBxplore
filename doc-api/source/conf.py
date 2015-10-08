@@ -14,6 +14,9 @@
 
 import sys
 import os
+import subprocess
+
+subprocess.call('./build.sh')
 
 AUTHORS = [u'Pierre Poulain', u'Jonathan Barnoud',
            u'Hubert Santuz', u'Alexandre G. deBrevern']
