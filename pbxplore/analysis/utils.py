@@ -67,12 +67,12 @@ def compute_freq_matrix(count_mat):
     Compute a PB frequency matrix from an occurence matrix.
 
     The frequency matrix has one row per sequence, and one column per block.
-    The columns are ordered in as PB.NAMES.
+    The columns are ordered in as :const:`pbxplore.PB.NAMES`.
 
     Parameters
     ----------
     count_mat : numpy array
-        an occurence matrix returned by `count_matrix`.
+        an occurence matrix returned by ``count_matrix``.
 
     Returns
     -------
@@ -98,20 +98,21 @@ def compute_score_by_position(score_mat, seq1, seq2):
 
     The substitution score can represent a similarity or a distance depending
     on the score matrix provided. The score matrix should be provided as a 2D
-    numpy array with score[i, j] the score to swich the PB at the i-th position
-    in PB.NAMES to the PB at the j-th position in PB.NAMES.
+    numpy array with ``score[i, j]`` the score to swich the PB at the i-th position
+    in :const:`pbxplore.PB.NAMES` to the PB at the j-th position in
+    :const:`pbxplore.PB.NAMES`.
 
     The function returns the result as a list of substitution scores to go from
-    `seq1` to `seq2` for each position. Both sequences must have the same
+    ``seq1`` to ``seq2`` for each position. Both sequences must have the same
     length.
 
-    ..note:
+    .. note::
 
-        The score to move from or to a Z block (dummy block) is always 0.
+       The score to move from or to a Z block (dummy block) is always 0.
 
     Raises
     ------
-    InvalidBlockError
+    pbxplore.PB.InvalidBlockError
         encountered an unexpected PB
     """
     assert len(seq1) == len(seq2), \
@@ -134,7 +135,7 @@ def compute_score_by_position(score_mat, seq1, seq2):
 
 def substitution_score(substitution_matrix, seqA, seqB):
     """
-    Compute the substitution score to go from `seqA` to `seqB`
+    Compute the substitution score to go from ``seqA`` to ``seqB``
 
     Both sequences must have the same length.
 

@@ -17,11 +17,12 @@ def _assert_same_size(sequences):
 
     Parameters
     ----------
-    sequences: a list of sequences
+    sequences
+        a list of sequences
 
     Raises
     ------
-    SizeError
+    pbxplore.PB.SizeError
         not all the sequences are the same length.
     """
     seq_size = len(sequences[0])
@@ -35,19 +36,21 @@ def count_matrix(pb_seq):
     Count the occurences of each block at each position.
 
     The occurence matrix has one row per sequence, and one column per block.
-    The columns are ordered in as PB.NAMES.
+    The columns are ordered in as :const:`pbxplore.PB.NAMES`.
 
     Parameters
     ----------
-    pb_seq: a list of PB sequences.
+    pb_seq
+        a list of PB sequences.
 
     Returns
     -------
-    The occurence matrix.
+    pb_count : numpy array
+        The occurence matrix.
 
     Raises
     ------
-    InvalidBlockError
+    pbxplore.PB.InvalidBlockError
         encountered an unexpected PB
     """
     _assert_same_size(pb_seq)

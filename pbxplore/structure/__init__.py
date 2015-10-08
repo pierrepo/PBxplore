@@ -26,6 +26,8 @@ Objects
 
 .. autoclass:: pbxplore.structure.structure.Chain
 
+   .. automethod:: pbxplore.structure.structure.Chain.get_phi_psi_angles
+
 .. autoclass:: pbxplore.structure.structure.Atom
 
 .. autoclass:: pbxplore.structure.PDB.PDB
