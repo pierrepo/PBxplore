@@ -88,7 +88,7 @@ def read_several_fasta(input_files):
     return pb_name, pb_seq
 
 
-def _write_fasta_entry(outfile, sequence, comment, width=FASTA_WIDTH):
+def write_fasta_entry(outfile, sequence, comment, width=FASTA_WIDTH):
     """
     Write a fasta entry (header + sequence) in an open file
 
@@ -121,4 +121,4 @@ def write_fasta(outfile, sequences, comments):
         List of sequences (str)
     """
     for sequence, comment in zip(sequences, comments):
-        _write_fasta_entry(outfile, sequence, comment)
+        write_fasta_entry(outfile, sequence, comment)

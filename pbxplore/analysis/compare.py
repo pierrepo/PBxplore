@@ -89,5 +89,5 @@ def compare(header_lst, seq_lst, substitution_mat, fname):
         for header, score_lst in compare_to_first_sequence(header_lst, seq_lst,
                                                            substitution_mat_modified):
             seq = "".join([str(s) for s in score_lst])
-            fasta._write_fasta_entry(outfile, seq, header)
+            fasta.write_fasta_entry(outfile, seq, header)
     print("wrote {0}".format(fname))
