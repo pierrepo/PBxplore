@@ -610,17 +610,23 @@ def _file_validity(file_a):
         return False, '{0} does not exist'.format(file_a)
 
 
-def _same_file_content(file_a, file_b):
+def _same_file_content(file_a, file_b, comment_char=">"):
     """
     Return True if two files are identical. Take file path as arguments.
+    Ignore the content of lines which start with `comment_char`.
     """
     with open(file_a) as f1, open(file_b) as f2:
         # Compare content line by line
         for f1_line, f2_line in zip(f1, f2):
             if (f1_line != f2_line):
-                print(file_a, file_b)
-                print(f1_line, f2_line, sep='//')
-                return False
+                # If both lines start with a comment,
+                # it's a valid one no matter the content of the comment
+                f1_firstchar = f1_line.strip().startswith(comment_char)
+                f2_firstchar = f2_line.strip().startswith(comment_char)
+                if f1_firstchar != f2_firstchar:
+                    print(file_a, file_b)
+                    print(f1_line, f2_line, sep='//')
+                    return False
         # Check if one file is longer than the other; it would result as one
         # file iterator not completely consumed
         for infile in (f1, f2):
@@ -637,11 +643,12 @@ def _same_file_content(file_a, file_b):
     return True
 
 
-def _assert_identical_files(file_a, file_b):
+def _assert_identical_files(file_a, file_b, comment_char=">"):
     """
     Raise an Assert exception if the two files are not identical.
 
     Take file path as arguments.
+    Ignore the content of lines which start with `comment_char`.
     """
     assert _same_file_content(file_a, file_b), '{0} and {1} are not identical'\
                                                .format(file_a, file_b)
