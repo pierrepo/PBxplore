@@ -68,7 +68,10 @@ def user_input():
     return options
 
 
-def main():
+def pbcount_cli():
+    """
+    PBcount command line.
+    """
     options = user_input()
 
     # read PBs files
@@ -91,4 +94,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    pbcount_cli()
