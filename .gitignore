@@ -17,4 +17,5 @@ test_tmp/
 # ignore API doc generated files
 doc-api/build/*
 doc-api/source/notebooks/*.rst
+doc-api/source/notebooks/*_files
 .ipynb_checkpoints

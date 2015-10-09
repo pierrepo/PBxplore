@@ -5,3 +5,4 @@ biopython
 jupyter
 ipython
 matplotlib
+weblogo

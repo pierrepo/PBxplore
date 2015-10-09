@@ -14,6 +14,7 @@ PBxplore API cookbook
 
    ./notebooks/Assignement
    ./notebooks/WritePB
+   ./notebooks/Deformability
 
 PBxplore API reference
 ----------------------
