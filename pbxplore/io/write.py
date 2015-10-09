@@ -11,7 +11,7 @@ from .. import PB
 from ..analysis import utils
 
 
-def _write_phipsi_entry(outfile, torsion, comment):
+def write_phipsi_entry(outfile, torsion, comment):
     for res in sorted(torsion):
         try:
             phi = "%8.2f" % torsion[res]["phi"]
@@ -26,7 +26,7 @@ def _write_phipsi_entry(outfile, torsion, comment):
 
 def write_phipsi(outfile, torsions, comments):
     for torsion, comment in zip(torsions, comments):
-        _write_phipsi_entry(outfile, torsion, comment)
+        write_phipsi_entry(outfile, torsion, comment)
 
 
 def write_flat(outfile, sequences):
