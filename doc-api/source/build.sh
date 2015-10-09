@@ -3,6 +3,15 @@
 STATIC_NB_DIR=../build/html/notebooks/
 mkdir -p $STATIC_NB_DIR
 
+if [[ -n $READTHEDOCS ]]
+then
+    echo "Settings for Readthedocs"
+    # This line makes ghostscript read the Fontmap.GS present in this
+    # directory.  Without it, weblogo fails on Readthedocs because it cannot
+    # find the ArialMT font.
+    export GS_LIB=$PWD
+fi
+
 pip install MDAnalysis
 
 # Prepare the notebooks
@@ -14,7 +23,9 @@ do
     # Jupyter can convert directly to rst, yet there is an issue with the
     # titles <https://github.com/ipython/ipython/issues/8674>.
     # Therefore, we do the conversion in two steps.
-    jupyter-nbconvert --to markdown --execute $notebook --output ${name}.md
+    jupyter-nbconvert --to markdown --execute $notebook --output ${name}.md \
+        --ExecutePreprocessor.timeout=120 \
+        --ExecutePreprocessor.allow_errors=True
     # Because of the 'implicit_figures' extension, pandoc uses the alt text
     # of images as figure caption. Yet, IPython sets the alt text as 'png'
     # for all figures. Therefore, we disable the extension. The filter
