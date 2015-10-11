@@ -16,8 +16,6 @@ import numpy
 class AtomError(Exception):
     """
     Exeption class for the Atom class.
-
-    This is a really lazy class. Feel to improve.
     """
     pass
 
@@ -25,8 +23,6 @@ class AtomError(Exception):
 class ChainError(Exception):
     """
     Exeption class for the Chain class
-
-    This is a really lazy class. Feel to improve.
     """
     pass
 
@@ -227,7 +223,7 @@ class Chain:
         -------
         phi_psi_angles : dict
             Dict with residue number (int) as keys
-            and a {'phi' : (float), 'psi' : (float)} dictionnary as values.
+            and a ``{'phi' : (float), 'psi' : (float)}`` dictionnary as values.
 
         Examples
         --------
@@ -237,10 +233,10 @@ class Chain:
         ...          "ATOM    851  C   SER B  12      21.150  24.066  -0.947  1.00 32.67           C  ",
         ...          "ATOM    855  N   ILE B  13      20.421  23.341  -0.088  1.00 30.25           N  ")
         >>>
-        >>> import PDBlib as PDB
-        >>> ch = PDB.Chain()
+        >>> import pbxplore as pbx
+        >>> ch = pbx.structure.structure.Chain()
         >>> for line in lines:
-        ...     at = PDB.Atom()
+        ...     at = pbx.structure.structure.Atom()
         ...     at.read_from_PDB(line)
         ...     ch.add_atom(at)
         ...
