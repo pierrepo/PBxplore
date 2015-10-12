@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """
-Protrein Block assignation --- :mod:`pbxplore.assign`
-=====================================================
+Protrein Block assignation --- :mod:`pbxplore.assignment`
+=========================================================
 
 .. autofunction:: assign
 """

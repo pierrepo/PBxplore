@@ -1,7 +1,6 @@
 #!/bin/bash
 
 STATIC_NB_DIR=../build/html/notebooks/
-mkdir -p $STATIC_NB_DIR
 
 if [[ -n $READTHEDOCS ]]
 then
@@ -10,7 +9,10 @@ then
     # directory.  Without it, weblogo fails on Readthedocs because it cannot
     # find the ArialMT font.
     export GS_LIB=$PWD
+    STATIC_NB_DIR=./_build/html/notebooks/
 fi
+
+mkdir -p $STATIC_NB_DIR
 
 pip install MDAnalysis
 
