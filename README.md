@@ -32,6 +32,8 @@ Optionally, PBxplore can use:
 - [Introduction to Protein Blocks](doc/intro.PBs.md)
 - [Single structure analysis](doc/single.structure.analysis.md)
 - [Multiple conformation analysis](doc/multiple.conformation.analysis.md)
+* [API documentation](http://pbxplore.readthedocs.org/en/latest/) [![Documentation Status](https://readthedocs.org/projects/pbxplore/badge/?version=latest)](http://pbxplore.readthedocs.org/en/latest/?badge=latest)
+
 
 
 # References
