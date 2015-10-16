@@ -39,8 +39,10 @@ except ImportError:
 else:
     IS_MDANALYSIS = True
 
+
+here = os.path.abspath(os.path.dirname(__file__))
 # Resources for the tests are stored in the following directory
-REFDIR = "test_data/"
+REFDIR = os.path.join(here, "test_data/")
 
 # Temporary outputs will be written in this directory
 OUTDIR = "test_tmp/"
@@ -170,9 +172,11 @@ class TestPBAssign(TemplateTestCase):
                 input_args += ['-p', path.join(REFDIR, basename + extension)]
             out_basename = path.join(out_run_dir, multiple)
 
-        run_list = (['./PBassign.py'] + input_args +
+        run_list = (['PBassign'] + input_args +
                     ['-o', out_basename + extension] + options)
         print(' '.join(run_list))
+        print("AAAAAAAAAAAAAAAAAAA")
+        print(out_basename + extension)
         exe = subprocess.Popen(run_list,
                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = exe.communicate()
@@ -262,7 +266,7 @@ class TestPBAssign(TemplateTestCase):
         name = 'barstar_md_traj'
         out_run_dir = self._temp_directory
         output_fname = name + '.PB.fasta'
-        call_list = ['./PBassign.py',
+        call_list = ['PBassign',
                      '-x', os.path.join(REFDIR, name + '.xtc'),
                      '-g', os.path.join(REFDIR, name + '.gro'),
                      '-o', os.path.join(out_run_dir, name)]
@@ -323,7 +327,7 @@ class TestPBcount(TemplateTestCase):
     """
     def _build_command_line(self, input_files, output, first_residue=None):
         output_full_path = os.path.join(self._temp_directory, output)
-        command = ['./PBcount.py', '-o', output_full_path]
+        command = ['PBcount', '-o', output_full_path]
         for input_file in input_files:
             command += ['-f', os.path.join(REFDIR, input_file)]
         if first_residue is not None:
@@ -407,7 +411,7 @@ class TestPBclust(TemplateTestCase):
     def _build_command_line(self, input_files, output,
                             clusters=None, compare=False):
         output_full_path = os.path.join(self._temp_directory, output)
-        command = ['./PBclust.py', '-o', output_full_path]
+        command = ['PBclust', '-o', output_full_path]
         for input_file in input_files:
             command += ['-f', os.path.join(REFDIR, input_file)]
         if clusters is not None:
@@ -462,7 +466,7 @@ class TestPBstat(TemplateTestCase):
                             residue_min=None, residue_max=None):
         input_full_path = os.path.join(REFDIR, input_file)
         output_full_path = os.path.join(self._temp_directory, output)
-        command = ['./PBstat.py', '-f', input_full_path, '-o', output_full_path]
+        command = ['PBstat', '-f', input_full_path, '-o', output_full_path]
         if mapdist:
             command += ['--map']
         if neq:

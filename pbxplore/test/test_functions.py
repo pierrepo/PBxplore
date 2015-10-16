@@ -14,9 +14,12 @@ Tests functions from different programs.
 # =============================================================================
 import unittest
 import collections
+import os
 
 import pbxplore as pbx
 from pbxplore.structure import structure
+
+here = os.path.abspath(os.path.dirname(__file__))
 
 
 # =============================================================================
@@ -166,7 +169,7 @@ class TestPBlib(unittest.TestCase):
     """
 
     def test_read_fasta(self):
-        headers, sequences = pbx.io.read_fasta("test_data/1BTA.pdb.PB.fasta")
+        headers, sequences = pbx.io.read_fasta(os.path.join(here, "test_data/1BTA.pdb.PB.fasta"))
         self.assertEqual(headers, ['test_data/1BTA.pdb | chain A'])
         self.assertEqual(sequences, ['ZZdddfklonbfklmmmmmmmmnopafklnoiakl'
                                      'mmmmmnoopacddddddehkllmmmmngoilmmmm'
