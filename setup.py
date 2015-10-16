@@ -34,6 +34,7 @@ setup(
         'Development Status :: 4 - Beta',
 
         # Indicate who your project is intended for
+        'Intended Audience :: Science/Research',
         'Intended Audience :: Developers',
         'Topic :: Scientific/Engineering :: Bio-Informatics',
         'Topic :: Scientific/Engineering :: Chemistry',
@@ -51,7 +52,11 @@ setup(
     ],
 
     install_requires=['numpy'],
-    packages=find_packages(exclude=['doc']),
+    tests_require=['nose', 'coverage'],
+
+    packages=find_packages(exclude=['test']),
+    include_package_data=True,
+
     entry_points={
         'console_scripts': [
             'PBassign = pbxplore.scripts.PBassign:pbassign_cli',
