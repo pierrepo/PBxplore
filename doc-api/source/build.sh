@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 STATIC_NB_DIR=../build/html/notebooks/
 
 if [[ -n $READTHEDOCS ]]
@@ -14,6 +16,8 @@ fi
 
 mkdir -p $STATIC_NB_DIR
 
+pandoc --version
+
 pip install MDAnalysis
 
 # Prepare the notebooks
@@ -26,7 +30,7 @@ do
     # titles <https://github.com/ipython/ipython/issues/8674>.
     # Therefore, we do the conversion in two steps.
     jupyter-nbconvert --to markdown --execute $notebook --output ${name}.md \
-        --ExecutePreprocessor.timeout=120 \
+        --ExecutePreprocessor.timeout=180 \
         --ExecutePreprocessor.allow_errors=True
     # Because of the 'implicit_figures' extension, pandoc uses the alt text
     # of images as figure caption. Yet, IPython sets the alt text as 'png'
@@ -37,7 +41,9 @@ do
     # The filter also fix the image path because the origin directory for the
     # relative path is not the same between where pandoc runs and where
     # ipython runs.
-    pandoc --from markdown-implicit_figures --filter ./pandoc_fix_img.py -i ${name}.md -o ${name}_.rst
+    pandoc --from markdown-implicit_figures \
+           --filter ./pandoc_fix_img.py \
+           -i ${name}.md -o ${name}_.rst
 
     # Clean and adapt the rst file to have better rendering by sphinx
     cat >> header.txt << EOF
