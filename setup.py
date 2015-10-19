@@ -14,6 +14,12 @@ with open(os.path.join(here, 'README.md')) as f:
     readme = f.read()
 
 
+extras = {
+    'analysis': ['weblogo', 'matplotlib'],
+    'trajectories': ['MDAnalysis>=0.11'],
+    'all': ['weblogo', 'matplotlib', 'MDAnalysis>=0.11']
+}
+
 setup(
 
     name='pbxplore',
@@ -53,6 +59,10 @@ setup(
 
     install_requires=['numpy'],
     tests_require=['nose', 'coverage'],
+    # List additional groups of dependencies here
+    # To install, use
+    # $ pip install -e .[analysis]
+    extras_require=extras,
 
     packages=find_packages(exclude=['test']),
     include_package_data=True,
