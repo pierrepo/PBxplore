@@ -27,6 +27,7 @@ PBxplore API reference
    ./pages/assign
    ./pages/io
    ./pages/analysis
+   ./pages/demo
    ./pages/pbxplore
 
 
