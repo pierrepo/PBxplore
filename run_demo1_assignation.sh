@@ -19,13 +19,18 @@ echo "#------------------------------------------------------------------------#
 
 pause
 
-# create and move into the demo directory
-if [ ! -d "demo1_assignation_tmp" ];
-then
-    mkdir demo1_assignation_tmp
-fi
-cd demo1_assignation_tmp
-cp ../demo1_assignation/*pdb ./
+DATA_PATH=$(PBdata)
+DEMO_PATH=demo1_assignation_tmp
+INPUT_FILES=(3ICH.pdb
+             1AY7.pdb
+             2LFU.pdb)
+mkdir -p $DEMO_PATH
+for input_file in ${INPUT_FILES[@]}
+do
+    cp ${DATA_PATH}/${input_file} $DEMO_PATH
+done
+
+cd $DEMO_PATH
 
 echo "#------------------------------------------------------------------------#"
 echo "|                                                                        |"
