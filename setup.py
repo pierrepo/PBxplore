@@ -66,6 +66,7 @@ setup(
 
     packages=find_packages(exclude=['test']),
     include_package_data=True,
+    package_data={'pbxplore':['demo/*']},
 
     entry_points={
         'console_scripts': [
