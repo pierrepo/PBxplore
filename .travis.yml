@@ -27,10 +27,11 @@ install:
     - pip install matplotlib
     - pip install weblogo
     - if [[ $TRAVIS_PYTHON_VERSION == 2.7 ]]; then pip install "mdanalysis>=0.11"; fi
+    - pip install -e .
 
 # command to run tests
 script:
-    - nosetests test_functions.py test_regression.py
+    - nosetests -v pbxplore
     - yes | ./run_demo1_assignation.sh
     - yes | ./run_demo2_statistics.sh
     - yes | ./run_demo2_clusters.sh

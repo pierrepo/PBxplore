@@ -1,0 +1,4 @@
+include README.md
+recursive-include doc *
+recursive-include pbxplore *.dat
+recursive-include pbxplore/test/test_data *

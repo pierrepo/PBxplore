@@ -20,7 +20,10 @@ echo "#------------------------------------------------------------------------#
 pause
 
 # create and move into the demo directory
-mkdir demo2_clusters_tmp
+if [ ! -d "demo2_clusters_tmp" ];
+then
+    mkdir demo2_clusters_tmp
+fi
 cd demo2_clusters_tmp
 cp ../demo2/psi_md_traj_all.PB.fasta  ./
 
@@ -33,15 +36,15 @@ echo "#------------------------------------------------------------------------#
 
 echo  -e "\n"
 echo "Produce with 3 clusters (--clusters option)"
-echo "../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all_3 --clusters 3"
+echo "PBclust -f psi_md_traj_all.PB.fasta -o psi_md_traj_all_3 --clusters 3"
 pause
-../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all_3 --clusters 3
+PBclust -f psi_md_traj_all.PB.fasta -o psi_md_traj_all_3 --clusters 3
 
 echo  -e "\n"
 echo "Compare all sequences against the first one (--compare option)"
-echo "../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all --compare"
+echo "PBclust -f psi_md_traj_all.PB.fasta -o psi_md_traj_all --compare"
 pause
-../PBclust.py -f psi_md_traj_all.PB.fasta -o psi_md_traj_all --compare
+PBclust -f psi_md_traj_all.PB.fasta -o psi_md_traj_all --compare
 
 
 echo  -e "\n"
@@ -50,9 +53,9 @@ echo "|                                                                        |
 echo "|  Demo completed!                                                       |"
 echo "|                                                                        |"
 echo "#------------------------------------------------------------------------#"
-echo 
+echo
 echo "Look at *.PB.* files in the demo2_clusters_tmp directory."
 pwd
-ls -lh 
-echo "Do not forget to delete demo2_clusters_tmp directory when you will be done with this demo." 
+ls -lh
+echo "Do not forget to delete demo2_clusters_tmp directory when you will be done with this demo."
 
