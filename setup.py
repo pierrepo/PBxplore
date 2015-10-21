@@ -6,7 +6,6 @@ from __future__ import print_function, absolute_import
 from setuptools import setup, find_packages
 import os
 
-import pbxplore
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -14,6 +13,13 @@ with open(os.path.join(here, 'README.md')) as f:
     readme = f.read()
 
 
+################
+# Version Number
+# Keep it sync with the pbxplore.__version__ in __init__.py
+VERSION = "1.1"
+################
+
+# Extras requirements for optional dependencies
 extras = {
     'analysis': ['weblogo', 'matplotlib'],
     'trajectories': ['MDAnalysis>=0.11'],
@@ -23,7 +29,7 @@ extras = {
 setup(
 
     name='pbxplore',
-    version=pbxplore.__version__,
+    version=VERSION,
 
     description="PBxplore is a suite of tools dedicated to Protein Block analysis.",
     long_description=readme,
