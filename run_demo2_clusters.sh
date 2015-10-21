@@ -20,12 +20,16 @@ echo "#------------------------------------------------------------------------#
 pause
 
 # create and move into the demo directory
-if [ ! -d "demo2_clusters_tmp" ];
-then
-    mkdir demo2_clusters_tmp
-fi
-cd demo2_clusters_tmp
-cp ../demo2/psi_md_traj_all.PB.fasta  ./
+DATA_PATH=$(PBdata)
+DEMO_PATH=demo2_clusters_tmp
+INPUT_FILES=(psi_md_traj_all.PB.fasta)
+mkdir -p $DEMO_PATH
+for input_file in ${INPUT_FILES[@]}
+do
+    cp ${DATA_PATH}/${input_file} $DEMO_PATH
+done
+
+cd $DEMO_PATH
 
 echo  -e "\n"
 echo "#------------------------------------------------------------------------#"

@@ -13,10 +13,13 @@
 .. function:: pbxplore.assign(dihedrals)
 
    See :func:`pbxplore.assignment.assign`
+
+:const:`pbxplore.DEMO_DATA_PATH`, see :mod:`pbxplore.demo`.
 """
 
 __version__ = "1.1"
 
+from .demo import DEMO_DATA_PATH
 from .structure.loader import *
 from .assignment import assign
 from . import PB

@@ -72,6 +72,7 @@ setup(
 
     packages=find_packages(exclude=['test']),
     include_package_data=True,
+    package_data={'pbxplore':['demo/*']},
 
     entry_points={
         'console_scripts': [
@@ -79,6 +80,7 @@ setup(
             'PBclust  = pbxplore.scripts.PBclust:pbclust_cli',
             'PBcount  = pbxplore.scripts.PBcount:pbcount_cli',
             'PBstat   = pbxplore.scripts.PBstat:pbstat_cli',
+            'PBdata   = pbxplore.scripts.PBdata:pbdata_cli',
         ],
     },
 
