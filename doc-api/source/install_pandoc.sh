@@ -5,7 +5,7 @@
 if [[ ! -f $HOME/.cabal/bin/pandoc ]]
 then
     cabal update
-    cabal install pandoc
+    cabal install pandoc-1.15.1.1
 else
     echo "Get pandoc from the cache"
 fi
