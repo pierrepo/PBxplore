@@ -15,6 +15,7 @@ PBxplore
    :maxdepth: 1
 
    installation
+   intro_PB
 
 PBxplore API cookbook
 ---------------------
