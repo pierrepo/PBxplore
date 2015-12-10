@@ -3,8 +3,18 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to PBxplore API's documentation!
-========================================
+Welcome to PBxplore's documentation!
+====================================
+
+PBxplore is a suite of tools dedicated to Protein Block analysis.
+
+PBxplore
+--------
+
+.. toctree::
+   :maxdepth: 1
+
+   installation
 
 PBxplore API cookbook
 ---------------------
@@ -15,6 +25,7 @@ PBxplore API cookbook
    ./notebooks/Assignement
    ./notebooks/WritePB
    ./notebooks/Deformability
+
 
 PBxplore API reference
 ----------------------
