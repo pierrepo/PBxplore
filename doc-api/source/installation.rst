@@ -7,18 +7,18 @@ we try in this document to provide few guidelines regarding PBxplore setup.
 Supported Platforms
 -------------------
 
-Currently, ``PBxplore`` run with Python 2.7, 3.3 and 3.4 on Linux and Mac OS X.
+Currently, `PBxplore` run with Python 2.7, 3.3 and 3.4 on Linux and Mac OS X.
 
 
 Dependencies
 ------------
 
-To use ``PBxplore``, the following libraries have to be installed.
+To use `PBxplore`, the following libraries have to be installed.
 
     `NumPy <http://numpy.scipy.org/>`_ >= 1.6.0
         Numpy is the base package for numerical computing in python.
 
-Optionally, ``PBxplore`` can use the following packages:
+Optionally, `PBxplore` can use the following packages:
 
     `MDAnalysis <http://www.mdanalysis.org/>`_ >= 0.11
         We use MDAnalysis for loading trajectories.

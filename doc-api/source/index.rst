@@ -14,8 +14,13 @@ PBxplore
 .. toctree::
    :maxdepth: 1
 
-   installation
    intro_PB
+   installation
+   utilization
+   PBassign
+   PBcount
+
+
 
 PBxplore API cookbook
 ---------------------
