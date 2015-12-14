@@ -34,4 +34,25 @@ For instance, the 3D structure of the barstar protein represented in :ref:`pdb_1
 The conformations of the 89 residues of the barstar are translated into a sequence of 89 protein blocks. Note that "Z" corresponds to amino acids for which a protein block cannot be assigned. As a matter of fact, the assignment of a given residue *n* requires is based on the conformations of residues *n-1*, *n-1*, *n*, *n+1* and *n+2*. Therefore, a protein block cannot be assigned to the two first (N-termini) and two last (C-termini) residues of a polypeptide chain.
 
 
+.. _Neq:
+
+Neq
+---
+
+*Neq* is calculated as follows:
+
+.. _Neq-fig:
+.. figure:: img/Neq.jpg
+    :align: center
+
+    Figure 3
+
+    Neq formula
+
+Where **fx** is the probability of PB **x**. **Neq** quantifies the average number of PBs
+at a given position in the protein sequence.
+A **Neq** value of 1 indicates that only one type of PB is observed,
+while a value of 16 is equivalent to a random distribution.
+
+
 .. [#] A. G. de Brevern, C. Etchebest, and S. Hazout. Bayesian Probabilistic Approach for Predicting Backbone Structures in Terms of Protein Blocks. *Proteins* **41**:271-87 (2000).
