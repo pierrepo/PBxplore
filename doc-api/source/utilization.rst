@@ -16,7 +16,7 @@ Here the list:
   from a set of protein structures.
 - :doc:`PBcount <PBcount>` computes the frequency of PBs at each position
   along the amino acid sequence.
-- PBstast generates frequency and logo plots, and estimates the (_Neq_).
+- :doc:`PBstat <PBstat>` generates frequency and logo plots, and estimates the :ref:`Neq <Neq>`.
 - PBclust use clustering algorithm (k-means) to re-group similar PBs sequences.
 
 
