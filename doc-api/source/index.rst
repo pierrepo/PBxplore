@@ -20,6 +20,7 @@ PBxplore
    PBassign
    PBcount
    PBstat
+   PBclust
 
 
 

@@ -17,7 +17,7 @@ Here the list:
 - :doc:`PBcount <PBcount>` computes the frequency of PBs at each position
   along the amino acid sequence.
 - :doc:`PBstat <PBstat>` generates frequency and logo plots, and estimates the :ref:`Neq <Neq>`.
-- PBclust use clustering algorithm (k-means) to re-group similar PBs sequences.
+- :doc:`PBclust <PBclust>` use clustering algorithm (k-means) to re-group similar PBs sequences.
 
 
 API
