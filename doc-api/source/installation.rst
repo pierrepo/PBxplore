@@ -28,7 +28,7 @@ Optionally, `PBxplore` can use the following packages:
     `Matplotlib <http://matplotlib.org/>`_ >= 1.4.0
         All ploting functions use `matplotlib` package.
 
-    `Weblogo3 <http://weblogo.threeplusone.com/>`_
+    `Weblogo3 <http://weblogo.threeplusone.com/>`_ [#]_
         `Weblogo3` is required to create logo from PB sequences.
 
 
@@ -40,3 +40,7 @@ Once dependencies installed, the most straightforward way is to use `pip`:
 .. code-block:: bash
 
     $ pip install pbxplore
+
+
+.. [#] G. E. Crooks, G. Hon, J.-M. Chandonia, and S. E. Brenner. WebLogo: A Sequence Logo Generator.
+       *Genome Research* **14**: 1188–90 (2004) doi:10.1101/gr.849004
