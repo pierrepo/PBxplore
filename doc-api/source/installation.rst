@@ -42,5 +42,16 @@ Once dependencies installed, the most straightforward way is to use `pip`:
     $ pip install pbxplore
 
 
+PBxplore can also be installed for the current user only:
+
+.. code-block:: bash
+
+    $ pip install --user pbxplore
+
+
+See the documentation of `pip <https://pip.pypa.io/en/stable/>`_ for more information.
+You may also want to look at `virtualenv <https://virtualenv.readthedocs.org/en/latest/>`_.
+
+
 .. [#] G. E. Crooks, G. Hon, J.-M. Chandonia, and S. E. Brenner. WebLogo: A Sequence Logo Generator.
        *Genome Research* **14**: 1188–90 (2004) doi:10.1101/gr.849004
