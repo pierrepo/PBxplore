@@ -54,7 +54,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'PBxplore API'
+project = u'PBxplore'
 copyright = u'2015, Pierre Poulain, and Alexandre G. deBrevern'
 
 # The version info for the project you're documenting, acts as replacement for
