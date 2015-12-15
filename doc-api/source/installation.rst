@@ -20,7 +20,7 @@ To use `PBxplore`, the following libraries have to be installed.
 
 Optionally, `PBxplore` can use the following packages:
 
-    `MDAnalysis <http://www.mdanalysis.org/>`_ >= 0.11
+    `MDAnalysis <http://www.mdanalysis.org/>`_ [#]_ >= 0.11
         We use MDAnalysis for loading trajectories.
         See the full supported list
         `here <https://pythonhosted.org/MDAnalysis/documentation_pages/coordinates/init.html#id1>`_.
@@ -53,5 +53,10 @@ See the documentation of `pip <https://pip.pypa.io/en/stable/>`_ for more inform
 You may also want to look at `virtualenv <https://virtualenv.readthedocs.org/en/latest/>`_.
 
 
-.. [#] G. E. Crooks, G. Hon, J.-M. Chandonia, and S. E. Brenner. WebLogo: A Sequence Logo Generator.
+.. [#] N. Michaud-Agrawal, E. J. Denning, T. B. Woolf, and O. Beckstein.
+       MDAnalysis: A Toolkit for the Analysis of Molecular Dynamics Simulations.
+       *J. Comput. Chem.* **32** (2011), 2319–2327. doi:10.1002/jcc.21787
+
+.. [#] G. E. Crooks, G. Hon, J.-M. Chandonia, and S. E. Brenner.
+       WebLogo: A Sequence Logo Generator.
        *Genome Research* **14**: 1188–90 (2004) doi:10.1101/gr.849004
