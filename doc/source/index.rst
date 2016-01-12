@@ -24,8 +24,8 @@ PBxplore
 
 
 
-PBxplore API cookbook
----------------------
+API cookbook
+------------
 
 .. toctree::
    :maxdepth: 1
@@ -35,8 +35,8 @@ PBxplore API cookbook
    ./notebooks/Deformability
 
 
-PBxplore API reference
-----------------------
+API reference
+-------------
 
 .. toctree::
    :maxdepth: 1
