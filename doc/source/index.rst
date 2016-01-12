@@ -6,10 +6,37 @@
 Welcome to PBxplore's documentation!
 ====================================
 
-PBxplore is a suite of tools dedicated to Protein Block analysis.
+**PBxplore is a suite of tools dedicated to Protein Block analysis.**
 
-PBxplore
---------
+Protein Blocks (PBs) are structural prototypes defined by
+`de Brevern <http://www.dsimb.inserm.fr/~debrevern/index.php>`_ *et al* in 2000 [#]_.
+The 3-dimensional local structure of a protein backbone can be modelized as an 1-dimensional
+sequence of PBs.
+In principle, any conformation of any amino acid could be represented
+by one of the sixteen available Protein Blocks.
+
+.. figure:: img/PBs.jpg
+    :align: center
+
+    Schematic representation of the sixteen protein blocks, labeled from *a* to *p*
+    (Creative commons CC-BY).
+
+
+
+
+PBxplore provides both a python library and command-line tools (:doc:`Utilization <utilization>`).
+For some features (reading trajectory, plots), PBxplore requires
+some optional dependencies (:doc:`Installation <installation>`).
+Basically, PBxplore can:
+
+* **assign PBs** from either a PDB or either a molecular dynamics trajectory (:doc:`PB assignation <./notebooks/Assignement>`).
+* use analysis tools to perform **statistical analysis** on PBs (:doc:`Statistics <PBstat>`).
+* use analysis tools to **study protein flexibility and deformability** (:doc:`Analyzis <./notebooks/Deformability>`).
+
+
+.. raw:: html
+
+   <div style="display:none">
 
 .. toctree::
    :maxdepth: 1
@@ -21,39 +48,26 @@ PBxplore
    PBcount
    PBstat
    PBclust
+   api_cookbook
+   api_reference
+
+.. raw:: html
+
+   </div>
 
 
+Contact & Support
+-----------------
 
-API cookbook
-------------
+PBxplore is a research software and has been developped by:
 
-.. toctree::
-   :maxdepth: 1
+* Pierre Poulain, DSIMB, Ets Poulain, Pointe-Noire, Congo
+* Jonathan Barnoud, University of Groningen, Groningen, The Netherlands
+* Hubert Santuz, DSIMB, Paris, France
+* Alexandre G. de Brevern, DSIMB, Paris, France
 
-   ./notebooks/Assignement
-   ./notebooks/WritePB
-   ./notebooks/Deformability
-
-
-API reference
--------------
-
-.. toctree::
-   :maxdepth: 1
-
-   ./pages/PB
-   ./pages/structure
-   ./pages/assign
-   ./pages/io
-   ./pages/analysis
-   ./pages/demo
-   ./pages/pbxplore
+If you want to report a bug, request a feature,
+use the `GitHub issue system <https://github.com/pierrepo/PBxplore/issues>`_.
 
 
-Indices and tables
-------------------
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
+.. [#] A. G. de Brevern, C. Etchebest, and S. Hazout. Bayesian Probabilistic Approach for Predicting Backbone Structures in Terms of Protein Blocks. *Proteins* **41**:271-87 (2000).
