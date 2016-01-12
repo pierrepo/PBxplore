@@ -19,7 +19,7 @@ by one of the sixteen available Protein Blocks.
     :align: center
 
     Schematic representation of the sixteen protein blocks, labeled from *a* to *p*
-    (Creative commons CC-BY).
+    (`Creative commons 4.0 CC-BY <https://creativecommons.org/licenses/by/4.0/>`_).
 
 
 
@@ -68,6 +68,12 @@ PBxplore is a research software and has been developped by:
 
 If you want to report a bug, request a feature,
 use the `GitHub issue system <https://github.com/pierrepo/PBxplore/issues>`_.
+
+
+Licence
+-------
+
+PBxplore is licensed under `The MIT License <https://github.com/pierrepo/PBxplore/blob/master/LICENSE>`_.
 
 
 .. [#] A. G. de Brevern, C. Etchebest, and S. Hazout. Bayesian Probabilistic Approach for Predicting Backbone Structures in Terms of Protein Blocks. *Proteins* **41**:271-87 (2000).
