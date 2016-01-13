@@ -1,7 +1,7 @@
 Utilization
 ===========
 
-2 ways to use `PBxplore`:
+There is 2 ways to use `PBxplore`:
   - command-line scripts
   - API
 
@@ -23,6 +23,8 @@ Here the list:
 API
 ---
 
+PBxplore is also a python library and provides an API to interfacing with Python applications.
+You will find :doc:`here <api_cookbook>` a list of notebooks to help you use the API.
 
 
 .. _demo:
