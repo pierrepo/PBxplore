@@ -42,7 +42,7 @@ Look at the notebook :doc:`Visualize protein deformability <./notebooks/Deformab
 for further information.
 
 
-.. note:: plotting function require `Matplotlib <http://matplotlib.org/>`_.
+.. note:: Plotting functions require `Matplotlib <http://matplotlib.org/>`_.
 
 .. note:: `generate_weblogo()` requires `Weblogo3 <http://weblogo.threeplusone.com/>`_.
 
