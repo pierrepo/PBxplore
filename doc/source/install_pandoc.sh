@@ -5,7 +5,7 @@
 if [[ ! -f $HOME/.cabal/bin/pandoc ]]
 then
     cabal update
-    cabal install monad-control-0.3.1
+    cabal install resourcet-1.1.7.1
     cabal install pandoc-1.15.1.1
 else
     echo "Get pandoc from the cache"
