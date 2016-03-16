@@ -8,7 +8,7 @@ PBxplore
 .. image:: https://img.shields.io/pypi/pyversions/pbxplore.svg
     :alt: PyPI Python version
 
-**PBxplore** is a suite of tools dedicated to Protein Block analysis.
+**PBxplore** is a suite of tools dedicated to Protein Block (PB) analysis.
 Protein Blocks are structural prototypes defined by
 `de Brevern et al <https://www.ncbi.nlm.nih.gov/pubmed/11025540>`_. The 3-dimensional local
 structure of a protein backbone can be modelized as an 1-dimensional sequence of PBs.
