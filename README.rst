@@ -13,7 +13,7 @@ structure of a protein backbone can be modelized as an 1-dimensional sequence of
 In principle, any conformation of any amino acid could be represented by one of
 the sixteen available Protein Blocks (see Figure 1).
 
-..image:: https://github.com/pierrepo/PBxplore/doc/source/img/PBs.jpg
+..image:: https://github.com/pierrepo/PBxplore/blob/master/doc/source/img/PBs.jpg
     :alt: PBs
 
 **Figure 1.** Schematic representation of the sixteen protein blocks,
