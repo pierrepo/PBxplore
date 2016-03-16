@@ -5,6 +5,11 @@ PBxplore
     :alt: Travis CI build status
     :target: https://travis-ci.org/pierrepo/PBxplore
 
+.. image:: https://img.shields.io/badge/Python-2.7-green.svg
+    :alt: Python 2.7
+
+.. image:: https://img.shields.io/badge/Python-3.5-green.svg
+    :alt: Python 3.5
 
 **PBxplore** is a suite of tools dedicated to Protein Block analysis.
 Protein Blocks are structural prototypes defined by
