@@ -5,6 +5,7 @@ from __future__ import print_function, absolute_import
 
 # Standard module
 import math
+import operator
 
 # Third-party modules
 import numpy
@@ -316,27 +317,31 @@ def get_dihedral(atomA, atomB, atomC, atomD):
     -36.8942888266
     """
 
-    # convert lists to Numpy objects
-    A = numpy.array(atomA)
-    B = numpy.array(atomB)
-    C = numpy.array(atomC)
-    D = numpy.array(atomD)
-
     # vectors
-    AB = B - A
-    BC = C - B
-    CD = D - C
+    AB = list(map(operator.sub, atomB, atomA))
+    BC = list(map(operator.sub, atomC, atomB))
+    CD = list(map(operator.sub, atomD, atomC))
 
     # normal vectors
-    n1 = numpy.cross(AB, BC)
-    n2 = numpy.cross(BC, CD)
+    n1 = []
+    n1.append(((AB[1] * BC[2]) - (AB[2] * BC[1])))
+    n1.append(((AB[2] * BC[0]) - (AB[0] * BC[2])))
+    n1.append(((AB[0] * BC[1]) - (AB[1] * BC[0])))
+    n2 = []
+    n2.append(((BC[1] * CD[2]) - (BC[2] * CD[1])))
+    n2.append(((BC[2] * CD[0]) - (BC[0] * CD[2])))
+    n2.append(((BC[0] * CD[1]) - (BC[1] * CD[0])))
+
+    n1 = numpy.array(n1)
+    n2 = numpy.array(n2)
+
 
     # normalize normal vectors
-    n1 /= numpy.linalg.norm(n1)
-    n2 /= numpy.linalg.norm(n2)
+    n1 /= numpy.sqrt(n1.dot(n1))
+    n2 /= numpy.sqrt(n2.dot(n2))
 
     # angle between normals
-    cosine = numpy.sum(n1*n2) / (numpy.linalg.norm(n1) * numpy.linalg.norm(n2))
+    cosine = n1.dot(n2)
     try:
         torsion = math.acos(cosine)
     except:
