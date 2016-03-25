@@ -10,6 +10,8 @@ Protrein Block assignation --- :mod:`pbxplore.assignment`
 
 from __future__ import print_function, absolute_import
 
+# Standard module
+import operator
 
 # Third-party module
 import numpy
@@ -75,20 +77,12 @@ def assign(dihedrals, pb_ref=PB.REFERENCES):
             pb_seq += "Z"
             continue
 
-        # convert to array
-        angles = numpy.array(angles)
-
         # compare to reference PB angles
         rmsda_lst = {}
         for block in pb_ref:
-            diff = pb_ref[block] - angles
-            diff2 = _angle_modulo_360_vect(diff)
-            rmsda = numpy.sum(diff2**2)
+            diff = list(map(operator.sub, pb_ref[block], angles))
+            #get the RMSD of the difference
+            rmsda = sum([_angle_modulo_360(d)**2 for d in diff])
             rmsda_lst[rmsda] = block
         pb_seq += rmsda_lst[min(rmsda_lst)]
     return pb_seq
-
-
-# vertorize function
-_angle_modulo_360_vect = numpy.vectorize(_angle_modulo_360)
-_angle_modulo_360_vect.__doc__ = _angle_modulo_360.__doc__

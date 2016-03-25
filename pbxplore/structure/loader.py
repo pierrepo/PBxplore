@@ -38,9 +38,9 @@ def chains_from_files(path_list):
 def chains_from_trajectory(trajectory, topology):
     comment = ""
     universe = MDAnalysis.Universe(topology, trajectory)
+    selection = universe.select_atoms("backbone")
     for ts in universe.trajectory:
         structure = Chain()
-        selection = universe.select_atoms("backbone")
         for atm in selection:
             atom = Atom()
             atom.read_from_xtc(atm)
