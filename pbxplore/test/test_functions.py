@@ -160,7 +160,10 @@ class TestChainClass(unittest.TestCase):
             at.read_from_PDB(line)
             ch.add_atom(at)
 
-        self.assertAlmostEqual(ch.get_phi_psi_angles(), results)
+        phi_psi = ch.get_phi_psi_angles()
+        for resid, angles in results.items():
+            self.assertAlmostEqual(angles["phi"], phi_psi[resid]["phi"])
+            self.assertAlmostEqual(angles["psi"], phi_psi[resid]["psi"])
 
 
 class TestPBlib(unittest.TestCase):
