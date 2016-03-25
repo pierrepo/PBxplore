@@ -16,7 +16,7 @@ Example
     Read 1 chain(s) in demo/3ICH.pdb
     wrote 3ICH.PB.fasta
 
-Content of `3ICH.PB.fasta`: ::
+Content of `3ICH.PB.fasta` : ::
 
     >demo1/3ICH.pdb | chain A
     ZZccdfbdcdddddehjbdebjcdddddfklmmmlmmmmmmmmnopnopajeopacfbdc
@@ -52,8 +52,8 @@ Here’s the ``PBassign`` help text. ::
         --flat    writes one PBs sequence per line
 
 
-`-p` option
-```````````
+``-p`` option
+`````````````
 
 can be used several times. For instance:
 
@@ -69,7 +69,7 @@ can be used several times. For instance:
 
 All PB assignments are written in the same output file. If a PDB file contains several chains
 and/or models, PBs assignments are also written in a single output file.
-From the previous example, the ouput of `test1.PB.fasta` is: ::
+From the previous example, the ouput of ``test1.PB.fasta`` is: ::
 
     >demo/3ICH.pdb | chain A
     ZZccdfbdcdddddehjbdebjcdddddfklmmmlmmmmmmmmnopnopajeopacfbdc
@@ -86,7 +86,7 @@ From the previous example, the ouput of `test1.PB.fasta` is: ::
     mnnommmmmmmmmmmmmmnopacddddZZ
 
 
-One can also use the `-p` option to provide a directory containing PDB files as an input.
+One can also use the ``-p`` option to provide a directory containing PDB files as an input.
 ``PBassign`` will process all PDB files located in the `PBdata` directory:
 
 .. code-block:: bash
@@ -104,14 +104,14 @@ One can also use the `-p` option to provide a directory containing PDB files as 
     wrote test2.PB.fasta
 
 
-`-x` and `-g` options
-`````````````````````
+``-x`` and ``-g`` options
+`````````````````````````
 
 .. warning:: These options require the installation of python library `MDAnalysis <http://www.mdanalysis.org/>`_
 
-Instead using the `-p` option, the protein structures could come
+Instead using the ``-p`` option, the protein structures could come
 from a molecular dynamics simulation file from Gromacs.
-For this, you have to specify a '.xtc' file with the `-x` option and a '.gro' file with the `-g` option.
+For this, you have to specify a '.xtc' file with the ``-x`` option and a '.gro' file with the ``-g`` option.
 
 .. code-block:: bash
 
@@ -128,8 +128,8 @@ For this, you have to specify a '.xtc' file with the `-x` option and a '.gro' fi
     wrote md_traj_4.PB.fasta
 
 
-`--phipsi` option
-`````````````````
+``--phipsi`` option
+```````````````````
 
 generates an additionnal file with the
 `phi and psi angles <http://en.wikipedia.org/wiki/Dihedral_angle#Dihedral_angles_of_biological_molecules>`_
@@ -143,7 +143,7 @@ for each residue.
     wrote 1BTA.PB.fasta
     wrote 1BTA.PB.phipsi
 
-Content of `1BTA.PB.phipsi`: ::
+Content of `1BTA.PB.phipsi` : ::
 
     demo/1BTA.pdb | chain A      1     None  -171.66
     demo/1BTA.pdb | chain A      2  -133.80   153.74
@@ -162,8 +162,8 @@ The last thee columns are, from left to right, the residue number, the phi angle
 The phi angle of the first residue and the psi angle of the last residue cannot be computed.
 
 
-`--flat` option
-```````````````
+``--flat`` option
+`````````````````
 
 formats the PBs assignment with one sequence per line.
 
@@ -175,7 +175,7 @@ formats the PBs assignment with one sequence per line.
     wrote 1BTA.PB.fasta
     wrote 1BTA.PB.flat
 
-Content of `1BTA.PB.flat`: ::
+Content of `1BTA.PB.flat` : ::
 
     ZZdddfklonbfklmmmmmmmmnopafklnoiaklmmmmmnoopacddddddehkllmmmmngoilmmmmmmmmmmmmnopacdcddZZ
 
