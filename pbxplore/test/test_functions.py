@@ -91,11 +91,11 @@ class TestAtomClass(unittest.TestCase):
         Tests for read_from_PDB()
         """
         a = structure.Atom.read_from_PDB("ATOM    512  N   GLU A  32      -1.870  -9.835  -1.853  1.00  0.56           N  ")
-        self.assertAlmostEqual(a.coords(), [-1.87, -9.835, -1.853])
+        self.assertAlmostEqual(a.coords, [-1.87, -9.835, -1.853])
         a = structure.Atom.read_from_PDB("ATOM   1424  CA  SER A  89       7.604  11.308   1.435  1.00  0.62           C  ")
-        self.assertAlmostEqual(a.coords(), [7.604, 11.308, 1.435])
+        self.assertAlmostEqual(a.coords, [7.604, 11.308, 1.435])
         a = structure.Atom.read_from_PDB("ATOM   1167  CG2 VAL B  50       9.294  44.541  -4.830  1.00 27.62           C  ")
-        self.assertAlmostEqual(a.coords(), [9.294, 44.541, -4.83])
+        self.assertAlmostEqual(a.coords, [9.294, 44.541, -4.83])
 
     def test_read_from_PDBx(self):
         """
@@ -110,13 +110,13 @@ class TestAtomClass(unittest.TestCase):
                   'auth_atom_id', 'pdbx_PDB_model_num']
         line = "ATOM 4769  H HB   . ILE A 1 35  ? -20.422 5.104   -0.207  1.00 0.00 ? ? ? ? ? ? 277 ILE A HB   3"
         a = structure.Atom.read_from_PDBx(line, fields)
-        self.assertAlmostEqual(a.coords(), [-20.422, 5.104, -0.207])
+        self.assertAlmostEqual(a.coords, [-20.422, 5.104, -0.207])
         line = "ATOM 18201 H HG21 . THR A 1 140 ? 11.080  -12.466 -8.977  1.00 0.00 ? ? ? ? ? ? 382 THR A HG21 8"
         a = structure.Atom.read_from_PDBx(line, fields)
-        self.assertAlmostEqual(a.coords(), [11.08, -12.466, -8.977])
+        self.assertAlmostEqual(a.coords, [11.08, -12.466, -8.977])
         line = "ATOM 23720 H HE2  . HIS A 1 193 ? 13.974  24.297  0.352   1.00 0.00 ? ? ? ? ? ? 435 HIS A HE2  10"
         a = structure.Atom.read_from_PDBx(line, fields)
-        self.assertAlmostEqual(a.coords(), [13.974, 24.297, 0.352])
+        self.assertAlmostEqual(a.coords, [13.974, 24.297, 0.352])
 
 
 class TestChainClass(unittest.TestCase):

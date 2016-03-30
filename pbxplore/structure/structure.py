@@ -143,12 +143,23 @@ class Atom:
                   self.resid, '', self.x, self.y, self.z,
                   0.0, 0.0, '  ', '  ')
 
+    @property
     def coords(self):
         """
         Return atom coordinates.
-
         """
         return [self.x, self.y, self.z]
+
+    @coords.setter
+    def coords(self, pos):
+        """
+        Set the cartesian coordinates of the atom.
+
+        Parameters
+        ----------
+        pos: a list or numpy array of 3 elements
+        """
+        self.x, self.y, self.z = pos
 
 
 class Chain:
@@ -170,6 +181,9 @@ class Chain:
         return "Chain {0} / model {1}: {2} atoms".format(self.name,
                                                          self.model,
                                                          len(self.atoms))
+
+    def __getitem__(self, i):
+        return self.atoms[i]
 
     def add_atom(self, atom):
         """
@@ -211,6 +225,26 @@ class Chain:
         Get number of atoms.
         """
         return len(self.atoms)
+
+    def set_coordinates(self, positions):
+        """
+        Update the coordinates of all atoms in a chain.
+
+        Parameters
+        ----------
+        positions : a 2D numpy array with a shape of (number of atoms * 3)
+
+        Raises
+        ------
+        TypeError
+            If positions doesn't have the right shape
+
+        """
+        if numpy.shape(positions) != (self.size(), 3):
+            raise ValueError("Coordinates array doesn't have the good shape.")
+
+        for atm, coords in zip(self.atoms, positions):
+            atm.coords = coords
 
     def get_phi_psi_angles(self):
         """
@@ -256,18 +290,18 @@ class Chain:
         for res in sorted(backbone):
             # phi: angle between C(i-1) - N(i) - CA(i) - C(i)
             try:
-                phi = get_dihedral(backbone[res-1]["C" ].coords(),
-                                   backbone[res  ]["N" ].coords(),
-                                   backbone[res  ]["CA"].coords(),
-                                   backbone[res  ]["C" ].coords())
+                phi = get_dihedral(backbone[res-1]["C" ].coords,
+                                   backbone[res  ]["N" ].coords,
+                                   backbone[res  ]["CA"].coords,
+                                   backbone[res  ]["C" ].coords)
             except:
                 phi = None
             # psi: angle between N(i) - CA(i) - C(i) - N(i+1)
             try:
-                psi = get_dihedral(backbone[res  ]["N" ].coords(),
-                                   backbone[res  ]["CA"].coords(),
-                                   backbone[res  ]["C" ].coords(),
-                                   backbone[res+1]["N" ].coords())
+                psi = get_dihedral(backbone[res  ]["N" ].coords,
+                                   backbone[res  ]["CA"].coords,
+                                   backbone[res  ]["C" ].coords,
+                                   backbone[res+1]["N" ].coords)
             except:
                 psi = None
             # print(res, phi, psi)
