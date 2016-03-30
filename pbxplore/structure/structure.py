@@ -32,27 +32,23 @@ class Atom:
     """
     Class for atoms in PDB or PDBx/mmCIF format.
     """
-    def __init__(self):
+    def __init__(self, ident=0, name=None, resname=None, chain=None, resid=0,
+                 x=0.0, y=0.0, z=0.0, model=None):
         """default constructor"""
-        self.id = 0
-        self.name = None
-        self.resalt = ' '
-        self.resname = None
-        self.chain = None
-        self.resid = 0
-        self.resins = ''
-        self.x = 0.0
-        self.y = 0.0
-        self.z = 0.0
-        self.occupancy = 0.0
-        self.tempfactor = 0.0
-        self.element = '  '
-        self.charge =  '  '
-        self.model = None
+        self.id = ident
+        self.name = name
+        self.resname = resname
+        self.chain = chain
+        self.resid = resid
+        self.x = x
+        self.y = y
+        self.z = z
+        self.model = model
 
-    def read_from_PDB(self, line):
+    @classmethod
+    def read_from_PDB(cls, line):
         """
-        Read ATOM data from a PDB file line.
+        Constructor from a PDB file line.
 
         Parameters
         ----------
@@ -71,18 +67,21 @@ class Atom:
         """
         if len(line) < 55:
             raise AtomError("ATOM line too short:\n{0}".format(line))
-        self.id = int(line[6:11].strip())
-        self.name = line[12:16].strip()
-        self.resname = line[17:20].strip()
-        self.chain = line[21:22].strip()
-        self.resid = int(line[22:26].strip())
-        self.x = float(line[30:38].strip())
-        self.y = float(line[38:46].strip())
-        self.z = float(line[46:54].strip())
+        ident = int(line[6:11].strip())
+        name = line[12:16].strip()
+        resname = line[17:20].strip()
+        chain = line[21:22].strip()
+        resid = int(line[22:26].strip())
+        x = float(line[30:38].strip())
+        y = float(line[38:46].strip())
+        z = float(line[46:54].strip())
 
-    def read_from_PDBx(self, line, fields):
+        return cls(ident, name, resname, chain, resid, x, y, z)
+
+    @classmethod
+    def read_from_PDBx(cls, line, fields):
         """
-        Read ATOM data from a PDBx/mmCIF file line
+        Constructor from a PDBx/mmCIF file line
 
         Parameters
         ----------
@@ -101,35 +100,32 @@ class Atom:
         except:
             raise AtomError("Something went wrong in reading\n{0}".format(line))
         try:
-            self.id = int(dic['id'])
-            self.name = dic['label_atom_id']
-            self.resname = dic['label_comp_id']
-            self.chain = dic['label_asym_id']
-            self.resid = int(dic['label_seq_id'])
-            self.x = float(dic['Cartn_x'])
-            self.y = float(dic['Cartn_y'])
-            self.z = float(dic['Cartn_z'])
-            self.model = dic['pdbx_PDB_model_num']
+            ident = int(dic['id'])
+            name = dic['label_atom_id']
+            resname = dic['label_comp_id']
+            chain = dic['label_asym_id']
+            resid = int(dic['label_seq_id'])
+            x = float(dic['Cartn_x'])
+            y = float(dic['Cartn_y'])
+            z = float(dic['Cartn_z'])
+            model = dic['pdbx_PDB_model_num']
         except:
             raise AtomError("Something went wrong in data convertion\n{0}"
                             .format(dic))
 
-    def read_from_xtc(self, atm):
+        return cls(ident, name, resname, chain, resid, x, y, z, model)
+
+    @classmethod
+    def read_from_xtc(cls, atm):
         """
-        Read ATOM date from a .xtc mdanalysis selection.
+        Constructor from a .xtc mdanalysis selection.
 
         Parameters
         ----------
-        atm : atom object
+        atm : atom object of MDAnlysis
         """
-        self.id = atm.id
-        self.name = atm.name
-        self.resname = atm.resname
-        self.chain = ""
-        self.resid = atm.resid
-        self.x = atm.pos[0]
-        self.y = atm.pos[1]
-        self.z = atm.pos[2]
+        x, y, z = atm.position
+        return cls(atm.id, atm.name, atm.resname, "", atm.resid, x, y, z)
 
     def __repr__(self):
         """
@@ -143,16 +139,27 @@ class Atom:
         Atom displayed in PDB format.
         """
         return '%-6s%5d %4s%1s%3s %1s%4d%1s   %8.3f%8.3f%8.3f%6.2f%6.2f          %2s%2s' \
-               % ('ATOM  ', self.id, self.name, self.resalt, self.resname, self.chain,
-                  self.resid, self.resins, self.x, self.y, self.z,
-                  self.occupancy, self.tempfactor, self.element, self.charge)
+               % ('ATOM  ', self.id, self.name, ' ', self.resname, self.chain,
+                  self.resid, '', self.x, self.y, self.z,
+                  0.0, 0.0, '  ', '  ')
 
+    @property
     def coords(self):
         """
         Return atom coordinates.
-
         """
         return [self.x, self.y, self.z]
+
+    @coords.setter
+    def coords(self, pos):
+        """
+        Set the cartesian coordinates of the atom.
+
+        Parameters
+        ----------
+        pos: a list or numpy array of 3 elements
+        """
+        self.x, self.y, self.z = pos
 
 
 class Chain:
@@ -174,6 +181,9 @@ class Chain:
         return "Chain {0} / model {1}: {2} atoms".format(self.name,
                                                          self.model,
                                                          len(self.atoms))
+
+    def __getitem__(self, i):
+        return self.atoms[i]
 
     def add_atom(self, atom):
         """
@@ -215,6 +225,26 @@ class Chain:
         Get number of atoms.
         """
         return len(self.atoms)
+
+    def set_coordinates(self, positions):
+        """
+        Update the coordinates of all atoms in a chain.
+
+        Parameters
+        ----------
+        positions : a 2D numpy array with a shape of (number of atoms * 3)
+
+        Raises
+        ------
+        TypeError
+            If positions doesn't have the right shape
+
+        """
+        if numpy.shape(positions) != (self.size(), 3):
+            raise ValueError("Coordinates array doesn't have the good shape.")
+
+        for atm, coords in zip(self.atoms, positions):
+            atm.coords = coords
 
     def get_phi_psi_angles(self):
         """
@@ -260,18 +290,18 @@ class Chain:
         for res in sorted(backbone):
             # phi: angle between C(i-1) - N(i) - CA(i) - C(i)
             try:
-                phi = get_dihedral(backbone[res-1]["C" ].coords(),
-                                   backbone[res  ]["N" ].coords(),
-                                   backbone[res  ]["CA"].coords(),
-                                   backbone[res  ]["C" ].coords())
+                phi = get_dihedral(backbone[res-1]["C" ].coords,
+                                   backbone[res  ]["N" ].coords,
+                                   backbone[res  ]["CA"].coords,
+                                   backbone[res  ]["C" ].coords)
             except:
                 phi = None
             # psi: angle between N(i) - CA(i) - C(i) - N(i+1)
             try:
-                psi = get_dihedral(backbone[res  ]["N" ].coords(),
-                                   backbone[res  ]["CA"].coords(),
-                                   backbone[res  ]["C" ].coords(),
-                                   backbone[res+1]["N" ].coords())
+                psi = get_dihedral(backbone[res  ]["N" ].coords,
+                                   backbone[res  ]["CA"].coords,
+                                   backbone[res  ]["C" ].coords,
+                                   backbone[res+1]["N" ].coords)
             except:
                 psi = None
             # print(res, phi, psi)
