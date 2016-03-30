@@ -42,8 +42,7 @@ def chains_from_trajectory(trajectory, topology):
     for ts in universe.trajectory:
         structure = Chain()
         for atm in selection:
-            atom = Atom()
-            atom.read_from_xtc(atm)
+            atom = Atom.read_from_xtc(atm)
             # append structure with atom
             structure.add_atom(atom)
             # define structure comment

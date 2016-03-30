@@ -174,9 +174,6 @@ class TestPBAssign(TemplateTestCase):
 
         run_list = (['PBassign'] + input_args +
                     ['-o', out_basename + extension] + options)
-        print(' '.join(run_list))
-        print("AAAAAAAAAAAAAAAAAAA")
-        print(out_basename + extension)
         exe = subprocess.Popen(run_list,
                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = exe.communicate()

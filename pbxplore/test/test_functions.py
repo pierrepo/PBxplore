@@ -90,19 +90,17 @@ class TestAtomClass(unittest.TestCase):
         """
         Tests for read_from_PDB()
         """
-        a = structure.Atom()
-        a.read_from_PDB("ATOM    512  N   GLU A  32      -1.870  -9.835  -1.853  1.00  0.56           N  ")
+        a = structure.Atom.read_from_PDB("ATOM    512  N   GLU A  32      -1.870  -9.835  -1.853  1.00  0.56           N  ")
         self.assertAlmostEqual(a.coords(), [-1.87, -9.835, -1.853])
-        a.read_from_PDB("ATOM   1424  CA  SER A  89       7.604  11.308   1.435  1.00  0.62           C  ")
+        a = structure.Atom.read_from_PDB("ATOM   1424  CA  SER A  89       7.604  11.308   1.435  1.00  0.62           C  ")
         self.assertAlmostEqual(a.coords(), [7.604, 11.308, 1.435])
-        a.read_from_PDB("ATOM   1167  CG2 VAL B  50       9.294  44.541  -4.830  1.00 27.62           C  ")
+        a = structure.Atom.read_from_PDB("ATOM   1167  CG2 VAL B  50       9.294  44.541  -4.830  1.00 27.62           C  ")
         self.assertAlmostEqual(a.coords(), [9.294, 44.541, -4.83])
 
     def test_read_from_PDBx(self):
         """
         Tests for read_from_PDBx()
         """
-        a = structure.Atom()
         fields = ['group_PDB', 'id', 'type_symbol', 'label_atom_id',
                   'label_alt_id', 'label_comp_id', 'label_asym_id', 'label_entity_id',
                   'label_seq_id', 'pdbx_PDB_ins_code', 'Cartn_x', 'Cartn_y', 'Cartn_z',
@@ -111,13 +109,13 @@ class TestAtomClass(unittest.TestCase):
                   'pdbx_formal_charge', 'auth_seq_id', 'auth_comp_id', 'auth_asym_id',
                   'auth_atom_id', 'pdbx_PDB_model_num']
         line = "ATOM 4769  H HB   . ILE A 1 35  ? -20.422 5.104   -0.207  1.00 0.00 ? ? ? ? ? ? 277 ILE A HB   3"
-        a.read_from_PDBx(line, fields)
+        a = structure.Atom.read_from_PDBx(line, fields)
         self.assertAlmostEqual(a.coords(), [-20.422, 5.104, -0.207])
         line = "ATOM 18201 H HG21 . THR A 1 140 ? 11.080  -12.466 -8.977  1.00 0.00 ? ? ? ? ? ? 382 THR A HG21 8"
-        a.read_from_PDBx(line, fields)
+        a = structure.Atom.read_from_PDBx(line, fields)
         self.assertAlmostEqual(a.coords(), [11.08, -12.466, -8.977])
         line = "ATOM 23720 H HE2  . HIS A 1 193 ? 13.974  24.297  0.352   1.00 0.00 ? ? ? ? ? ? 435 HIS A HE2  10"
-        a.read_from_PDBx(line, fields)
+        a = structure.Atom.read_from_PDBx(line, fields)
         self.assertAlmostEqual(a.coords(), [13.974, 24.297, 0.352])
 
 
@@ -137,8 +135,7 @@ class TestChainClass(unittest.TestCase):
                  "ATOM    855  N   ILE B  13      20.421  23.341  -0.088  1.00 30.25           N  ")
         ch = structure.Chain()
         for line in lines:
-            at = structure.Atom()
-            at.read_from_PDB(line)
+            at = structure.Atom.read_from_PDB(line)
             ch.add_atom(at)
         self.assertEqual(ch.size(), 5)
 
@@ -156,8 +153,7 @@ class TestChainClass(unittest.TestCase):
                  "ATOM    855  N   ILE B  13      20.421  23.341  -0.088  1.00 30.25           N  ")
         ch = structure.Chain()
         for line in lines:
-            at = structure.Atom()
-            at.read_from_PDB(line)
+            at = structure.Atom.read_from_PDB(line)
             ch.add_atom(at)
 
         phi_psi = ch.get_phi_psi_angles()

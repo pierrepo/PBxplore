@@ -57,8 +57,7 @@ class PDB:
             if flag == "MODEL":
                 chain.set_model(line.split()[1])
             if flag == "ATOM":
-                atom = Atom()
-                atom.read_from_PDB(line)
+                atom = Atom.read_from_PDB(line)
                 # store current chain and clean object
                 if chain.size() != 0 and chain.name != atom.chain:
                     self.chains.append(chain)
@@ -104,8 +103,7 @@ class PDB:
         # separate all chains and store atoms
         chain = Chain()
         for atom_line in atom_coordinates:
-            atom = Atom()
-            atom.read_from_PDBx(atom_line, atom_fields)
+            atom = Atom.read_from_PDBx(atom_line, atom_fields)
             # define model at first atom
             if chain.size() == 1:
                 chain.set_model(atom.model)
