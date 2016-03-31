@@ -10,26 +10,11 @@ Protrein Block assignation --- :mod:`pbxplore.assignment`
 
 from __future__ import print_function, absolute_import
 
-# Standard module
-import operator
-
 # Third-party module
 import numpy
 
 # Local module
 from . import PB
-
-
-def _angle_modulo_360(angle):
-    """
-    Keep angle in the range -180 / +180 [degrees]
-    """
-    if angle > 180.0:
-        return angle - 360.0
-    elif angle < -180.0:
-        return angle + 360.0
-    else:
-        return angle
 
 
 def assign(dihedrals, pb_ref=PB.REFERENCES):
@@ -51,6 +36,10 @@ def assign(dihedrals, pb_ref=PB.REFERENCES):
         The definition of the protein blocks.
     """
     pb_seq = ""
+
+    # Transform the dict into a numpy array with the right order
+    ref = numpy.array([pb_ref[key] for key in sorted(pb_ref)])
+
     # iterate over all residues
     for res in sorted(dihedrals):
         angles = []
@@ -77,12 +66,12 @@ def assign(dihedrals, pb_ref=PB.REFERENCES):
             pb_seq += "Z"
             continue
 
-        # compare to reference PB angles
-        rmsda_lst = {}
-        for block in pb_ref:
-            diff = list(map(operator.sub, pb_ref[block], angles))
-            #get the RMSD of the difference
-            rmsda = sum([_angle_modulo_360(d)**2 for d in diff])
-            rmsda_lst[rmsda] = block
-        pb_seq += rmsda_lst[min(rmsda_lst)]
+        # Compute the RMSD between all reference angles and angles of the current residue
+        # (16*8)*(1,8) vectorization
+        # Note (ref - ang + 180) % 360 - 180) ensure the real difference between 2 angles
+        rmsda = numpy.sum(((ref - angles + 180) % 360 - 180)**2, axis=1)
+
+        # Find the PB with the lowest RMSD
+        pb_seq += PB.NAMES[numpy.argmin(rmsda)]
+
     return pb_seq
