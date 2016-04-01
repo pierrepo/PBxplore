@@ -162,21 +162,18 @@ The last thee columns are, from left to right, the residue number, the phi angle
 The phi angle of the first residue and the psi angle of the last residue cannot be computed.
 
 
-``--flat`` option
-`````````````````
 
-formats the PBs assignment with one sequence per line.
+Tips'n tricks
+-------------
+
+To flatten the PB sequences obtained in FASTA format, i.e. get PB sequences in a sigle lin each, one solution could be:
 
 .. code-block:: bash
 
-    $ PBassign -p `PBdata`/1BTA.pdb -o 1BTA --flat
-    1 PDB file(s) to process
-    Read 1 chain(s) in demo/1BTA.pdb
-    wrote 1BTA.PB.fasta
-    wrote 1BTA.PB.flat
+    $ cat `PBdata`/1AY7.PB.fasta | sed "s/^>.*/\t/" | tr -d "\n" | tr "\t" "\n" > 1AY7.PB.flat
 
-Content of `1BTA.PB.flat` : ::
+Content of `1AY7.PB.flat` : ::
 
-    ZZdddfklonbfklmmmmmmmmnopafklnoiaklmmmmmnoopacddddddehkllmmmmngoilmmmmmmmmmmmmnopacdcddZZ
-
+    ZZbjadfklmcfklmmmmmmmmnnpaafbfkgopacehlnomaccddehjaccdddddehklpnbjadcdddfbehiacddfegolaccdddfkZZ
+    ZZcddfklpcbfklmmmmmmmmnopafklgoiaklmmmmmmmmpacddddddehkllmmmmnnommmmmmmmmmmmmmnopacddddZZ
 

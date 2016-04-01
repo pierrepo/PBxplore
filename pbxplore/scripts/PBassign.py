@@ -65,8 +65,6 @@ def user_inputs():
     # optional arguments
     parser.add_argument("--phipsi", action="store_true", default=False,
                         help="writes phi and psi angle")
-    parser.add_argument("--flat", action="store_true", default=False,
-                        help="writes one PBs sequence per line")
     parser.add_argument('-v', '--version', action='version',
                         version='%(prog)s 1.0')
     # get all arguments
@@ -137,18 +135,12 @@ def pbassign_cli():
     fasta_name = options.o + ".PB.fasta"
     with open(fasta_name, 'w') as outfile:
         pbx.io.write_fasta(outfile, all_sequences, all_comments)
-    if options.flat:
-        flat_name = options.o + ".PB.flat"
-        with open(flat_name, 'w') as outfile:
-            pbx.io.write_flat(outfile, all_sequences)
     if options.phipsi:
         phipsi_name = options.o + ".PB.phipsi"
         with open(phipsi_name, 'w') as outfile:
             pbx.io.write_phipsi(outfile, all_dihedrals, all_comments)
 
     print("wrote {0}".format(fasta_name))
-    if options.flat:
-        print("wrote {0}".format(flat_name))
     if options.phipsi:
         print("wrote {0}".format(phipsi_name))
 
