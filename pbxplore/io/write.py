@@ -29,11 +29,6 @@ def write_phipsi(outfile, torsions, comments):
         write_phipsi_entry(outfile, torsion, comment)
 
 
-def write_flat(outfile, sequences):
-    for sequence in sequences:
-        print(sequence, file=outfile)
-
-
 def write_count_matrix(pb_count, outfile, first=1):
     """
     Write a PB occurence matrix in a file.

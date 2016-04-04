@@ -77,21 +77,6 @@ PBassign -p 3ICH.pdb -o 3ICH --phipsi
 echo  -e "\n"
 echo "#------------------------------------------------------------------------#"
 echo "|                                                                        |"
-echo "|  Protein Blocks assignment: static structures --flat option            |"
-echo "|                                                                        |"
-echo "#------------------------------------------------------------------------#"
-
-
-echo  -e "\n"
-echo "Test with 2LFU.pdb: RMN structure, 10 models"
-echo "PBassign -p 2LFU.pdb -o 2LFU --flat"
-pause
-PBassign -p 2LFU.pdb -o 2LFU --flat
-
-
-echo  -e "\n"
-echo "#------------------------------------------------------------------------#"
-echo "|                                                                        |"
 echo "|  Protein Blocks assignment: several static structures                  |"
 echo "|                                                                        |"
 echo "#------------------------------------------------------------------------#"

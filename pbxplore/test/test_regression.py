@@ -213,16 +213,6 @@ class TestPBAssign(TemplateTestCase):
         self._test_PBassign_options(references, extensions,
                                     ['{0}.PB.fasta'], [])
 
-    def test_flat(self):
-        """
-        Run PBassign with the --flat option.
-        """
-        references = ["1BTA", "1AY7", "2LFU", "3ICH"]
-        extensions = [".pdb", ".cif.gz"]
-        self._test_PBassign_options(references, extensions,
-                                    ['{0}.PB.fasta', '{0}.PB.flat'],
-                                    ['--flat'])
-
     def test_phipsi(self):
         """
         Run PBassign with the --phipsi option.
@@ -233,16 +223,6 @@ class TestPBAssign(TemplateTestCase):
                                     ['{0}.PB.fasta', '{0}.PB.phipsi'],
                                     ['--phipsi'])
 
-    def test_flat_phipsi(self):
-        """
-        Run PBassign with the both the --flat and --phipsi options.
-        """
-        references = ["1BTA", "1AY7", "2LFU", "3ICH"]
-        extensions = [".pdb", ".cif.gz"]
-        self._test_PBassign_options(references, extensions,
-                                    ['{0}.PB.fasta', '{0}.PB.flat', '{0}.PB.phipsi'],
-                                    ['--flat', '--phipsi'])
-
     def test_multiple_inputs(self):
         """
         Run PBassign with multiple inputs.
@@ -250,8 +230,8 @@ class TestPBAssign(TemplateTestCase):
         references = ["1BTA", "1AY7", "2LFU", "3ICH"]
         extensions = [".pdb", ".cif.gz"]
         self._test_PBassign_options(references, extensions,
-                                    ['{0}.PB.fasta', '{0}.PB.flat', '{0}.PB.phipsi'],
-                                    ['--flat', '--phipsi'], multiple='all')
+                                    ['{0}.PB.fasta', '{0}.PB.phipsi'],
+                                    ['--phipsi'], multiple='all')
 
     def test_xtc_input(self):
         """
@@ -292,9 +272,9 @@ class TestPBAssign(TemplateTestCase):
         references = ["1BTA"]
         extensions = [".pdb"]
         self._test_PBassign_options(references, extensions,
-                                    ['{0}.PB.fasta', '{0}.PB.flat',
+                                    ['{0}.PB.fasta',
                                      '{0}.PB.phipsi', '{0}.missing'],
-                                    ['--flat', '--phipsi'])
+                                    ['--phipsi'])
 
     @_failure_test
     def test_too_many_outputs(self):
@@ -304,8 +284,8 @@ class TestPBAssign(TemplateTestCase):
         references = ["1BTA"]
         extensions = [".pdb"]
         self._test_PBassign_options(references, extensions,
-                                    ['{0}.PB.fasta', '{0}.PB.flat'],
-                                    ['--flat', '--phipsi'])
+                                    ['{0}.PB.fasta'],
+                                    ['--phipsi'])
 
     @_failure_test
     def test_different_outputs(self):
