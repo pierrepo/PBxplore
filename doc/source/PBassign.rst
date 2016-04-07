@@ -47,10 +47,6 @@ Here’s the ``PBassign`` help text. ::
         -x X      name of xtc file (Gromacs)
         -g G      name of gro file (Gromacs)
 
-      Optional arguments:
-        --phipsi  writes phi and psi angle
-        --flat    writes one PBs sequence per line
-
 
 ``-p`` option
 `````````````
@@ -126,41 +122,6 @@ For this, you have to specify a '.xtc' file with the ``-x`` option and a '.gro' 
     PBs assigned for demo/md.xtc | frame 200
     PBs assigned for demo/md.xtc | frame 201
     wrote md_traj_4.PB.fasta
-
-
-``--phipsi`` option
-```````````````````
-
-generates an additionnal file with the
-`phi and psi angles <http://en.wikipedia.org/wiki/Dihedral_angle#Dihedral_angles_of_biological_molecules>`_
-for each residue.
-
-.. code-block:: bash
-
-    $ PBassign -p `PBdata`/1BTA.pdb -o 1BTA --phipsi
-    1 PDB file(s) to process
-    Read 1 chain(s) in demo/1BTA.pdb
-    wrote 1BTA.PB.fasta
-    wrote 1BTA.PB.phipsi
-
-Content of `1BTA.PB.phipsi` : ::
-
-    demo/1BTA.pdb | chain A      1     None  -171.66
-    demo/1BTA.pdb | chain A      2  -133.80   153.74
-    demo/1BTA.pdb | chain A      3  -134.66   157.30
-    demo/1BTA.pdb | chain A      4  -144.49   118.60
-    demo/1BTA.pdb | chain A      5  -100.13    92.99
-    demo/1BTA.pdb | chain A      6   -83.49   104.24
-    demo/1BTA.pdb | chain A      7   -64.77   -43.25
-    demo/1BTA.pdb | chain A      8   -44.48   -25.89
-    demo/1BTA.pdb | chain A      9   -94.91   -47.18
-    demo/1BTA.pdb | chain A     10   -41.31   133.74
-    [snip]
-
-The first part of the line is the comment also found in the fasta file.
-The last thee columns are, from left to right, the residue number, the phi angle and the psi angle.
-The phi angle of the first residue and the psi angle of the last residue cannot be computed.
-
 
 
 Tips'n tricks
