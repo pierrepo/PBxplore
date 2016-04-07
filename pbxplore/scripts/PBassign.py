@@ -62,9 +62,7 @@ def user_inputs():
                        help="name of xtc file (Gromacs)")
     group.add_argument("-g", action="store",
                        help="name of gro file (Gromacs)")
-    # optional arguments
-    parser.add_argument("--phipsi", action="store_true", default=False,
-                        help="writes phi and psi angle")
+
     parser.add_argument('-v', '--version', action='version',
                         version='%(prog)s 1.0')
     # get all arguments
@@ -124,25 +122,18 @@ def pbassign_cli():
 
     all_comments = []
     all_sequences = []
-    all_dihedrals = []
     for comment, chain in chains:
         dihedrals = chain.get_phi_psi_angles()
         sequence = pbx.assign(dihedrals)
         all_comments.append(comment)
-        all_dihedrals.append(dihedrals)
         all_sequences.append(sequence)
 
     fasta_name = options.o + ".PB.fasta"
     with open(fasta_name, 'w') as outfile:
         pbx.io.write_fasta(outfile, all_sequences, all_comments)
-    if options.phipsi:
-        phipsi_name = options.o + ".PB.phipsi"
-        with open(phipsi_name, 'w') as outfile:
-            pbx.io.write_phipsi(outfile, all_dihedrals, all_comments)
 
     print("wrote {0}".format(fasta_name))
-    if options.phipsi:
-        print("wrote {0}".format(phipsi_name))
+
 
 if __name__ == '__main__':
     pbassign_cli()
