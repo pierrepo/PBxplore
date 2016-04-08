@@ -15,9 +15,18 @@ Tests functions from different programs.
 import unittest
 import collections
 import os
+import warnings
 
 import pbxplore as pbx
 from pbxplore.structure import structure
+
+try:
+    import MDAnalysis
+except ImportError:
+    IS_MDANALYSIS = False
+    warnings.warn('MDanalysis is not available, tests will be run accordingly')
+else:
+    IS_MDANALYSIS = True
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -117,6 +126,34 @@ class TestAtomClass(unittest.TestCase):
         line = "ATOM 23720 H HE2  . HIS A 1 193 ? 13.974  24.297  0.352   1.00 0.00 ? ? ? ? ? ? 435 HIS A HE2  10"
         a = structure.Atom.read_from_PDBx(line, fields)
         self.assertAlmostEqual(a.coords, [13.974, 24.297, 0.352])
+
+    @unittest.skipUnless(IS_MDANALYSIS, "MDAnalysis is not present")
+    def test_read_from_xtc(self):
+        """
+        Tests for read_from_xtc()
+        """
+        topology = os.path.join(here, "test_data/barstar_md_traj.gro")
+        traj = os.path.join(here, "test_data/barstar_md_traj.xtc")
+        universe = MDAnalysis.Universe(topology, traj)
+        selection = universe.select_atoms("backbone")
+
+        # First timeframe
+        atom = structure.Atom.read_from_xtc(selection[0])
+        self.assertEqual(atom.resid, 1)
+        self.assertEqual(atom.name, "N")
+        [self.assertAlmostEqual(a, b, places=3) for a, b in zip(atom.coords, [21.68, 33.87, 36.18])]
+        atom = structure.Atom.read_from_xtc(selection[-1])
+        self.assertEqual(atom.resid, 89)
+        self.assertEqual(atom.name, "C")
+        [self.assertAlmostEqual(a, b, places=3) for a, b in zip(atom.coords, [40.14, 38.75, 28.42])]
+
+        #Last one
+        ts = universe.trajectory[-1]
+        atom = structure.Atom.read_from_xtc(selection[0])
+        [self.assertAlmostEqual(a, b, places=3) for a, b in zip(atom.coords, [46.18, 53.24, 50.70])]
+        atom = structure.Atom.read_from_xtc(selection[-1])
+        [self.assertAlmostEqual(a, b, places=3) for a, b in zip(atom.coords, [62.89, 45.82, 45.46])]
+
 
 
 class TestChainClass(unittest.TestCase):
