@@ -152,8 +152,7 @@ class TestPBAssign(TemplateTestCase):
     """
     Regression tests for PBAssign.py
     """
-    def _run_PBassign(self, pdbid, extension, options,
-                      multiple=None, indir=REFDIR, outdir=OUTDIR):
+    def _run_PBassign(self, pdbid, extension, multiple=None, indir=REFDIR, outdir=OUTDIR):
         """
         Run a PBxplore program on a PDBID with the given options.
 
@@ -172,8 +171,7 @@ class TestPBAssign(TemplateTestCase):
                 input_args += ['-p', path.join(REFDIR, basename + extension)]
             out_basename = path.join(out_run_dir, multiple)
 
-        run_list = (['PBassign'] + input_args +
-                    ['-o', out_basename + extension] + options)
+        run_list = (['PBassign'] + input_args + ['-o', out_basename + extension])
         exe = subprocess.Popen(run_list,
                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = exe.communicate()
@@ -182,15 +180,14 @@ class TestPBAssign(TemplateTestCase):
 
         return exe.returncode, out_run_dir
 
-    def _test_PBassign_options(self, basenames, extensions, outfiles, options,
+    def _test_PBassign_options(self, basenames, extensions, outfiles,
                                multiple=None, expected_exit=0):
         if multiple is not None:
             basenames = [basenames]
             out_name = multiple
         for basename in basenames:
             for extension in extensions:
-                status, out_run_dir = self._run_PBassign(basename, extension,
-                                                         options, multiple)
+                status, out_run_dir = self._run_PBassign(basename, extension, multiple)
                 assert status == expected_exit, \
                        'PBassign stoped with a {0} exit code'.format(status)
                 assert len(os.listdir(out_run_dir)) == len(outfiles),\
@@ -211,17 +208,7 @@ class TestPBAssign(TemplateTestCase):
         references = ["1BTA", "1AY7", "2LFU", "3ICH"]
         extensions = [".pdb", ".cif.gz"]
         self._test_PBassign_options(references, extensions,
-                                    ['{0}.PB.fasta'], [])
-
-    def test_phipsi(self):
-        """
-        Run PBassign with the --phipsi option.
-        """
-        references = ["1BTA", "1AY7", "2LFU", "3ICH"]
-        extensions = [".pdb", ".cif.gz"]
-        self._test_PBassign_options(references, extensions,
-                                    ['{0}.PB.fasta', '{0}.PB.phipsi'],
-                                    ['--phipsi'])
+                                    ['{0}.PB.fasta'])
 
     def test_multiple_inputs(self):
         """
@@ -230,8 +217,7 @@ class TestPBAssign(TemplateTestCase):
         references = ["1BTA", "1AY7", "2LFU", "3ICH"]
         extensions = [".pdb", ".cif.gz"]
         self._test_PBassign_options(references, extensions,
-                                    ['{0}.PB.fasta', '{0}.PB.phipsi'],
-                                    ['--phipsi'], multiple='all')
+                                    ['{0}.PB.fasta'], multiple='all')
 
     def test_xtc_input(self):
         """
@@ -265,29 +251,6 @@ class TestPBAssign(TemplateTestCase):
             assert status != 0, 'PBassign shoud not have exited with a 0 code'
 
     @_failure_test
-    def test_missing_output(self):
-        """
-        Test if the tests properly fail if an output is missing.
-        """
-        references = ["1BTA"]
-        extensions = [".pdb"]
-        self._test_PBassign_options(references, extensions,
-                                    ['{0}.PB.fasta',
-                                     '{0}.PB.phipsi', '{0}.missing'],
-                                    ['--phipsi'])
-
-    @_failure_test
-    def test_too_many_outputs(self):
-        """
-        Test if the tests properly fail if an output is not expected.
-        """
-        references = ["1BTA"]
-        extensions = [".pdb"]
-        self._test_PBassign_options(references, extensions,
-                                    ['{0}.PB.fasta'],
-                                    ['--phipsi'])
-
-    @_failure_test
     def test_different_outputs(self):
         """
         Test if the tests properly fail if an output content is different from
@@ -295,7 +258,7 @@ class TestPBAssign(TemplateTestCase):
         """
         references = ["test_fail"]
         extensions = [".pdb"]
-        self._test_PBassign_options(references, extensions, ['{0}.PB.fasta'], [])
+        self._test_PBassign_options(references, extensions, ['{0}.PB.fasta'])
 
 
 class TestPBcount(TemplateTestCase):

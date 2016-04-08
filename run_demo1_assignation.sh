@@ -62,21 +62,6 @@ PBassign -p 2LFU.pdb -o 2LFU
 echo  -e "\n"
 echo "#------------------------------------------------------------------------#"
 echo "|                                                                        |"
-echo "|  Protein Blocks assignment: static structures --phipsi option          |"
-echo "|                                                                        |"
-echo "#------------------------------------------------------------------------#"
-
-
-echo  -e "\n"
-echo "Test with 3ICH.pdb: RX structure, one chain"
-echo "PBassign -p 3ICH.pdb -o 3ICH --phipsi"
-pause
-PBassign -p 3ICH.pdb -o 3ICH --phipsi
-
-
-echo  -e "\n"
-echo "#------------------------------------------------------------------------#"
-echo "|                                                                        |"
 echo "|  Protein Blocks assignment: several static structures                  |"
 echo "|                                                                        |"
 echo "#------------------------------------------------------------------------#"
