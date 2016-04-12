@@ -35,9 +35,9 @@ here = os.path.abspath(os.path.dirname(__file__))
 # =============================================================================
 # Classes for tests
 # =============================================================================
-class TestPDBlib(unittest.TestCase):
+class TestStructurelib(unittest.TestCase):
     """
-    Tests for PDBlib
+    Tests for Structurelib
     """
 
     def test_get_dihedral(self):
@@ -90,6 +90,38 @@ class TestPDBlib(unittest.TestCase):
             torsion = structure.get_dihedral(res.A, res.B, res.C, res.D)
             self.assertAlmostEqual(torsion, res.torsion)
 
+    def test_loader_PDB(self):
+        """
+        Test for API loader function on PDBs
+        """
+        filename = os.path.join(here, "test_data/2LFU.pdb")
+        comment, chain = list(pbx.chains_from_files([filename]))[0]
+
+        ref_comment = "{0} | model 1 | chain A".format(filename)
+        ref_chain = "Chain A / model 1: 2372 atoms"
+        self.assertEqual(ref_comment, comment)
+        self.assertEqual(ref_chain, format(chain))
+
+    @unittest.skipUnless(IS_MDANALYSIS, "MDAnalysis is not present")
+    def test_loader_xtc(self):
+        """
+        Test for API load function on xtc files
+        """
+        topol = os.path.join(here, "test_data/barstar_md_traj.gro")
+        traj = os.path.join(here, "test_data/barstar_md_traj.xtc")
+        chains = list(pbx.chains_from_trajectory(traj, topol))
+
+        comment, chain = chains[0]
+        ref_comment = "{0} | frame 0".format(traj)
+        ref_chain = "Chain  / model : 355 atoms"
+        self.assertEqual(ref_comment, comment)
+        self.assertEqual(ref_chain, format(chain))
+
+        comment, chain = chains[-1]
+        ref_comment = "{0} | frame 200".format(traj)
+        self.assertEqual(ref_comment, comment)
+        self.assertEqual(ref_chain, format(chain))
+
 
 class TestAtomClass(unittest.TestCase):
     """
@@ -140,7 +172,7 @@ class TestAtomClass(unittest.TestCase):
         """
         Test when PDBx line is not correctly formated
         """
-        line = "ATOM 4769  H HB   . ILE A 1 35  ? -20.422 5.104   -0.207  1.00 0.00 ? ? ? ? ? ? 277"
+        line = "ATOM 4769  H HB   . ILE A 1 35  ? -20.422 5.104"
         with self.assertRaises(structure.AtomError):
             structure.Atom.read_from_PDBx(line, self.PDBx_fields)
         line = "ATOM 4769  H HB   . ILE A 1 XXX  ? -20.422 5.104   -0.207  1.00 0.00 ? ? ? ? ? ? 277 ILE A HB   3"
@@ -233,6 +265,82 @@ class TestChainClass(unittest.TestCase):
         wrong_coords = new_coords[:-1]
         with self.assertRaises(ValueError):
             self.ch.set_coordinates(wrong_coords)
+
+
+class TestPDBClass(unittest.TestCase):
+    """
+    Tests for PDB class in Structurelib
+    """
+
+    def test_read_single_PDB(self):
+        """
+        Tests for single chain in one PDB
+        """
+        filename = os.path.join(here, "test_data/1BTA.pdb")
+        pdb = pbx.structure.PDB.PDB(filename)
+        chain = list(pdb.get_chains())[0]
+
+        ref = "ATOM      1    N LYS A   1      -8.655   5.770   8.371  0.00  0.00              "
+        self.assertEqual(chain[0].format(), ref)
+        ref = "ATOM   1434   HG SER A  89       6.663  12.440   4.229  0.00  0.00              "
+        self.assertEqual(chain[-1].format(), ref)
+
+    def test_read_multiple_PDB(self):
+        """
+        Tests for multiple chains in one PDB
+        """
+        filename = os.path.join(here, "test_data/1AY7.pdb")
+        pdb = pbx.structure.PDB.PDB(filename)
+        chains = list(pdb.get_chains())
+
+        chain_A = chains[0]
+        ref = "ATOM      1    N ASP A   1      11.860  13.207  12.724  0.00  0.00              "
+        self.assertEqual(chain_A[0].format(), ref)
+        ref = "ATOM    751  OXT CYS A  96       9.922  16.291  36.110  0.00  0.00              "
+        self.assertEqual(chain_A[-1].format(), ref)
+
+        chain_B = chains[1]
+        ref = "ATOM    753    N LYS B   1      11.318  46.585   0.493  0.00  0.00              "
+        self.assertEqual(chain_B[0].format(), ref)
+        ref = "ATOM   1489  OXT SER B  89      13.857  33.192 -16.133  0.00  0.00              "
+        self.assertEqual(chain_B[-1].format(), ref)
+
+    def test_read_models_PDB(self):
+        """
+        Tests for multiple models in one PDB
+        """
+        filename = os.path.join(here, "test_data/2LFU.pdb")
+        pdb = pbx.structure.PDB.PDB(filename)
+        chains = list(pdb.get_chains())
+
+        #10 models of one chain
+        self.assertEqual(len(chains), 10)
+
+        model_4 = chains[3]
+        ref = "ATOM      1    N ASN A 276     -24.610  17.002   9.569  0.00  0.00              "
+        self.assertEqual(model_4[0].format(), ref)
+        self.assertEqual(model_4.model, "4")
+
+
+    def test_read_multiple_PDBx(self):
+        """
+        Tests for multiple chains in one PDBx
+        """
+        filename = os.path.join(here, "test_data/1AY7.cif.gz")
+        pdb = pbx.structure.PDB.PDB(filename)
+        chains = list(pdb.get_chains())
+
+        chain_A = chains[0]
+        ref = "ATOM      1    N ASP A   1      11.860  13.207  12.724  0.00  0.00              "
+        self.assertEqual(chain_A[0].format(), ref)
+        ref = "ATOM    751  OXT CYS A  96       9.922  16.291  36.110  0.00  0.00              "
+        self.assertEqual(chain_A[-1].format(), ref)
+
+        chain_B = chains[1]
+        ref = "ATOM    752    N LYS B   1      11.318  46.585   0.493  0.00  0.00              "
+        self.assertEqual(chain_B[0].format(), ref)
+        ref = "ATOM   1488  OXT SER B  89      13.857  33.192 -16.133  0.00  0.00              "
+        self.assertEqual(chain_B[-1].format(), ref)
 
 
 class TestPBlib(unittest.TestCase):
