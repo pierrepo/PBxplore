@@ -343,17 +343,24 @@ class TestPDBClass(unittest.TestCase):
         self.assertEqual(chain_B[-1].format(), ref)
 
 
-class TestPBlib(unittest.TestCase):
+class TestIolib(unittest.TestCase):
     """
-    Tests for PBlib
+    Tests for Iolib
     """
 
     def test_read_fasta(self):
-        headers, sequences = pbx.io.read_fasta(os.path.join(here, "test_data/1BTA.pdb.PB.fasta"))
-        self.assertEqual(headers, ['test_data/1BTA.pdb | chain A'])
-        self.assertEqual(sequences, ['ZZdddfklonbfklmmmmmmmmnopafklnoiakl'
-                                     'mmmmmnoopacddddddehkllmmmmngoilmmmm'
-                                     'mmmmmmmmnopacdcddZZ'])
+        """
+        Test for parsing mulitple fastas
+        """
+        headers, sequences = pbx.io.read_fasta(os.path.join(here, "test_data/1AY7.pdb.PB.fasta"))
+        self.assertEqual(headers, ['test_data/1AY7.pdb | chain A',
+                                   'test_data/1AY7.pdb | chain B'])
+        self.assertEqual(sequences, ['ZZbjadfklmcfklmmmmmmmmnnpaafbfkgo'
+                                     'pacehlnomaccddehjaccdddddehklpnbja'
+                                     'dcdddfbehiacddfegolaccdddfkZZ',
+                                     'ZZcddfklpcbfklmmmmmmmmnopafklgoiakl'
+                                     'mmmmmmmmpacddddddehkllmmmmnnommmmmm'
+                                     'mmmmmmmmnopacddddZZ'])
 
 if __name__ == '__main__':
     unittest.main()
