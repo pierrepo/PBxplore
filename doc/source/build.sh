@@ -21,6 +21,7 @@ pandoc --version
 pip install MDAnalysis
 
 # Prepare the notebooks
+echo "Jupyter-nbconvert version: `jupyter-nbconvert --version`"
 for notebook in ./notebooks/*.ipynb
 do
     name=${notebook%.ipynb}
