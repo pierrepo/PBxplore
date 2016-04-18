@@ -4,6 +4,7 @@ sphinx_rtd_theme
 numpy
 biopython
 jupyter
+nbconvert==4.1.0
 ipython
 matplotlib
 weblogo
