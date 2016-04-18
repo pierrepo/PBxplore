@@ -22,7 +22,7 @@ PBxplore.io
 
 This module is about the I/O of all files other than PDB.
 It handles the reading/writing of fasta files and the writing of
-flat analysis files (phi/psi files, Neq files).
+text-like analysis files (Neq files).
 
 Look at the notebook  :doc:`Writing PB in file <./notebooks/Assignement>` for further information.
 
