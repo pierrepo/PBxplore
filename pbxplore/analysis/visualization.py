@@ -96,7 +96,6 @@ def plot_map(fname, count_mat, residue_min=1, residue_max=None):
     residue_max: int
         the upper bound of the protein sequence
     """
-
     # Get the frequency matrix
     freq_mat = utils.compute_freq_matrix(count_mat)
     # Slice it
@@ -105,18 +104,28 @@ def plot_map(fname, count_mat, residue_min=1, residue_max=None):
     # Residue number with good offset given the slice
     x = numpy.arange(residue_min, residue_min + nb_residues)
 
+    # Define a scaling factor to handle nice rendering for small and large proteins
+    # This is empirical!
+    scaling_factor = math.log(nb_residues)
+
     # define ticks for x-axis
     x_step = 5
+    # space ticks for large proteins
+    if nb_residues > 100:
+        x_step = 10
+    if nb_residues > 200:
+        x_step = int( scaling_factor) * 5
     xticks = x[::x_step]
     # trying to round ticks: 5, 10, 15 instead of 6, 11, 16...
     if xticks[0] == 1:
         xticks = xticks-1
         xticks[0] += 1
 
+    # define ticks for y-axis
     yticks = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
               'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p')
 
-    fig = plt.figure(figsize=(2.0*math.log(nb_residues), 4))
+    fig = plt.figure(figsize=(2.0 * scaling_factor, 4))
     ax = fig.add_axes([0.1, 0.1, 0.75, 0.8])
 
     # Color scheme inspired from ColorBrewer
@@ -141,20 +150,23 @@ def plot_map(fname, count_mat, residue_min=1, residue_max=None):
     # print "beta-strand", "coil" and "alpha-helix" text
     # only if there is more than 20 residues
     if nb_residues >= 20:
+        text_shift = 0.0
+        if nb_residues >= 100:
+            text_shift = scaling_factor / 500
         # center alpha-helix: PB m (13th PB out of 16 PBs)
         # center coil: PB h and i (8th and 9th PBs out of 16 PBs)
         # center beta-sheet: PB d (4th PB out of 16 PBs)
-        fig.text(0.05, 4.0/16*0.8+0.075, r"$\beta$-strand", rotation=90,
+        fig.text(0.05 + text_shift, 4.0/16*0.8+0.075, r"$\beta$-strand", rotation=90,
                  va='center', transform=ax.transAxes)
-        fig.text(0.05, 8.5/16*0.8+0.075, r"coil", rotation=90,
+        fig.text(0.05 + text_shift, 8.5/16*0.8+0.075, r"coil", rotation=90,
                  va='center')
-        fig.text(0.05, 13.0/16*0.8+0.075, r"$\alpha$-helix", rotation=90,
+        fig.text(0.05 + text_shift, 13.0/16*0.8+0.075, r"$\alpha$-helix", rotation=90,
                  va='center', transform=ax.transAxes)
 
-    fig.text(0.01, 0.5, "PBs", rotation=90, weight="bold",
+    fig.text(0.01 + text_shift * 2, 0.5, "PBs", rotation=90, weight="bold",
              size='larger', transform=ax.transAxes)
     fig.text(0.4, 0.01, "Residue number", weight="bold")
-    fig.text(0.96, 0.6, "Intensity", rotation=90, weight="bold")
+    fig.text(0.96 - text_shift, 0.6, "Intensity", rotation=90, weight="bold")
     fig.savefig(fname, dpi=300)
 
 
