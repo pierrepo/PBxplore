@@ -73,6 +73,7 @@ setup(
             'PBclust  = pbxplore.scripts.PBclust:pbclust_cli',
             'PBcount  = pbxplore.scripts.PBcount:pbcount_cli',
             'PBstat   = pbxplore.scripts.PBstat:pbstat_cli',
+            'PBkmeans = pbxplore.scripts.PBkmeans:pbkmeans_cli',
             'PBdata   = pbxplore.scripts.PBdata:pbdata_cli',
         ],
     },

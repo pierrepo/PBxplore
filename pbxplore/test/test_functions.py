@@ -16,8 +16,11 @@ import unittest
 import collections
 import os
 
+import numpy
+
 import pbxplore as pbx
 from pbxplore.structure import structure
+from pbxplore.analysis import kmeans
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -173,6 +176,131 @@ class TestPBlib(unittest.TestCase):
         self.assertEqual(sequences, ['ZZdddfklonbfklmmmmmmmmnopafklnoiakl'
                                      'mmmmmnoopacddddddehkllmmmmngoilmmmm'
                                      'mmmmmmmmnopacdcddZZ'])
+
+
+class TestKMeans(unittest.TestCase):
+    """
+    Test individual functions for K-Means clustering
+    """
+
+    def test_count_per_position_partial(self):
+        sequences = ['abcdef', 'bcdefg', 'cdefgh',
+                     'defghi', 'efghij', 'fghijk',  # ignore in the test
+                     'ghijkl', 'hijklm', 'ijklmn',
+                     'ghijkl', 'hijklm', 'ijklmn',
+                     'jklmno', 'klmnop', ]          # ignore in the test
+        indices = [0, 1, 2, 6, 7, 8, 9, 10, 11]
+
+        # Shorten defaultdict call to have a nicer table
+        dd = collections.defaultdict
+        # Create a list with the right number of elements. The type of each
+        # element does not matter as the elements will be overwritten
+        ref_count = ['' for _ in range(6)]
+        # Fill the reference. Each element of the list corresponds to a
+        # position in the sequences. Only the sequences that have their index
+        # in the ``indices`` list will be used in the count.
+        ref_count[0] = dd(int, {'a': 1, 'b': 1, 'c': 1, 'g': 2, 'h': 2, 'i': 2})
+        ref_count[1] = dd(int, {'b': 1, 'c': 1, 'd': 1, 'h': 2, 'i': 2, 'j': 2})
+        ref_count[2] = dd(int, {'c': 1, 'd': 1, 'e': 1, 'i': 2, 'j': 2, 'k': 2})
+        ref_count[3] = dd(int, {'d': 1, 'e': 1, 'f': 1, 'j': 2, 'k': 2, 'l': 2})
+        ref_count[4] = dd(int, {'e': 1, 'f': 1, 'g': 1, 'k': 2, 'l': 2, 'm': 2})
+        ref_count[5] = dd(int, {'f': 1, 'g': 1, 'h': 1, 'l': 2, 'm': 2, 'n': 2})
+
+        count = kmeans.count_per_position_partial(sequences, indices)
+        self.assertEqual(count, ref_count)
+
+    def test_make_profile_partial(self):
+        sequences = ['abcdef', 'bcdefg', 'cdefgh',
+                     'defghi', 'efghij', 'fghijk',  # ignore in the test
+                     'ghijkl', 'hijklm', 'ijklmn',
+                     'ghijkl', 'hijklm', 'ijklmn',
+                     'jklmno', 'klmnop',            # ignore in the test
+                     'ijklmn']
+        # Using 10 sequences makes things easier
+        indices = [0, 1, 2, 6, 7, 8, 9, 10, 11, 14]
+        ref_profile = numpy.array([[0.1, 0.0, 0.0, 0.0, 0.0, 0.0],   # a
+                                   [0.1, 0.1, 0.0, 0.0, 0.0, 0.0],   # b
+                                   [0.1, 0.1, 0.1, 0.0, 0.0, 0.0],   # c
+                                   [0.0, 0.1, 0.1, 0.1, 0.0, 0.0],   # d
+                                   [0.0, 0.0, 0.1, 0.1, 0.1, 0.0],   # e
+                                   [0.0, 0.0, 0.0, 0.1, 0.1, 0.1],   # f
+                                   [0.2, 0.0, 0.0, 0.0, 0.1, 0.1],   # g
+                                   [0.2, 0.2, 0.0, 0.0, 0.0, 0.1],   # h
+                                   [0.3, 0.2, 0.2, 0.0, 0.0, 0.0],   # i
+                                   [0.0, 0.3, 0.2, 0.2, 0.0, 0.0],   # j
+                                   [0.0, 0.0, 0.3, 0.2, 0.2, 0.0],   # k
+                                   [0.0, 0.0, 0.0, 0.3, 0.2, 0.2],   # l
+                                   [0.0, 0.0, 0.0, 0.0, 0.3, 0.2],   # m
+                                   [0.0, 0.0, 0.0, 0.0, 0.0, 0.3],   # n
+                                   [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],   # o
+                                   [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]])  # p
+        profile = kmeans.make_profile_partial(sequences, indices)
+        assert(numpy.allclose(ref_profile, profile))
+
+    def test_compatibility_identity(self):
+        profile = numpy.array([[1.0, 0.0, 0.0, 0.0],   # a
+                               [0.0, 1.0, 0.0, 0.0],   # b
+                               [0.0, 0.0, 1.0, 0.0],   # c
+                               [0.0, 0.0, 0.0, 1.0],   # d
+                               [0.0, 0.0, 0.0, 0.0],   # e
+                               [0.0, 0.0, 0.0, 0.0],   # f
+                               [0.0, 0.0, 0.0, 0.0],   # g
+                               [0.0, 0.0, 0.0, 0.0],   # h
+                               [0.0, 0.0, 0.0, 0.0],   # i
+                               [0.0, 0.0, 0.0, 0.0],   # j
+                               [0.0, 0.0, 0.0, 0.0],   # k
+                               [0.0, 0.0, 0.0, 0.0],   # l
+                               [0.0, 0.0, 0.0, 0.0],   # m
+                               [0.0, 0.0, 0.0, 0.0],   # n
+                               [0.0, 0.0, 0.0, 0.0],   # o
+                               [0.0, 0.0, 0.0, 0.0]])  # p
+        sequence = 'abcd'
+        reference_compatibility = len(sequence)
+        compatibility = kmeans.compatibility(profile, sequence)
+        self.assertAlmostEqual(compatibility, reference_compatibility)
+
+    def test_compatibility(self):
+        # The profile correspond to the following sequences:
+        # - abcd      - ioph    - alep
+        # - jiop      - fgad    - hobe
+        # - abjp      - piep
+        # - hbno      - jojo
+        profile = numpy.array([[0.3, 0.0, 0.1, 0.0],   # a
+                               [0.0, 0.3, 0.1, 0.0],   # b
+                               [0.0, 0.0, 0.1, 0.0],   # c
+                               [0.0, 0.0, 0.0, 0.2],   # d
+                               [0.0, 0.1, 0.2, 0.1],   # e
+                               [0.1, 0.0, 0.0, 0.0],   # f
+                               [0.0, 0.1, 0.0, 0.0],   # g
+                               [0.2, 0.0, 0.0, 0.1],   # h
+                               [0.1, 0.2, 0.0, 0.0],   # i
+                               [0.2, 0.0, 0.2, 0.0],   # j
+                               [0.0, 0.0, 0.0, 0.0],   # k
+                               [0.0, 0.1, 0.0, 0.0],   # l
+                               [0.0, 0.0, 0.0, 0.0],   # m
+                               [0.0, 0.0, 0.1, 0.0],   # n
+                               [0.0, 0.2, 0.1, 0.2],   # o
+                               [0.1, 0.0, 0.1, 0.4]])  # p
+        print(profile.sum(axis=0))
+        assert(numpy.allclose(profile.sum(axis=0),
+                              numpy.ones((profile.shape[1],),
+                                         dtype=profile.dtype)))
+        reference_sequences = (('abcd', 0.9), ('hipo', 0.7), ('bcda', 0.0),
+                               ('aaaa', 0.4), ('kkkk', 0.0), ('oooo', 0.5),)
+        for sequence, reference_compatibility in reference_sequences:
+            compatibility = kmeans.compatibility(profile, sequence)
+            self.assertAlmostEqual(compatibility, reference_compatibility)
+
+    def test_argmax(self):
+        reference = (([0, 1, 2, 3, 4], 4),  # Ordered
+                     ([4, 3, 2, 1, 0], 0),  # Reverse ordered
+                     ([1, 3, 2, 4, 0], 3),  # Random order
+                     ([0, 0, 3, 4, 4], 3),  # Duplicates
+                     ([4, 4, 4, 4, 4], 0),  # All the same
+                     )
+        for test_case, expectation in reference:
+            self.assertEqual(kmeans._argmax(test_case), expectation)
+
 
 if __name__ == '__main__':
     unittest.main()
