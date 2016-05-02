@@ -118,7 +118,7 @@ class TestStructurelib(unittest.TestCase):
         self.assertEqual(ref_chain, format(chain))
 
         comment, chain = chains[-1]
-        ref_comment = "{0} | frame 200".format(traj)
+        ref_comment = "{0} | frame 9".format(traj)
         self.assertEqual(ref_comment, comment)
         self.assertEqual(ref_chain, format(chain))
 
@@ -202,9 +202,9 @@ class TestAtomClass(unittest.TestCase):
         #Last one
         ts = universe.trajectory[-1]
         atom = structure.Atom.read_from_xtc(selection[0])
-        [self.assertAlmostEqual(a, b, places=3) for a, b in zip(atom.coords, [46.18, 53.24, 50.70])]
+        [self.assertAlmostEqual(a, b, places=3) for a, b in zip(atom.coords, [20.63, 38.43, 32.09])]
         atom = structure.Atom.read_from_xtc(selection[-1])
-        [self.assertAlmostEqual(a, b, places=3) for a, b in zip(atom.coords, [62.89, 45.82, 45.46])]
+        [self.assertAlmostEqual(a, b, places=3) for a, b in zip(atom.coords, [39.14, 39.77, 25.60])]
 
 
 class TestChainClass(unittest.TestCase):
