@@ -314,12 +314,12 @@ class TestPDBClass(unittest.TestCase):
         chains = list(pdb.get_chains())
 
         #10 models of one chain
-        self.assertEqual(len(chains), 10)
+        self.assertEqual(len(chains), 3)
 
-        model_4 = chains[3]
-        ref = "ATOM      1    N ASN A 276     -24.610  17.002   9.569  0.00  0.00              "
-        self.assertEqual(model_4[0].format(), ref)
-        self.assertEqual(model_4.model, "4")
+        model_3 = chains[2]
+        ref = "ATOM      1    N ASN A 276     -21.874   9.349   4.010  0.00  0.00              "
+        self.assertEqual(model_3[0].format(), ref)
+        self.assertEqual(model_3.model, "3")
 
 
     def test_read_multiple_PDBx(self):
