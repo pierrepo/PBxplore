@@ -29,15 +29,25 @@ import os
 import subprocess
 import shutil
 import sys
-import warnings
 
 try:
     import MDAnalysis
 except ImportError:
     IS_MDANALYSIS = False
-    warnings.warn('MDanalysis is not available, tests will be run accordingly')
 else:
     IS_MDANALYSIS = True
+
+try:
+    import matplotlib
+    IS_MATPLOTLIB = True
+except ImportError:
+    IS_MATPLOTLIB = False
+
+try:
+    import weblogolib
+    IS_WEBLOGO = True
+except ImportError:
+    IS_WEBLOGO = False
 
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -452,6 +462,7 @@ class TestPBstat(TemplateTestCase):
         value, msg = _file_validity(output_full_path + extension)
         self.assertTrue(value, msg=msg)
 
+    @unittest.skipUnless(IS_MATPLOTLIB, "Matplotlib is not present")
     def test_neq(self):
         self._run_program_and_validate(reference='count_multi123',
                                        input_file='count_multi123.PB.count',
@@ -462,6 +473,7 @@ class TestPBstat(TemplateTestCase):
                                        output='output',
                                        neq=True)
 
+    @unittest.skipUnless(IS_MATPLOTLIB, "Matplotlib is not present")
     def test_neq_with_range_residues(self):
         self._run_program_and_validate(reference='count_multi123',
                                        input_file='count_multi123.PB.count',
@@ -469,24 +481,28 @@ class TestPBstat(TemplateTestCase):
                                        neq=True,
                                        residue_min=10, residue_max=30)
 
+    @unittest.skipUnless(IS_MATPLOTLIB, "Matplotlib is not present")
     def test_neq_pdf(self):
         self._run_program_and_validate(reference='count_multi123',
                                        input_file='count_multi123.PB.count',
                                        output='output',
                                        neq=True, image_format='pdf')
 
+    @unittest.skipUnless(IS_MATPLOTLIB, "Matplotlib is not present")
     def test_mapdist(self):
         self._run_program_and_validate(reference='count_multi123',
                                        input_file='count_multi123.PB.count',
                                        output='output',
                                        mapdist=True)
 
+    @unittest.skipUnless(IS_MATPLOTLIB, "Matplotlib is not present")
     def test_mapdist_pdf(self):
         self._run_program_and_validate(reference='count_multi123',
                                        input_file='count_multi123.PB.count',
                                        output='output',
                                        mapdist=True, image_format='pdf')
 
+    @unittest.skipUnless(IS_MATPLOTLIB, "Matplotlib is not present")
     def test_mapdist_with_range_residues(self):
         self._run_program_and_validate(reference='count_multi123',
                                        input_file='count_multi123.PB.count',
@@ -494,30 +510,35 @@ class TestPBstat(TemplateTestCase):
                                        mapdist=True,
                                        residue_min=10, residue_max=30)
 
+    @unittest.skipUnless(IS_WEBLOGO, "Weblogo is not present")
     def test_weblogo(self):
         self._run_program_and_validate(reference='count_multi123',
                                        input_file='count_multi123.PB.count',
                                        output='output',
                                        logo=True)
 
+    @unittest.skipUnless(IS_WEBLOGO, "Weblogo is not present")
     def test_weblogo_logo_pdf(self):
         self._run_program_and_validate(reference='count_multi123',
                                        input_file='count_multi123.PB.count',
                                        output='output',
                                        logo=True, image_format='pdf')
 
+    @unittest.skipUnless(IS_WEBLOGO, "Weblogo is not present")
     def test_weblogo_logo_png(self):
         self._run_program_and_validate(reference='count_multi123',
                                        input_file='count_multi123.PB.count',
                                        output='output',
                                        logo=True, image_format='png')
 
+    @unittest.skipUnless(IS_WEBLOGO, "Weblogo is not present")
     def test_weblogo_logo_jpg(self):
         self._run_program_and_validate(reference='count_multi123',
                                        input_file='count_multi123.PB.count',
                                        output='output',
                                        logo=True, image_format='jpg')
 
+    @unittest.skipUnless(IS_WEBLOGO, "Weblogo is not present")
     @_failure_test
     def test_weblogo_logo_invalid_format(self):
         self._run_program_and_validate(reference='count_multi123',
@@ -525,6 +546,7 @@ class TestPBstat(TemplateTestCase):
                                        output='output',
                                        logo=True, image_format='invalid')
 
+    @unittest.skipUnless(IS_WEBLOGO, "Weblogo is not present")
     def test_weblogo_with_range_residues(self):
         self._run_program_and_validate(reference='count_multi123',
                                        input_file='count_multi123.PB.count',

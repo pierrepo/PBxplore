@@ -8,7 +8,7 @@
 
 .. function:: pbxplore.chains_from_trajectory(trajectory, topology)
 
-   See :func:`pbxplore.structure.chains_from_trajectory` 
+   See :func:`pbxplore.structure.chains_from_trajectory`
 
 .. function:: pbxplore.assign(dihedrals)
 
@@ -26,3 +26,27 @@ from . import PB
 from . import io
 from . import structure
 from . import analysis
+
+
+def tests():
+    import os
+
+    try:
+        import nose
+    except ImportError:
+        raise ImportError("Nose have to be installed for tests")
+
+    # find the directory where the test package lives
+    from . import test
+    test_dir = os.path.dirname(test.__file__)
+    argv = [test_dir]
+
+    #Get informations about system
+    test.system_info()
+    print("nose version {}".format(nose.__version__))
+
+    # run nose
+    try:
+        return nose.main(argv=argv)
+    except SystemExit as e:
+        return e.code

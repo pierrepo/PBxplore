@@ -15,7 +15,6 @@ Tests functions from different programs.
 import unittest
 import collections
 import os
-import warnings
 import numpy
 
 import pbxplore as pbx
@@ -25,7 +24,6 @@ try:
     import MDAnalysis
 except ImportError:
     IS_MDANALYSIS = False
-    warnings.warn('MDanalysis is not available, tests will be run accordingly')
 else:
     IS_MDANALYSIS = True
 
@@ -313,7 +311,7 @@ class TestPDBClass(unittest.TestCase):
         pdb = pbx.structure.PDB.PDB(filename)
         chains = list(pdb.get_chains())
 
-        #10 models of one chain
+        #3 models of one chain
         self.assertEqual(len(chains), 3)
 
         model_3 = chains[2]
