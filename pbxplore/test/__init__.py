@@ -19,7 +19,8 @@ def module_info(module_name):
 
     try:
         module = importlib.import_module(module_name)
-        print("{0} version {1}".format(module_name, module.__version__))
+        if hasattr(module, '__version__'):
+            print("{0} version {1}".format(module_name, module.__version__))
         module_dir = os.path.dirname(module.__file__)
         print("{0} is installed in {1}".format(module_name, module_dir))
     except:
