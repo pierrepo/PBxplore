@@ -28,7 +28,7 @@ from . import structure
 from . import analysis
 
 
-def tests():
+def test():
     import os
 
     try:
@@ -37,12 +37,12 @@ def tests():
         raise ImportError("Nose have to be installed for tests")
 
     # find the directory where the test package lives
-    from . import test
-    test_dir = os.path.dirname(test.__file__)
+    from . import tests
+    test_dir = os.path.dirname(tests.__file__)
     argv = [test_dir]
 
     #Get informations about system
-    test.system_info()
+    tests.system_info()
     print("nose version {}".format(nose.__version__))
 
     # run nose

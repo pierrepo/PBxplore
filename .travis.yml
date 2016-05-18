@@ -65,7 +65,7 @@ install:
 
 # command to run tests
 script:
-    - if [[ $SETUP == 'test' ]]; then nosetests -v pbxplore/test; fi
+    - if [[ $SETUP == 'test' ]]; then nosetests -v pbxplore/tests; fi
     - if [[ $SETUP == 'test' ]]; then yes | ./run_demo1_assignation.sh; fi
     - if [[ $SETUP == 'test' ]]; then yes | ./run_demo2_statistics.sh; fi
     - if [[ $SETUP == 'test' ]]; then yes | ./run_demo2_clusters.sh; fi

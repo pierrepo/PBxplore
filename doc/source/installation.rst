@@ -61,7 +61,7 @@ Testing PBxplore
 
 .. code-block:: bash
 
-    $ nosetests -v pbxplore/test
+    $ nosetests -v pbxplore/tests
 
 .. code-block:: bash
 
@@ -73,7 +73,7 @@ Or from the `PBxplore` module:
 .. code-block:: python
 
     import pbxplore
-    pbxplore.tests()
+    pbxplore.test()
 
 
 .. [#] N. Michaud-Agrawal, E. J. Denning, T. B. Woolf, and O. Beckstein.
