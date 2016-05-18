@@ -229,7 +229,6 @@ class TestPBAssign(TemplateTestCase):
         self._test_PBassign_options(references, extensions,
                                     ['{0}.PB.fasta'], multiple='all')
 
-    @unittest.skipUnless(IS_MDANALYSIS, "MDAnalysis is not present")
     def test_xtc_input(self):
         """
         Run PBassign on a trajectory in the XTC format.
@@ -251,10 +250,15 @@ class TestPBAssign(TemplateTestCase):
         status = exe.wait()
         print(out.decode('utf-8'))
         print(err.decode('utf-8'))
-
-        assert status == 0, 'PBassign exited with an error'
-        _assert_identical_files(os.path.join(REFDIR, output_fname),
-                                os.path.join(out_run_dir, output_fname))
+        if IS_MDANALYSIS:
+            # MDanalysis is available, PBassign should run and produce the
+            # correct output
+            assert status == 0, 'PBassign exited with an error'
+            _assert_identical_files(os.path.join(REFDIR, output_fname),
+                                    os.path.join(out_run_dir, output_fname))
+        else:
+            # MDanalysis is not available, PBassign should fail
+            assert status != 0, 'PBassign shoud not have exited with a 0 code'
 
     @_failure_test
     def test_different_outputs(self):
