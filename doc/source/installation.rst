@@ -57,7 +57,7 @@ Testing PBxplore
 ----------------
 
 `PBxplore` comes with unit tests and regression tests. It requires the package
-`nose <https://nose.readthedocs.io/en/latest/>`_ to run them. You have several options:
+`nose <https://nose.readthedocs.io/en/latest/>`_. You have several options to run the tests:
 
 .. code-block:: bash
 
@@ -68,7 +68,7 @@ Testing PBxplore
     $ python setup.py nosetests
 
 
-Or within the `PBxplore` package:
+Or from the `PBxplore` module:
 
 .. code-block:: python
 
