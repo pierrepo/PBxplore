@@ -17,7 +17,7 @@
 :const:`pbxplore.DEMO_DATA_PATH`, see :mod:`pbxplore.demo`.
 """
 
-__version__ = "1.3"
+__version__ = "1.3.1"
 
 from .demo import DEMO_DATA_PATH
 from .structure.loader import *

@@ -4,7 +4,6 @@
 from __future__ import print_function, absolute_import
 from setuptools import setup, find_packages
 import os
-import pbxplore
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -19,10 +18,10 @@ extras = {
     'all': ['weblogo', 'matplotlib', 'MDAnalysis>=0.11']
 }
 
+# Version number must be in sync with the one in pbxplore/__init__.py
 setup(
-
     name='pbxplore',
-    version=pbxplore.__version__,
+    version='1.3.1',
 
     description="PBxplore is a suite of tools dedicated to Protein Block analysis.",
     long_description=readme,
