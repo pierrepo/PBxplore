@@ -53,6 +53,29 @@ See the documentation of `pip <https://pip.pypa.io/en/stable/>`_ for more inform
 You may also want to look at `virtualenv <https://virtualenv.readthedocs.org/en/latest/>`_.
 
 
+Testing PBxplore
+----------------
+
+`PBxplore` comes with unit tests and regression tests. It requires the package
+`nose <https://nose.readthedocs.io/en/latest/>`_. You have several options to run the tests:
+
+.. code-block:: bash
+
+    $ nosetests -v pbxplore/tests
+
+.. code-block:: bash
+
+    $ python setup.py nosetests
+
+
+Or from the `PBxplore` module:
+
+.. code-block:: python
+
+    import pbxplore
+    pbxplore.test()
+
+
 .. [#] N. Michaud-Agrawal, E. J. Denning, T. B. Woolf, and O. Beckstein.
        MDAnalysis: A Toolkit for the Analysis of Molecular Dynamics Simulations.
        *J. Comput. Chem.* **32** (2011), 2319–2327. doi:10.1002/jcc.21787

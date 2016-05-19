@@ -1,0 +1,12 @@
+>test_data/2LFU.pdb | model 1 | chain A
+ZZbghiacfkbccdddddehiadddddddddddfklggcdddddddddddddehifbdcd
+dddddddddfklopadddddfhpamlnopcddddddehjadddddehjacbddddddddf
+klmaccddddddfbgniaghiapaddddddfklnoambZZ
+>test_data/2LFU.pdb | model 2 | chain A
+ZZpcfblcffbccdddddeehjacdddddddddfklggcddddddddddddddfblghia
+dddddddddfklopadddddehpmmmnopcddddddeehiacdddfblopadcddddddf
+klpaccdddddfklmlmgcdehiaddddddfklmmgopZZ
+>test_data/2LFU.pdb | model 3 | chain A
+ZZmgghiafbbccdddddehjbdcdddddddddfklggcddddddddddddddfbfghpa
+cddddddddfklopadddddehiaklmmmgcdddddeehiaddddfkbgciacdddddef
+klpaccddddddfkgojbdfehpaddddddfkbccfbgZZ

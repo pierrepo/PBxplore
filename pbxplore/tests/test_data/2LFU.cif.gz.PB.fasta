@@ -1,0 +1,12 @@
+>test_data/2LFU.cif.gz | model 1 | chain A
+ZZbghiacfkbccdddddehiadddddddddddfklggcdddddddddddddehifbdcd
+dddddddddfklopadddddfhpamlnopcddddddehjadddddehjacbddddddddf
+klmaccddddddfbgniaghiapaddddddfklnoambZZ
+>test_data/2LFU.cif.gz | model 2 | chain A
+ZZpcfblcffbccdddddeehjacdddddddddfklggcddddddddddddddfblghia
+dddddddddfklopadddddehpmmmnopcddddddeehiacdddfblopadcddddddf
+klpaccdddddfklmlmgcdehiaddddddfklmmgopZZ
+>test_data/2LFU.cif.gz | model 3 | chain A
+ZZmgghiafbbccdddddehjbdcdddddddddfklggcddddddddddddddfbfghpa
+cddddddddfklopadddddehiaklmmmgcdddddeehiaddddfkbgciacdddddef
+klpaccddddddfkgojbdfehpaddddddfkbccfbgZZ
