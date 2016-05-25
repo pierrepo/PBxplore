@@ -47,6 +47,6 @@ def test():
 
     # run nose
     try:
-        return nose.main(argv=argv)
+        return nose.main(defaultTest=argv)
     except SystemExit as e:
         return e.code
