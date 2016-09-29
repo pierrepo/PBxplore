@@ -31,3 +31,6 @@ eggs
 # Unit test / coverage reports
 .coverage
 nosetests.xml
+# conda
+devtools/conda/*.json
+
