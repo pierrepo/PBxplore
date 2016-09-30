@@ -41,6 +41,15 @@ try:
 except NameError:
     pass
 
+# Weblogo compatibility
+# With version < 3.5, the color class is 'ColorGroup'. In version >= 3.5,
+# it is 'SymbolColor'. Here, we change to always have 'ColorGroup'.
+try:
+    ColorGroup = weblogolib.SymbolColor
+except NameError:
+    ColorGroup = weblogolib.ColorGroup
+
+
 # Create the __all__ keyword according to the conditional imports
 __all__ = []
 if IS_MATPLOTLIB:
@@ -200,11 +209,11 @@ def generate_weblogo(fname, count_mat, residue_min=1, residue_max=None, title=""
     count = utils._slice_matrix(count_mat, residue_min, residue_max)
 
     # Create a custom color scheme for PB
-    colors = weblogolib.ColorScheme([weblogolib.ColorGroup("d", "#1240AB", "strand main"),
-                                     weblogolib.ColorGroup("abcdef", "#1240AB", "strand others"),
-                                     weblogolib.ColorGroup("ghij", "#0BD500", "coil"),
-                                     weblogolib.ColorGroup("m",  "#FD0006", "helix main"),
-                                     weblogolib.ColorGroup("klnop",  "#FD0006", "helix others")])
+    colors = weblogolib.ColorScheme([ColorGroup("d", "#1240AB", "strand main"),
+                                     ColorGroup("abcdef", "#1240AB", "strand others"),
+                                     ColorGroup("ghij", "#0BD500", "coil"),
+                                     ColorGroup("m", "#FD0006", "helix main"),
+                                     ColorGroup("klnop", "#FD0006", "helix others")])
 
     # Load data from an occurence matrix
     data = weblogolib.LogoData.from_counts(PB.NAMES, count)
