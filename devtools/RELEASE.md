@@ -17,12 +17,12 @@
 
 2. The path of the created archive will be given at the end of the process
 
-3. Convert it for all plateforms (where `XX` is the Python version)
+3. Convert it for all plateforms (where `X.X.X` is the pbxplore version and `YY` is the Python version)
 
-    conda convert --platform all /path/to/archive/pbxplore-1.3.1-pyXX_0.tar.bz2
+    conda convert --platform all /path/to/archive/pbxplore-X.X.X-pyYY_0.tar.bz2
 
 4. Upload it to anaconda
 
-    anaconda upload /path/to/archive/pbxplore-1.3.1-pyXX_0.tar.bz2
+    anaconda upload /path/to/archive/pbxplore-X.X.X-pyYY_0.tar.bz2
 
 This has to be done for each package created.
