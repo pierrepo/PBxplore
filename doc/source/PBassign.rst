@@ -3,8 +3,7 @@ PBassign
 
 ``PBassign`` assigns a PB sequence to a protein structure.
 
-.. note:: The following examples use ``PBdata`` and the demo files.
-          See :ref:`Demo files <demo>` for more information.
+.. note:: The following examples use `wget` to download PDB files.
 
 
 Example
@@ -12,13 +11,14 @@ Example
 
 .. code-block:: bash
 
-    $ PBassign -p `PBdata`/3ICH.pdb -o 3ICH
-    Read 1 chain(s) in demo/3ICH.pdb
+    $ wget https://files.rcsb.org/download/3ICH.pdb
+    $ PBassign -p 3ICH.pdb -o 3ICH
+    Read 1 chain(s) in 3ICH.pdb
     wrote 3ICH.PB.fasta
 
 Content of `3ICH.PB.fasta` : ::
 
-    >demo1/3ICH.pdb | chain A
+    >3ICH.pdb | chain A
     ZZccdfbdcdddddehjbdebjcdddddfklmmmlmmmmmmmmnopnopajeopacfbdc
     ehibacehiamnonopgocdfkbjbdcdfblmbccfbghiacdddebehiafkbccddfb
     dcfklgokaccfbdcfbhklmmmmmmmpccdfkopafbacddfbgcddddfbacddddZZ
@@ -55,11 +55,14 @@ can be used several times. For instance:
 
 .. code-block:: bash
 
-    $ PBassign -p `PBdata`/3ICH.pdb -p `PBdata`/1BTA.pdb -p `PBdata`/1AY7.pdb -o test1
+    $ wget https://files.rcsb.org/download/3ICH.pdb
+    $ wget https://files.rcsb.org/download/1BTA.pdb
+    $ wget https://files.rcsb.org/download/1AY7.pdb
+    $ PBassign -p 3ICH.pdb -p 1BTA.pdb -p 1AY7.pdb -o test1
     3 PDB file(s) to process
-    Read 1 chain(s) in demo/3ICH.pdb
-    Read 1 chain(s) in demo/1BTA.pdb
-    Read 2 chain(s) in demo/1AY7.pdb
+    Read 1 chain(s) in 3ICH.pdb
+    Read 1 chain(s) in 1BTA.pdb
+    Read 2 chain(s) in 1AY7.pdb
     wrote test1.PB.fasta
 
 
@@ -67,17 +70,17 @@ All PB assignments are written in the same output file. If a PDB file contains s
 and/or models, PBs assignments are also written in a single output file.
 From the previous example, the ouput of ``test1.PB.fasta`` is: ::
 
-    >demo/3ICH.pdb | chain A
+    >3ICH.pdb | chain A
     ZZccdfbdcdddddehjbdebjcdddddfklmmmlmmmmmmmmnopnopajeopacfbdc
     ehibacehiamnonopgocdfkbjbdcdfblmbccfbghiacdddebehiafkbccddfb
     dcfklgokaccfbdcfbhklmmmmmmmpccdfkopafbacddfbgcddddfbacddddZZ
-    >demo/1BTA.pdb | chain A
+    >1BTA.pdb | chain A
     ZZdddfklonbfklmmmmmmmmnopafklnoiaklmmmmmnoopacddddddehkllmmm
     mngoilmmmmmmmmmmmmnopacdcddZZ
-    >demo/1AY7.pdb | chain A
+    >1AY7.pdb | chain A
     ZZbjadfklmcfklmmmmmmmmnnpaafbfkgopacehlnomaccddehjaccdddddeh
     klpnbjadcdddfbehiacddfegolaccdddfkZZ
-    >demo/1AY7.pdb | chain B
+    >1AY7.pdb | chain B
     ZZcddfklpcbfklmmmmmmmmnopafklgoiaklmmmmmmmmpacddddddehkllmmm
     mnnommmmmmmmmmmmmmnopacddddZZ
 
@@ -87,17 +90,32 @@ One can also use the ``-p`` option to provide a directory containing PDB files a
 
 .. code-block:: bash
 
-    $ PBassign -p `PBdata`/ -o test2
-    8 PDB file(s) to process
-    Read 2 chain(s) in demo/1AY7.pdb
-    Read 90 chain(s) in demo/psi_md_traj_1.pdb
-    Read 10 chain(s) in demo/2LFU.pdb
-    Read 90 chain(s) in demo/psi_md_traj_2.pdb
-    Read 1 chain(s) in demo/3ICH.pdb
-    Read 90 chain(s) in demo/psi_md_traj_3.pdb
-    Read 190 chain(s) in demo/beta3_IEGF12.pdb
-    Read 1 chain(s) in demo/1BTA.pdb
+    $ # make test directory and download a bunch of files
+    $ mkdir test
+    $ wget https://files.rcsb.org/download/3ICH.pdb -P test
+    $ wget https://files.rcsb.org/download/1BTA.pdb -P test
+    $ wget https://files.rcsb.org/download/1AY7.pdb -P test
+    $ wget https://files.rcsb.org/download/2LFU.pdb -P test
+    $ # run PB assignement
+    $ PBassign -p test/ -o test2
+    4 PDB file(s) to process
+    Read 1 chain(s) in test/3ICH.pdb
+    Read 1 chain(s) in test/1BTA.pdb
+    Read 2 chain(s) in test/1AY7.pdb
+    Read 10 chain(s) in test/2LFU.pdb
     wrote test2.PB.fasta
+
+`PBassign` can also read gzipped files and PDBx/mmCIF files.
+
+    $ wget https://files.rcsb.org/download/3ICH.pdb.gz
+    $ wget https://files.rcsb.org/download/1BTA.cif
+    $ wget https://files.rcsb.org/download/1AY7.cif.gz
+    $ PBassign -p 3ICH.pdb.gz -p 1BTA.cif -p 1AY7.cif.gz -o test3
+    3 PDB file(s) to process
+    Read 1 chain(s) in 3ICH.pdb
+    Read 1 chain(s) in 1BTA.pdb
+    Read 2 chain(s) in 1AY7.pdb
+    wrote test3.PB.fasta
 
 
 ``-x`` and ``-g`` options
