@@ -1,5 +1,7 @@
 ## How to release
 
+Before any release, double-check all tests had run successfully.
+
 #### Update version number
 
 We use the tool [bumpversion](https://github.com/peritus/bumpversion) to synchronize the version number
@@ -9,9 +11,34 @@ across different files:
     git push origin
     git push origin --tags
 
-#### Publish on Pypi
+#### Publish on PyPI
+
+Initial setup
+
+- Create an account on PyPI and create a projet (here [pbxplore](https://pypi.python.org/pypi/pbxplore)).
+
+- Create a .pypirc files into your HOME directory with the following lines :
+
+        [distutils]
+        index-servers = pypi
+
+        [pypi]
+        repository=https://pypi.python.org/pypi
+        username=your_username
+
+- Prepare package files (at minimum `setup.py`, `setup.cfg`, `README.md`, `MANIFEST.in` and `LICENSE.txt`).
+
+- Register package to PyPI :
+
+        python setup.py register -r pypi
 
 
+
+Build and upload package to PyPI:
+
+    python setup.py sdist upload
+
+Enter your password when required.
 
 #### Publish Documentation
 
