@@ -287,7 +287,7 @@ class TestPDBClass(unittest.TestCase):
         """
         Tests for multiple chains in one PDB
         """
-        filename = os.path.join(here, "test_data/1AY7.pdb")
+        filename = os.path.join(here, "test_data/1AY7.pdb.gz")
         pdb = pbx.structure.PDB.PDB(filename)
         chains = list(pdb.get_chains())
 

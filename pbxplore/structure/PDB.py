@@ -14,7 +14,7 @@ from .structure import Atom, Chain
 # Data
 # =============================================================================
 # file extensions for PDB and PDBx/mmCIF files
-PDB_EXTENSIONS = ('.pdb', '.PDB', '.ent', '.ENT4')
+PDB_EXTENSIONS = ('.pdb', '.PDB', '.pdb.gz', '.pdb.GZ', '.PDB.gz', '.PDB.GZ', '.ent', '.ENT4')
 PDBx_EXTENSIONS = ('.cif', '.CIF', '.cif.gz', '.CIF.GZ')
 
 
@@ -35,8 +35,11 @@ class PDB:
                           .format(self.filename))
         if self.filename.endswith(PDB_EXTENSIONS):
             self.__read_PDB()
-        if self.filename.endswith(PDBx_EXTENSIONS):
+        elif self.filename.endswith(PDBx_EXTENSIONS):
             self.__read_PDBx()
+        else:
+            raise IOError("File extension is not a valid one. "
+                          "Corrects one are {}".format(", ".join(PDB_EXTENSIONS + PDBx_EXTENSIONS)))
 
     def __read_PDB(self):
         """
