@@ -7,7 +7,6 @@ Read PDB structures and assign protein blocs (PBs).
 2013 - P. Poulain, A. G. de Brevern
 """
 
-
 # Use print as a function for python 3 compatibility
 from __future__ import print_function
 
@@ -21,11 +20,11 @@ import argparse
 import pbxplore as pbx
 
 
-# load MDAnalasys with limited support for Python3
+# load MDAnalysis with limited support for Python3
 import warnings
-warnings.filterwarnings('ignore')
-import MDAnalysis
-warnings.resetwarnings()
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    import MDAnalysis
 
 
 # Python2/Python3 compatibility
