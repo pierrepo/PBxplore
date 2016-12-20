@@ -20,13 +20,12 @@ import argparse
 # Local modules
 import pbxplore as pbx
 
-# MDAnalysis is an optional requirement
-try:
-    import MDAnalysis
-except ImportError:
-    IS_MDANALYSIS = False
-else:
-    IS_MDANALYSIS = True
+
+# load MDAnalasys with limited support for Python3
+import warnings
+warnings.filterwarnings('ignore')
+import MDAnalysis
+warnings.resetwarnings()
 
 
 # Python2/Python3 compatibility
@@ -57,7 +56,7 @@ def user_inputs():
                         help="name for results")
     # arguments for MDanalysis
     group = parser.add_argument_group(
-        title='other options [if MDanalysis module is available]')
+        title='other options to handle molecular dynamics trajectories')
     group.add_argument("-x", action="store",
                        help="name of xtc file (Gromacs)")
     group.add_argument("-g", action="store",
@@ -70,8 +69,6 @@ def user_inputs():
 
     # check options
     if not options.p:
-        if not IS_MDANALYSIS:
-            parser.error("MDAnalysis is not installed; options -x and -d are not available")
         if not options.x:
             parser.print_help()
             parser.error("use at least option -p or -x")
