@@ -348,58 +348,6 @@ class TestPBcount(TemplateTestCase):
                                        first_residue=-20)
 
 
-class TestPBclust(TemplateTestCase):
-    def _build_command_line(self, input_files, output,
-                            clusters=None, compare=False):
-        output_full_path = os.path.join(self._temp_directory, output)
-        command = ['PBclust', '-o', output_full_path]
-        for input_file in input_files:
-            command += ['-f', os.path.join(REFDIR, input_file)]
-        if clusters is not None:
-            command += ['--clusters', str(clusters)]
-        if compare:
-            command += ['--compare']
-        return command
-
-    def _validate_output(self, reference, input_files, output,
-                         clusters=None, compare=False, **kwargs):
-        output = os.path.join(self._temp_directory, output)
-        if compare:
-            # Asses the validity of the distance file
-            reference_full_path = os.path.join(REFDIR,
-                                               reference + '.PB.compare.fasta')
-            output_full_path = output + '.PB.compare.fasta'
-            _assert_identical_files(output_full_path, reference_full_path)
-        else:
-            # Asses the validity of the main output od PBclust (the clust file)
-            reference_full_path = os.path.join(REFDIR, reference + '.PB.clust')
-            output_full_path = output + '.PB.clust'
-            _assert_identical_files(output_full_path, reference_full_path)
-
-    def test_default_single_input(self):
-        self._run_program_and_validate(reference='psi_md_traj_all',
-                                       input_files=['psi_md_traj_all.PB.fasta', ],
-                                       output='output', clusters=3)
-
-    def test_default_multi_input(self):
-        self._run_program_and_validate(reference='psi_md_traj_all',
-                                       input_files=['psi_md_traj_1.PB.fasta',
-                                                    'psi_md_traj_2.PB.fasta',
-                                                    'psi_md_traj_3.PB.fasta'],
-                                       output='output', clusters=3)
-
-    def test_nclusters(self):
-        self._run_program_and_validate(reference='psi_md_traj_all_c5',
-                                       input_files=['psi_md_traj_all.PB.fasta', ],
-                                       output='output',
-                                       clusters=5)
-
-    def test_compare(self):
-        self._run_program_and_validate(reference='psi_md_traj_1',
-                                       input_files=['psi_md_traj_1.PB.fasta', ],
-                                       output='output',
-                                       compare=True)
-
 
 class TestPBstat(TemplateTestCase):
     def _build_command_line(self, input_file, output, mapdist=False, neq=False,

@@ -47,7 +47,6 @@ Basically, PBxplore can:
    PBassign
    PBcount
    PBstat
-   PBclust
    api_cookbook
    api_reference
 
