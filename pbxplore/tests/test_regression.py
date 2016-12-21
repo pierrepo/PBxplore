@@ -30,12 +30,9 @@ import subprocess
 import shutil
 import sys
 
-try:
-    import MDAnalysis
-except ImportError:
-    IS_MDANALYSIS = False
-else:
-    IS_MDANALYSIS = True
+
+import MDAnalysis
+
 
 try:
     import matplotlib
@@ -250,15 +247,13 @@ class TestPBAssign(TemplateTestCase):
         status = exe.wait()
         print(out.decode('utf-8'))
         print(err.decode('utf-8'))
-        if IS_MDANALYSIS:
-            # MDanalysis is available, PBassign should run and produce the
-            # correct output
-            assert status == 0, 'PBassign exited with an error'
-            _assert_identical_files(os.path.join(REFDIR, output_fname),
-                                    os.path.join(out_run_dir, output_fname))
-        else:
-            # MDanalysis is not available, PBassign should fail
-            assert status != 0, 'PBassign shoud not have exited with a 0 code'
+
+        # MDanalysis is available, PBassign should run and produce the
+        # correct output
+        assert status == 0, 'PBassign exited with an error'
+        _assert_identical_files(os.path.join(REFDIR, output_fname),
+                                os.path.join(out_run_dir, output_fname))
+
 
     @_failure_test
     def test_different_outputs(self):

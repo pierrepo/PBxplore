@@ -20,12 +20,7 @@ import numpy
 import pbxplore as pbx
 from pbxplore.structure import structure
 
-try:
-    import MDAnalysis
-except ImportError:
-    IS_MDANALYSIS = False
-else:
-    IS_MDANALYSIS = True
+import MDAnalysis
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -100,7 +95,6 @@ class TestStructurelib(unittest.TestCase):
         self.assertEqual(ref_comment, comment)
         self.assertEqual(ref_chain, format(chain))
 
-    @unittest.skipUnless(IS_MDANALYSIS, "MDAnalysis is not present")
     def test_loader_xtc(self):
         """
         Test for API load function on xtc files
@@ -177,7 +171,6 @@ class TestAtomClass(unittest.TestCase):
         with self.assertRaises(structure.AtomError):
             structure.Atom.read_from_PDBx(line, self.PDBx_fields)
 
-    @unittest.skipUnless(IS_MDANALYSIS, "MDAnalysis is not present")
     def test_read_from_xtc(self):
         """
         Tests for read_from_xtc()
