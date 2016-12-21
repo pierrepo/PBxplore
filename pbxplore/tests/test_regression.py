@@ -33,12 +33,8 @@ import sys
 
 import MDAnalysis
 
+import matplotlib
 
-try:
-    import matplotlib
-    IS_MATPLOTLIB = True
-except ImportError:
-    IS_MATPLOTLIB = False
 
 try:
     import weblogolib
@@ -461,7 +457,6 @@ class TestPBstat(TemplateTestCase):
         value, msg = _file_validity(output_full_path + extension)
         self.assertTrue(value, msg=msg)
 
-    @unittest.skipUnless(IS_MATPLOTLIB, "Matplotlib is not present")
     def test_neq(self):
         self._run_program_and_validate(reference='count_multi123',
                                        input_file='count_multi123.PB.count',
@@ -472,7 +467,6 @@ class TestPBstat(TemplateTestCase):
                                        output='output',
                                        neq=True)
 
-    @unittest.skipUnless(IS_MATPLOTLIB, "Matplotlib is not present")
     def test_neq_with_range_residues(self):
         self._run_program_and_validate(reference='count_multi123',
                                        input_file='count_multi123.PB.count',
@@ -480,28 +474,24 @@ class TestPBstat(TemplateTestCase):
                                        neq=True,
                                        residue_min=10, residue_max=30)
 
-    @unittest.skipUnless(IS_MATPLOTLIB, "Matplotlib is not present")
     def test_neq_pdf(self):
         self._run_program_and_validate(reference='count_multi123',
                                        input_file='count_multi123.PB.count',
                                        output='output',
                                        neq=True, image_format='pdf')
 
-    @unittest.skipUnless(IS_MATPLOTLIB, "Matplotlib is not present")
     def test_mapdist(self):
         self._run_program_and_validate(reference='count_multi123',
                                        input_file='count_multi123.PB.count',
                                        output='output',
                                        mapdist=True)
 
-    @unittest.skipUnless(IS_MATPLOTLIB, "Matplotlib is not present")
     def test_mapdist_pdf(self):
         self._run_program_and_validate(reference='count_multi123',
                                        input_file='count_multi123.PB.count',
                                        output='output',
                                        mapdist=True, image_format='pdf')
 
-    @unittest.skipUnless(IS_MATPLOTLIB, "Matplotlib is not present")
     def test_mapdist_with_range_residues(self):
         self._run_program_and_validate(reference='count_multi123',
                                        input_file='count_multi123.PB.count',
