@@ -30,13 +30,12 @@ Look at the notebook  :doc:`Writing PB in file <./notebooks/Assignement>` for fu
 PBxplore.analysis
 -----------------
 
-This module handle all analysis functions, ploting functions and clustering one available with the package.
+This module handle all analysis functions and ploting functions.
 You can:
 
 * generate map of the distribution of PBs along protein sequence with `plot_map()`.
 * compute :ref:`Neq` with `compute_neq()` and generate the plot with `plot_neq()`.
 * generate WebLogo-like representation of PBs frequency along protein sequence with `generate_weblogo()`.
-* cluster conformations of a same protein based on PB similarities.
 
 Look at the notebook :doc:`Visualize protein deformability <./notebooks/Deformability>`
 for further information.
