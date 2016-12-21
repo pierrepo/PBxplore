@@ -20,13 +20,6 @@ import argparse
 import pbxplore as pbx
 
 
-# load MDAnalysis with limited support for Python3
-import warnings
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore")
-    import MDAnalysis
-
-
 # Python2/Python3 compatibility
 # The range function in python 3 behaves as the range function in python 2
 # and returns a generator rather than a list. To produce a list in python 3,
