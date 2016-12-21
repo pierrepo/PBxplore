@@ -10,14 +10,8 @@ import math
 # Third-party modules
 import numpy
 
-# Conditional imports
-try:
-    import matplotlib
-    import matplotlib.pyplot as plt
-except ImportError:
-    IS_MATPLOTLIB = False
-else:
-    IS_MATPLOTLIB = True
+import matplotlib
+import matplotlib.pyplot as plt
 
 try:
     import weblogolib
@@ -51,9 +45,7 @@ except NameError:
 
 
 # Create the __all__ keyword according to the conditional imports
-__all__ = []
-if IS_MATPLOTLIB:
-    __all__ += ['plot_neq', 'plot_map']
+__all__ = ['plot_neq', 'plot_map']
 if IS_WEBLOGO:
     __all__ += ['generate_weblogo']
 

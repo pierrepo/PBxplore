@@ -31,13 +31,8 @@ except:
 else:
     IS_WEBLOGO = True
 
-# matplotlib is an optional requirement
-try:
-    import matplotlib
-except:
-    IS_MATPLOTLIB = False
-else:
-    IS_MATPLOTLIB = True
+import matplotlib
+
 
 # ============================================================================
 # Python2/Python3 compatibility
@@ -106,11 +101,6 @@ def user_inputs():
     if options.logo:
         if not IS_WEBLOGO:
             parser.error("Weblogo is not installed; cannot generate the logo image.")
-
-    # Check matplotlib
-    if options.mapdist or options.neq:
-        if not IS_MATPLOTLIB:
-            parser.error("matplotlib is not installed; cannot generate plots.")
 
     return options
 
