@@ -14,8 +14,7 @@ with open(os.path.join(here, 'README.rst')) as f:
 # Extras requirements for optional dependencies
 extras = {
     'analysis': ['weblogo', 'matplotlib'],
-    'trajectories': ['MDAnalysis>=0.11'],
-    'all': ['weblogo', 'matplotlib', 'MDAnalysis>=0.11']
+    'all': ['weblogo', 'matplotlib']
 }
 
 # Version number must be in sync with the one in pbxplore/__init__.py
@@ -55,7 +54,7 @@ setup(
         'Programming Language :: Python :: 3.4',
     ],
 
-    install_requires=['numpy'],
+    install_requires=['numpy', 'MDAnalysis>=0.11'],
     tests_require=['nose', 'coverage'],
     # List additional groups of dependencies here
     # To install, use
