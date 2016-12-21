@@ -17,13 +17,13 @@ Initial setup
 
 - Create an account on PyPI and create a projet (here [pbxplore](https://pypi.python.org/pypi/pbxplore)).
 
-- Create a .pypirc files into your HOME directory with the following lines :
+- Create a .pypirc files into your HOME directory with the following lines:
 
         [distutils]
         index-servers = pypi
 
         [pypi]
-        repository=https://pypi.python.org/pypi
+        repository=https://upload.pypi.org/legacy/
         username=your_username
 
 - Prepare package files (at minimum `setup.py`, `setup.cfg`, `README.md`, `MANIFEST.in` and `LICENSE.txt`).
@@ -39,6 +39,12 @@ Build and upload package to PyPI:
     python setup.py sdist upload
 
 Enter your password when required.
+
+
+Doc:
+
+- https://packaging.python.org/distributing/#uploading-your-project-to-pypi
+
 
 #### Publish Documentation
 

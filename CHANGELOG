@@ -1,4 +1,6 @@
 **Dev**
+- update RELEASE doc (PyPI url)
+
 **1.3.2**
 - add some unit tests
 - add a function test() within the root path of PBxplore
