@@ -15,6 +15,13 @@ import matplotlib.pyplot as plt
 
 try:
     import weblogolib
+    # Weblogo compatibility
+    # With version < 3.5, the color class is 'ColorGroup'. In version >= 3.5,
+    # it is 'SymbolColor'. Here, we change to always have 'ColorGroup'.
+    try:
+        ColorGroup = weblogolib.SymbolColor
+    except NameError:
+        ColorGroup = weblogolib.ColorGroup
 except ImportError:
     IS_WEBLOGO = False
 else:
@@ -35,13 +42,7 @@ try:
 except NameError:
     pass
 
-# Weblogo compatibility
-# With version < 3.5, the color class is 'ColorGroup'. In version >= 3.5,
-# it is 'SymbolColor'. Here, we change to always have 'ColorGroup'.
-try:
-    ColorGroup = weblogolib.SymbolColor
-except NameError:
-    ColorGroup = weblogolib.ColorGroup
+
 
 
 # Create the __all__ keyword according to the conditional imports
