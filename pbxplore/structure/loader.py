@@ -7,13 +7,6 @@ from __future__ import absolute_import
 from .structure import Chain, Atom
 from .PDB import PDB
 
-'''
-# load MDAnalasys with limited support for Python3
-import warnings
-warnings.filterwarnings('ignore')
-import MDAnalysis
-warnings.resetwarnings()
-'''
 
 # load MDAnalysis with limited support for Python 3
 import warnings
