@@ -112,17 +112,24 @@ def pbassign_cli():
     all_comments = []
     all_sequences = []
     for comment, chain in chains:
-        dihedrals = chain.get_phi_psi_angles()
-        sequence = pbx.assign(dihedrals)
-        all_comments.append(comment)
-        all_sequences.append(sequence)
+        try:
+            dihedrals = chain.get_phi_psi_angles()
+            sequence = pbx.assign(dihedrals)
+            all_comments.append(comment)
+            all_sequences.append(sequence)
+        except FloatingPointError:
+            print("The computation of angles produced NaN. This typically means there are issues"
+                  " with some residues coordinates. Check your input file ({0})".format(comment),
+                  file=sys.stderr)
 
-    fasta_name = options.o + ".PB.fasta"
-    with open(fasta_name, 'w') as outfile:
-        pbx.io.write_fasta(outfile, all_sequences, all_comments)
+    if all_comments:
+        fasta_name = options.o + ".PB.fasta"
+        with open(fasta_name, 'w') as outfile:
+            pbx.io.write_fasta(outfile, all_sequences, all_comments)
 
-    print("wrote {0}".format(fasta_name))
-
+        print("wrote {0}".format(fasta_name))
+    else:
+        print("No output file was written")
 
 if __name__ == '__main__':
     pbassign_cli()

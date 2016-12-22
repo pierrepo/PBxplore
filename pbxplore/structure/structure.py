@@ -256,6 +256,12 @@ class Chain:
             Dict with residue number (int) as keys
             and a ``{'phi' : (float), 'psi' : (float)}`` dictionnary as values.
 
+        Raises
+        ------
+        FloatingPointError
+            If the computation of angles produces NaN.
+            Generally, it means there is some problem with the residue coordinates.
+
         Examples
         --------
         >>> lines = ("ATOM    840  C   ARG B  11      22.955  23.561  -4.012  1.00 28.07           C  ",
@@ -287,25 +293,38 @@ class Chain:
 
         # get dihedrals
         phi_psi_angles = {}
-        for res in sorted(backbone):
-            # phi: angle between C(i-1) - N(i) - CA(i) - C(i)
-            try:
-                phi = get_dihedral(backbone[res-1]["C" ].coords,
-                                   backbone[res  ]["N" ].coords,
-                                   backbone[res  ]["CA"].coords,
-                                   backbone[res  ]["C" ].coords)
-            except:
-                phi = None
-            # psi: angle between N(i) - CA(i) - C(i) - N(i+1)
-            try:
-                psi = get_dihedral(backbone[res  ]["N" ].coords,
-                                   backbone[res  ]["CA"].coords,
-                                   backbone[res  ]["C" ].coords,
-                                   backbone[res+1]["N" ].coords)
-            except:
-                psi = None
-            # print(res, phi, psi)
-            phi_psi_angles[res] = {"phi": phi, "psi": psi}
+
+        # When get_dihedral() produces NaN, raise an exception (FloatingPointError) instead of a RuntimeWarning
+        with numpy.errstate(invalid='raise'):
+            for res in sorted(backbone):
+                # phi: angle between C(i-1) - N(i) - CA(i) - C(i)
+                try:
+
+                    phi = get_dihedral(backbone[res-1]["C" ].coords,
+                                       backbone[res  ]["N" ].coords,
+                                       backbone[res  ]["CA"].coords,
+                                       backbone[res  ]["C" ].coords)
+                except FloatingPointError:
+                    # Using raise with no arguments re-raises the last exception
+                    # In order to keep the traceback
+                    raise
+                except:
+                    phi = None
+                # psi: angle between N(i) - CA(i) - C(i) - N(i+1)
+                try:
+                    psi = get_dihedral(backbone[res  ]["N" ].coords,
+                                       backbone[res  ]["CA"].coords,
+                                       backbone[res  ]["C" ].coords,
+                                       backbone[res+1]["N" ].coords)
+                except FloatingPointError:
+                    # Using raise with no arguments re-raises the last exception
+                    # In order to keep the traceback
+                    raise
+                except:
+                    psi = None
+                # print(res, phi, psi)
+                phi_psi_angles[res] = {"phi": phi, "psi": psi}
+
         return phi_psi_angles
 
 
