@@ -294,18 +294,18 @@ class Chain:
         # get dihedrals
         phi_psi_angles = {}
 
-        # When get_dihedral() produces NaN, raise an exception (FloatingPointError) instead of a RuntimeWarning
+        # When get_dihedral() produces NaN, raises a FloatingPointError exception
+        # instead of a RuntimeWarning
         with numpy.errstate(invalid='raise'):
             for res in sorted(backbone):
                 # phi: angle between C(i-1) - N(i) - CA(i) - C(i)
                 try:
-
                     phi = get_dihedral(backbone[res-1]["C" ].coords,
                                        backbone[res  ]["N" ].coords,
                                        backbone[res  ]["CA"].coords,
                                        backbone[res  ]["C" ].coords)
                 except FloatingPointError:
-                    # Using raise with no arguments re-raises the last exception
+                    # Using raise with no argument re-raises the last exception
                     # In order to keep the traceback
                     raise
                 except:
@@ -317,7 +317,7 @@ class Chain:
                                        backbone[res  ]["C" ].coords,
                                        backbone[res+1]["N" ].coords)
                 except FloatingPointError:
-                    # Using raise with no arguments re-raises the last exception
+                    # Using raise with no argument re-raises the last exception
                     # In order to keep the traceback
                     raise
                 except:
