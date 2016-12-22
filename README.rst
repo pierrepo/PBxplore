@@ -1,16 +1,21 @@
 PBxplore
 ========
 
-.. image:: https://travis-ci.org/pierrepo/PBxplore.svg?branch=master
-    :alt: Travis CI build status
-    :target: https://travis-ci.org/pierrepo/PBxplore
-
 .. image:: https://img.shields.io/badge/Python-2.7%203.4%203.5-brightgreen.svg
     :alt: Python version
+    :target: https://pypi.python.org/pypi/pbxplore
 
 .. image:: https://badge.fury.io/py/pbxplore.svg
     :alt: PyPI PBxplore version
     :target: https://pypi.python.org/pypi/pbxplore
+
+.. image:: https://travis-ci.org/pierrepo/PBxplore.svg?branch=master
+    :alt: Travis CI build status
+    :target: https://travis-ci.org/pierrepo/PBxplore
+
+.. image:: https://readthedocs.org/projects/pip/badge/?version=latest
+    :alt: PBxplore documentation
+    :target: https://pbxplore.readthedocs.org/en/latest/
 
 
 **PBxplore** is a suite of tools dedicated to Protein Block (PB) analysis.
