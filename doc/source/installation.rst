@@ -16,17 +16,18 @@ Dependencies
 To use `PBxplore`, the following libraries have to be installed.
 
     `NumPy <http://numpy.scipy.org/>`_ >= 1.6.0
-        Numpy is the base package for numerical computing in python.
+        NumPy is the base package for numerical computing in python.
 
-Optionally, `PBxplore` can use the following packages:
+    `matplotlib <http://matplotlib.org/>`_ [#]_ >= 1.4.0
+        All ploting functions use `matplotlib` package.
 
     `MDAnalysis <http://www.mdanalysis.org/>`_ [#]_ >= 0.11
-        We use MDAnalysis for loading trajectories.
-        See the full supported list
+        We use MDAnalysis to read Gromacs molecular dynamics trajectories.
+        Many other trajectory files are also supported, see list 
         `here <https://pythonhosted.org/MDAnalysis/documentation_pages/coordinates/init.html#id1>`_.
 
-    `Matplotlib <http://matplotlib.org/>`_ >= 1.4.0
-        All ploting functions use `matplotlib` package.
+
+Optionally, `PBxplore` can use the following packages:
 
     `Weblogo3 <http://weblogo.threeplusone.com/>`_ [#]_
         `Weblogo3` is required to create logo from PB sequences.
@@ -35,7 +36,7 @@ Optionally, `PBxplore` can use the following packages:
 Installing PBxplore
 -------------------
 
-Once dependencies installed, the most straightforward way is to use `pip`:
+The most straightforward way is to use `pip`:
 
 .. code-block:: bash
 
@@ -75,6 +76,20 @@ Or from the `PBxplore` module:
     import pbxplore
     pbxplore.test()
 
+
+Uninstalling PBxplore
+---------------------
+
+Run the simple command:
+
+.. code-block:: bash
+
+    $ pip uninstall pbxplore
+
+
+.. [#] J. D. Hunter.
+       Matplotlib: A 2D graphics environment.
+       *Computing In Science and Engineering* **9** (2007), 90-95. doi:10.1109/MCSE.2007.55
 
 .. [#] N. Michaud-Agrawal, E. J. Denning, T. B. Woolf, and O. Beckstein.
        MDAnalysis: A Toolkit for the Analysis of Molecular Dynamics Simulations.
