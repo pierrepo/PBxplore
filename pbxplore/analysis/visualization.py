@@ -44,8 +44,6 @@ except NameError:
     pass
 
 
-
-
 # Create the __all__ keyword according to the conditional imports
 __all__ = ['plot_neq', 'plot_map']
 if IS_WEBLOGO:
@@ -74,9 +72,9 @@ def plot_neq(fname, neq_array, residue_min=1, residue_max=None):
     # Residue number with good offset given the slice
     x = numpy.arange(residue_min, residue_min + nb_residues)
 
-    fig = plt.figure(figsize=(2.0*math.log(nb_residues), 5))
+    fig = plt.figure(figsize=(2.0 * math.log(nb_residues), 5))
     ax = fig.add_subplot(1, 1, 1)
-    ax.set_ylim([0, round(max(neq), 0)+1])
+    ax.set_ylim([0, round(max(neq), 0) + 1])
     ax.plot(x, neq)
     ax.set_xlabel('Residue number', fontsize=18)
     ax.set_ylabel('Neq', fontsize=18, style='italic')
@@ -121,13 +119,12 @@ def plot_map(fname, count_mat, residue_min=1, residue_max=None):
     if nb_residues > 100:
         x_step = 10
     if nb_residues > 200:
-        x_step = int( scaling_factor) * 5
+        x_step = int(scaling_factor) * 5
     xticks = x[::x_step]
     # trying to round ticks: 5, 10, 15 instead of 6, 11, 16...
     if xticks[0] == 1:
-        xticks = xticks-1
+        xticks = xticks - 1
         xticks[0] += 1
-
 
     # define ticks for y-axis
     yticks = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
@@ -150,11 +147,11 @@ def plot_map(fname, count_mat, residue_min=1, residue_max=None):
     cmap = matplotlib.colors.LinearSegmentedColormap.from_list('ColBrewerRdYlBu', colors)
 
     img = ax2.imshow(numpy.transpose(freq[:, :]), interpolation='none', vmin=0, vmax=1,
-                    origin='lower', aspect='auto', cmap=cmap)
+                     origin='lower', aspect='auto', cmap=cmap)
 
     # add colorbar
-    divider2 =  make_axes_locatable(ax2)
-    #cax2 = divider2.append_axes("right", size="5%", pad=0.08)
+    divider2 = make_axes_locatable(ax2)
+    # cax2 = divider2.append_axes("right", size="5%", pad=0.08)
     cax2 = divider2.append_axes("right", size=0.15, pad=0.08)
     plt.colorbar(img, cax=cax2)
 
@@ -172,13 +169,13 @@ def plot_map(fname, count_mat, residue_min=1, residue_max=None):
     # center alpha-helix: PB m (13th PB out of 16 PBs)
     # center coil: PB h and i (8th and 9th PBs out of 16 PBs)
     # center beta-sheet: PB d (4th PB out of 16 PBs)
-    ax1.text(0.5, 4.0/16, r"$\beta$-strand", rotation=90,
-                          ha='center', va='center')
-    ax1.text(0.5, 8.5/16, r"coil", rotation=90,
-                          ha='center', va='center')
-    ax1.text(0.5, 13.0/16, r"$\alpha$-helix", rotation=90,
-                           ha='center', va='center')
-    
+    ax1.text(0.5, 4.0 / 16, r"$\beta$-strand", rotation=90,
+             ha='center', va='center')
+    ax1.text(0.5, 8.5 / 16, r"coil", rotation=90,
+             ha='center', va='center')
+    ax1.text(0.5, 13.0 / 16, r"$\alpha$-helix", rotation=90,
+             ha='center', va='center')
+
     # add "intensity"
     ax3.set_axis_off()
     ax3.text(0.7, 0.5, "Intensity", rotation=90, weight="bold", ha='center', va='center')
