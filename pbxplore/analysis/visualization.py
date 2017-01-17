@@ -11,6 +11,7 @@ import math
 import numpy
 
 import matplotlib
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 import matplotlib.pyplot as plt
 
 try:
@@ -43,8 +44,6 @@ except NameError:
     pass
 
 
-
-
 # Create the __all__ keyword according to the conditional imports
 __all__ = ['plot_neq', 'plot_map']
 if IS_WEBLOGO:
@@ -73,9 +72,9 @@ def plot_neq(fname, neq_array, residue_min=1, residue_max=None):
     # Residue number with good offset given the slice
     x = numpy.arange(residue_min, residue_min + nb_residues)
 
-    fig = plt.figure(figsize=(2.0*math.log(nb_residues), 5))
+    fig = plt.figure(figsize=(2.0 * math.log(nb_residues), 5))
     ax = fig.add_subplot(1, 1, 1)
-    ax.set_ylim([0, round(max(neq), 0)+1])
+    ax.set_ylim([0, round(max(neq), 0) + 1])
     ax.plot(x, neq)
     ax.set_xlabel('Residue number', fontsize=18)
     ax.set_ylabel('Neq', fontsize=18, style='italic')
@@ -100,7 +99,7 @@ def plot_map(fname, count_mat, residue_min=1, residue_max=None):
     """
     # Get the frequency matrix
     freq_mat = utils.compute_freq_matrix(count_mat)
-    # Slice it
+    # take a slice with min/max residues
     freq = utils._slice_matrix(freq_mat, residue_min, residue_max)
     nb_residues = freq.shape[0]
     # Residue number with good offset given the slice
@@ -111,16 +110,20 @@ def plot_map(fname, count_mat, residue_min=1, residue_max=None):
     scaling_factor = math.log(nb_residues)
 
     # define ticks for x-axis
-    x_step = 5
+    x_step = 1
     # space ticks for large proteins
+    if nb_residues > 12:
+        x_step = 2
+    if nb_residues > 25:
+        x_step = 5
     if nb_residues > 100:
         x_step = 10
     if nb_residues > 200:
-        x_step = int( scaling_factor) * 5
+        x_step = int(scaling_factor) * 5
     xticks = x[::x_step]
     # trying to round ticks: 5, 10, 15 instead of 6, 11, 16...
     if xticks[0] == 1:
-        xticks = xticks-1
+        xticks = xticks - 1
         xticks[0] += 1
 
     # define ticks for y-axis
@@ -128,8 +131,11 @@ def plot_map(fname, count_mat, residue_min=1, residue_max=None):
               'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p')
 
     fig = plt.figure(figsize=(2.0 * scaling_factor, 4))
-    ax = fig.add_axes([0.1, 0.1, 0.75, 0.8])
 
+    gs = matplotlib.gridspec.GridSpec(1, 3, width_ratios=[1, 2.0 * scaling_factor, 1])
+    ax1 = fig.add_subplot(gs[0])
+    ax2 = fig.add_subplot(gs[1])
+    ax3 = fig.add_subplot(gs[2])
     # Color scheme inspired from ColorBrewer
     # http://colorbrewer2.org/?type=diverging&scheme=RdYlBu&n=5
     # This color scheme is colorblind safe
@@ -140,35 +146,42 @@ def plot_map(fname, count_mat, residue_min=1, residue_max=None):
               (215.0 / 255, 25.0 / 255, 28.0 / 255)]
     cmap = matplotlib.colors.LinearSegmentedColormap.from_list('ColBrewerRdYlBu', colors)
 
-    img = ax.imshow(numpy.transpose(freq[:, :]), interpolation='none', vmin=0, vmax=1,
-                    origin='lower', aspect='auto', cmap=cmap)
+    img = ax2.imshow(numpy.transpose(freq[:, :]), interpolation='none', vmin=0, vmax=1,
+                     origin='lower', aspect='auto', cmap=cmap)
 
-    ax.set_xticks(xticks - numpy.min(xticks))
-    ax.set_xticklabels(xticks)
-    ax.set_yticks(range(len(yticks)))
-    ax.set_yticklabels(yticks, style='italic', weight='bold')
-    colorbar_ax = fig.add_axes([0.87, 0.1, 0.03, 0.8])
-    fig.colorbar(img, cax=colorbar_ax)
-    # print "beta-strand", "coil" and "alpha-helix" text
-    # only if there is more than 20 residues
-    if nb_residues >= 20:
-        text_shift = 0.0
-        if nb_residues >= 100:
-            text_shift = scaling_factor / 500
-        # center alpha-helix: PB m (13th PB out of 16 PBs)
-        # center coil: PB h and i (8th and 9th PBs out of 16 PBs)
-        # center beta-sheet: PB d (4th PB out of 16 PBs)
-        fig.text(0.05 + text_shift, 4.0/16*0.8+0.075, r"$\beta$-strand", rotation=90,
-                 va='center', transform=ax.transAxes)
-        fig.text(0.05 + text_shift, 8.5/16*0.8+0.075, r"coil", rotation=90,
-                 va='center')
-        fig.text(0.05 + text_shift, 13.0/16*0.8+0.075, r"$\alpha$-helix", rotation=90,
-                 va='center', transform=ax.transAxes)
+    # add colorbar
+    divider2 = make_axes_locatable(ax2)
+    # cax2 = divider2.append_axes("right", size="5%", pad=0.08)
+    cax2 = divider2.append_axes("right", size=0.15, pad=0.08)
+    plt.colorbar(img, cax=cax2)
 
-    fig.text(0.01 + text_shift * 2, 0.5, "PBs", rotation=90, weight="bold",
-             size='larger', transform=ax.transAxes)
-    fig.text(0.4, 0.01, "Residue number", weight="bold")
-    fig.text(0.96 - text_shift, 0.6, "Intensity", rotation=90, weight="bold")
+    # add ticks and labels
+    ax2.set_xticks(xticks - numpy.min(xticks))
+    ax2.set_xticklabels(xticks)
+    ax2.set_yticks(range(len(yticks)))
+    ax2.set_yticklabels(yticks, style='italic', weight='bold')
+    ax2.set_xlabel("Residue number", weight="bold")
+
+    # add secondary structures
+    ax1.set_axis_off()
+    ax1.text(0.2, 0.5, "PBs", rotation=90, weight="bold",
+                       size='larger', ha='center', va='center')
+    # center alpha-helix: PB m (13th PB out of 16 PBs)
+    # center coil: PB h and i (8th and 9th PBs out of 16 PBs)
+    # center beta-sheet: PB d (4th PB out of 16 PBs)
+    ax1.text(0.5, 4.0 / 16, r"$\beta$-strand", rotation=90,
+             ha='center', va='center')
+    ax1.text(0.5, 8.5 / 16, r"coil", rotation=90,
+             ha='center', va='center')
+    ax1.text(0.5, 13.0 / 16, r"$\alpha$-helix", rotation=90,
+             ha='center', va='center')
+
+    # add "intensity"
+    ax3.set_axis_off()
+    ax3.text(0.7, 0.5, "Intensity", rotation=90, weight="bold", ha='center', va='center')
+
+    # adjust margins and save
+    fig.subplots_adjust(left=0.01, bottom=0.12, top=0.96, right=0.99, wspace=0)
     fig.savefig(fname, dpi=300)
 
 
