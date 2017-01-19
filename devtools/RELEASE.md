@@ -2,6 +2,11 @@
 
 Before any release, double-check all tests had run successfully.
 
+Then install needed tools:
+
+    pip install --user bumpversion twine
+
+
 #### Update version number
 
 We use the tool [bumpversion](https://github.com/peritus/bumpversion) to synchronize the version number
@@ -36,7 +41,7 @@ Initial setup
 
 Build and upload package to PyPI:
 
-    python setup.py sdist upload
+    twine upload dist/*
 
 Enter your password when required.
 
