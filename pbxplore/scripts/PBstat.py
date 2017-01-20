@@ -104,7 +104,6 @@ def user_inputs():
 
     return options
 
-
 def check_residue_range(residues, residue_min, residue_max):
     """"
     Ensure that the lower bound and the upper bound parameters are in the range of
@@ -141,7 +140,6 @@ def check_residue_range(residues, residue_min, residue_max):
 
     return residue_min, residue_max
 
-
 def pbstat_cli():
     """
     PBstat command line.
@@ -151,12 +149,15 @@ def pbstat_cli():
 
     try:
         count, residues = pbx.analysis.read_occurence_file(options.f)
+        # Handle the index of the first residue in the matrix
+        idx_first_residue = residues[0]
+        print("Index of first residue in {0} is {1}".format(options.f, idx_first_residue))
         residue_min, residue_max = check_residue_range(residues,
                                                        options.residue_min, options.residue_max)
     except Exception as e:
         sys.exit("ERROR: {0}".format(e))
 
-    print("Index of first residue is: {0}".format(residue_min))
+    print("First residue in the output file(s) is {0}".format(residue_min))
 
     # Handle output file name...
     output_file_name = options.o + ".PB.{0}"
@@ -170,7 +171,7 @@ def pbstat_cli():
     # -------------------------------------------------------------------------------
     if options.mapdist:
         file_fig_name = output_fig_name.format("map")
-        pbx.analysis.plot_map(file_fig_name, count, residue_min, residue_max)
+        pbx.analysis.plot_map(file_fig_name, count, idx_first_residue, residue_min, residue_max)
         print("wrote " + file_fig_name)
 
     # -------------------------------------------------------------------------------
@@ -183,12 +184,12 @@ def pbstat_cli():
         # write Neq
         neq_file_name = output_file_name.format("Neq")
         with open(neq_file_name, "w") as outfile:
-            pbx.io.write_neq(outfile, neq, residue_min, residue_max)
+            pbx.io.write_neq(outfile, neq, idx_first_residue, residue_min, residue_max)
         print("wrote {0}".format(neq_file_name))
 
         # draw Neq
         file_fig_name = output_fig_name.format("Neq")
-        pbx.analysis.plot_neq(file_fig_name, neq, residue_min, residue_max)
+        pbx.analysis.plot_neq(file_fig_name, neq, idx_first_residue, residue_min, residue_max)
         print("wrote {}".format(file_fig_name))
 
     # -------------------------------------------------------------------------------
@@ -197,7 +198,8 @@ def pbstat_cli():
     if options.logo:
         file_fig_name = output_fig_name.format("logo")
         title = options.f.replace(".PB.count", "")
-        pbx.analysis.generate_weblogo(file_fig_name, count, residue_min, residue_max, title)
+        pbx.analysis.generate_weblogo(file_fig_name, count,
+                                      idx_first_residue, residue_min, residue_max, title)
         print("wrote {}".format(file_fig_name))
 
 

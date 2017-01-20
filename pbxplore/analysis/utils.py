@@ -18,7 +18,7 @@ except NameError:
     pass
 
 
-def _slice_matrix(mat, residue_min=1, residue_max=None):
+def _slice_matrix(mat, idx_first_residue=1, residue_min=1, residue_max=None):
     """
     Slice a matrix given the lower and upper bond in parameters.
     The matrix has to be a numpy array with one row per residue.
@@ -28,6 +28,8 @@ def _slice_matrix(mat, residue_min=1, residue_max=None):
     ----------
     mat : numpy array
         the matrix to slice
+    idx_first_residue: int
+        the index of the first residue in the matrix
     residue_min: int
         the lower bound of residue frame
     residue_max: int
@@ -47,19 +49,25 @@ def _slice_matrix(mat, residue_min=1, residue_max=None):
     if residue_max is None:
         residue_max = mat.shape[0]
 
+    # Sanity checks
     if residue_min <= 0 or residue_max <= 0:
         raise IndexError("Index start at 1")
-
-    # range of indexes of the matrix
-    residues_idx = range(1, mat.shape[0] + 1)
-
-    if residue_min not in residues_idx or residue_max not in residues_idx:
-        raise IndexError("Index out of range")
 
     if residue_min >= residue_max:
         raise IndexError("Lower bound > upper bound")
 
-    return mat[residue_min - 1: residue_max]
+    # Check if the parameters residue_min and residue_max are in the range of the matrix
+    # Take in account the optional offset (idx_first_residue)
+
+    # range of indexes of the matrix
+    residues_idx = range(idx_first_residue, mat.shape[0] + idx_first_residue)
+
+    if residue_min not in residues_idx or residue_max not in residues_idx:
+        raise IndexError("Index out of range")
+
+
+    # Slice the matrix according to the index of first residue, residue_min and residue_max
+    return mat[residue_min - idx_first_residue: residue_max - idx_first_residue + 1]
 
 
 def compute_freq_matrix(count_mat):

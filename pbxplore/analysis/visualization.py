@@ -50,23 +50,25 @@ if IS_WEBLOGO:
     __all__ += ['generate_weblogo']
 
 
-def plot_neq(fname, neq_array, residue_min=1, residue_max=None):
+def plot_neq(fname, neq_array, idx_first_residue=1, residue_min=1, residue_max=None):
     """
     Generate the Neq plot along the protein sequence
 
     Parameters
     ----------
-    neq_array : numpy array
-        an array containing the neq value associated to the residue number
     fname : str
         The path to the file to write in
+    neq_array : numpy array
+        an array containing the neq value associated to the residue number
+    idx_first_residue: int
+        the index of the first residue in the array
     residue_min: int
         the lower bound of the protein sequence
     residue_max: int
         the upper bound of the protein sequence
     """
 
-    neq = utils._slice_matrix(neq_array, residue_min, residue_max)
+    neq = utils._slice_matrix(neq_array, idx_first_residue, residue_min, residue_max)
     nb_residues = neq.shape[0]
 
     # Residue number with good offset given the slice
@@ -81,7 +83,7 @@ def plot_neq(fname, neq_array, residue_min=1, residue_max=None):
     fig.savefig(fname)
 
 
-def plot_map(fname, count_mat, residue_min=1, residue_max=None):
+def plot_map(fname, count_mat, idx_first_residue=1, residue_min=1, residue_max=None):
     """
     Generate a map of the distribution of PBs along protein sequence from
     an occurence matrix.
@@ -92,6 +94,8 @@ def plot_map(fname, count_mat, residue_min=1, residue_max=None):
         The path to the file to write in
     count_mat : numpy array
         an occurence matrix returned by `count_matrix`.
+    idx_first_residue: int
+        the index of the first residue in the matrix
     residue_min: int
         the lower bound of the protein sequence
     residue_max: int
@@ -100,7 +104,7 @@ def plot_map(fname, count_mat, residue_min=1, residue_max=None):
     # Get the frequency matrix
     freq_mat = utils.compute_freq_matrix(count_mat)
     # take a slice with min/max residues
-    freq = utils._slice_matrix(freq_mat, residue_min, residue_max)
+    freq = utils._slice_matrix(freq_mat, idx_first_residue, residue_min, residue_max)
     nb_residues = freq.shape[0]
     # Residue number with good offset given the slice
     x = numpy.arange(residue_min, residue_min + nb_residues)
@@ -185,7 +189,7 @@ def plot_map(fname, count_mat, residue_min=1, residue_max=None):
     fig.savefig(fname, dpi=300)
 
 
-def generate_weblogo(fname, count_mat, residue_min=1, residue_max=None, title=""):
+def generate_weblogo(fname, count_mat, idx_first_residue=1, residue_min=1, residue_max=None, title=""):
     """
     Generates logo representation of PBs frequency along protein sequence through
     the weblogo library.
@@ -203,6 +207,8 @@ def generate_weblogo(fname, count_mat, residue_min=1, residue_max=None, title=""
         The path to the file to write in
     count_mat : numpy array
         an occurence matrix returned by `count_matrix`.
+    idx_first_residue: int
+        the index of the first residue in the matrix
     residue_min: int
         the lower bound of residue frame
     residue_max: int
@@ -212,7 +218,7 @@ def generate_weblogo(fname, count_mat, residue_min=1, residue_max=None, title=""
     """
 
     # Slice the matrix
-    count = utils._slice_matrix(count_mat, residue_min, residue_max)
+    count = utils._slice_matrix(count_mat, idx_first_residue, residue_min, residue_max)
 
     # Create a custom color scheme for PB
     colors = weblogolib.ColorScheme([ColorGroup("d", "#1240AB", "strand main"),

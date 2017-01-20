@@ -29,7 +29,7 @@ def write_count_matrix(pb_count, outfile, first=1):
               " ".join("%5d" % i for i in residue_pb), file=outfile)
 
 
-def write_neq(outfile, neq_array, residue_min=1, residue_max=None):
+def write_neq(outfile, neq_array, idx_first_residue=1, residue_min=1, residue_max=None):
     """
     Write the Neq matrix in an open file
 
@@ -39,6 +39,8 @@ def write_neq(outfile, neq_array, residue_min=1, residue_max=None):
         The file descriptor to write in. It must allow writing.
     neq_array : numpy array
         a 1D array containing the neq values.
+    idx_first_residue: int
+        the index of the first residue in the array
     residue_min: int
         the lower bound of residue frame
     residue_max: int
@@ -47,7 +49,7 @@ def write_neq(outfile, neq_array, residue_min=1, residue_max=None):
     """
 
     # Slice
-    neq = utils._slice_matrix(neq_array, residue_min, residue_max)
+    neq = utils._slice_matrix(neq_array, idx_first_residue, residue_min, residue_max)
 
     print("%-6s %8s " % ("resid", "Neq"), file=outfile)
     for (res, neq) in enumerate(neq):

@@ -329,9 +329,11 @@ class TestPBcount(TemplateTestCase):
         """
         Test PBcount on with the --first-residue option and a positive value.
         """
-        input_files = ['count_multi1.PB.fasta', ]
+        input_files = ['count_multi1.PB.fasta',
+                       'count_multi2.PB.fasta',
+                       'count_multi3.PB.fasta']
         output = 'output'
-        reference = 'count_multi1_first20.PB.count'
+        reference = 'count_multi123_first20.PB.count'
         self._run_program_and_validate(reference,
                                        input_files=input_files, output=output,
                                        first_residue=20)
@@ -340,9 +342,11 @@ class TestPBcount(TemplateTestCase):
         """
         Test PBcount on with the --first-residue option and a negative value.
         """
-        input_files = ['count_multi1.PB.fasta', ]
+        input_files = ['count_multi1.PB.fasta',
+                       'count_multi2.PB.fasta',
+                       'count_multi3.PB.fasta']
         output = 'output'
-        reference = 'count_multi1_first-20.PB.count'
+        reference = 'count_multi123_first-20.PB.count'
         self._run_program_and_validate(reference,
                                        input_files=input_files, output=output,
                                        first_residue=-20)
@@ -421,6 +425,19 @@ class TestPBstat(TemplateTestCase):
                                        output='output',
                                        neq=True,
                                        residue_min=10, residue_max=30)
+
+    def test_neq_with_first_residue(self):
+        self._run_program_and_validate(reference='count_multi123_first20',
+                                       input_file='count_multi123_first20.PB.count',
+                                       output='output',
+                                       neq=True)
+
+    def test_neq_with_first_range_residues(self):
+        self._run_program_and_validate(reference='count_multi123_first20',
+                                       input_file='count_multi123_first20.PB.count',
+                                       output='output',
+                                       neq=True,
+                                       residue_min=25, residue_max=35)
 
     def test_neq_pdf(self):
         self._run_program_and_validate(reference='count_multi123',
