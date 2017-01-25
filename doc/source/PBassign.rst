@@ -70,9 +70,9 @@ can be used several times. For instance:
     $ wget https://files.rcsb.org/view/1AY7.pdb
     $ PBassign -p 3ICH.pdb -p 1BTA.pdb -p 1AY7.pdb -o test1
     3 PDB file(s) to process
-    Read 1 chain(s) in demo/3ICH.pdb
-    Read 1 chain(s) in demo/1BTA.pdb
-    Read 2 chain(s) in demo/1AY7.pdb
+    Read 1 chain(s) in 3ICH.pdb
+    Read 1 chain(s) in 1BTA.pdb
+    Read 2 chain(s) in 1AY7.pdb
     wrote test1.PB.fasta
 
 
