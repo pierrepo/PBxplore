@@ -1,4 +1,6 @@
 **Dev**
+- update documentation
+
 **1.3.3**
 - update RELEASE doc (PyPI url)
 - remove support for Python 2.6 and 3.3

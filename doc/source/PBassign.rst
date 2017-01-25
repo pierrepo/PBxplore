@@ -10,15 +10,25 @@ PBassign
 Example
 -------
 
+
+First download data:
+
 .. code-block:: bash
 
-    $ PBassign -p `PBdata`/3ICH.pdb -o 3ICH
-    Read 1 chain(s) in demo/3ICH.pdb
+    $ wget https://files.rcsb.org/view/3ICH.pdb
+
+Then perform PBs assignment:
+
+.. code-block:: bash
+
+    $ PBassign -p 3ICH.pdb -o 
+    1 PDB file(s) to process
+    Read 1 chain(s) in 3ICH.pdb
     wrote 3ICH.PB.fasta
 
 Content of `3ICH.PB.fasta` : ::
 
-    >demo1/3ICH.pdb | chain A
+    >3ICH.pdb | chain A
     ZZccdfbdcdddddehjbdebjcdddddfklmmmlmmmmmmmmnopnopajeopacfbdc
     ehibacehiamnonopgocdfkbjbdcdfblmbccfbghiacdddebehiafkbccddfb
     dcfklgokaccfbdcfbhklmmmmmmmpccdfkopafbacddfbgcddddfbacddddZZ
@@ -55,7 +65,10 @@ can be used several times. For instance:
 
 .. code-block:: bash
 
-    $ PBassign -p `PBdata`/3ICH.pdb -p `PBdata`/1BTA.pdb -p `PBdata`/1AY7.pdb -o test1
+    $ wget https://files.rcsb.org/view/3ICH.pdb
+    $ wget https://files.rcsb.org/view/1BTA.pdb
+    $ wget https://files.rcsb.org/view/1AY7.pdb
+    $ PBassign -p 3ICH.pdb -p 1BTA.pdb -p 1AY7.pdb -o test1
     3 PDB file(s) to process
     Read 1 chain(s) in demo/3ICH.pdb
     Read 1 chain(s) in demo/1BTA.pdb
@@ -67,17 +80,17 @@ All PB assignments are written in the same output file. If a PDB file contains s
 and/or models, PBs assignments are also written in a single output file.
 From the previous example, the ouput of ``test1.PB.fasta`` is: ::
 
-    >demo/3ICH.pdb | chain A
+    >3ICH.pdb | chain A
     ZZccdfbdcdddddehjbdebjcdddddfklmmmlmmmmmmmmnopnopajeopacfbdc
     ehibacehiamnonopgocdfkbjbdcdfblmbccfbghiacdddebehiafkbccddfb
     dcfklgokaccfbdcfbhklmmmmmmmpccdfkopafbacddfbgcddddfbacddddZZ
-    >demo/1BTA.pdb | chain A
+    >1BTA.pdb | chain A
     ZZdddfklonbfklmmmmmmmmnopafklnoiaklmmmmmnoopacddddddehkllmmm
     mngoilmmmmmmmmmmmmnopacdcddZZ
-    >demo/1AY7.pdb | chain A
+    >1AY7.pdb | chain A
     ZZbjadfklmcfklmmmmmmmmnnpaafbfkgopacehlnomaccddehjaccdddddeh
     klpnbjadcdddfbehiacddfegolaccdddfkZZ
-    >demo/1AY7.pdb | chain B
+    >1AY7.pdb | chain B
     ZZcddfklpcbfklmmmmmmmmnopafklgoiaklmmmmmmmmpacddddddehkllmmm
     mnnommmmmmmmmmmmmmnopacddddZZ
 
@@ -86,52 +99,46 @@ One can also use the ``-p`` option to provide a directory containing PDB files a
 ``PBassign`` will process all PDB files located in the `PBdata` directory:
 
 .. code-block:: bash
-
-    $ PBassign -p `PBdata`/ -o test2
-    8 PDB file(s) to process
-    Read 2 chain(s) in demo/1AY7.pdb
-    Read 90 chain(s) in demo/psi_md_traj_1.pdb
-    Read 10 chain(s) in demo/2LFU.pdb
-    Read 90 chain(s) in demo/psi_md_traj_2.pdb
+    
+    $ wget https://files.rcsb.org/view/1AY7.pdb -P demo
+    $ wget https://files.rcsb.org/view/2LFU.pdb -P demo
+    $ wget https://files.rcsb.org/view/3ICH.pdb -P demo
+    $ wget https://files.rcsb.org/view/1BTA.pdb -P demo
+    $ PBassign -p demo/ -o test2
+    4 PDB file(s) to process
     Read 1 chain(s) in demo/3ICH.pdb
-    Read 90 chain(s) in demo/psi_md_traj_3.pdb
-    Read 190 chain(s) in demo/beta3_IEGF12.pdb
+    Read 2 chain(s) in demo/1AY7.pdb
     Read 1 chain(s) in demo/1BTA.pdb
+    Read 10 chain(s) in demo/2LFU.pdb
     wrote test2.PB.fasta
 
 
 ``-x`` and ``-g`` options
 `````````````````````````
 
-.. warning:: These options require the installation of python library `MDAnalysis <http://www.mdanalysis.org/>`_
+.. warning:: These options use the `MDAnalysis <http://www.mdanalysis.org/>`_ library which is installed by PBxplore.
 
-Instead using the ``-p`` option, the protein structures could come
-from a molecular dynamics simulation file from Gromacs.
+Instead using the ``-p`` option, protein structures could come
+from a Gromacs molecular dynamics simulation trajectory file.
 For this, you have to specify a '.xtc' file with the ``-x`` option and a '.gro' file with the ``-g`` option.
 
 .. code-block:: bash
 
-    $ PBassign -x `PBdata`/md_traj_4.xtc -g `PBdata`/md_traj_4.gro -o md_traj_4
-    PBs assigned for demo/md.xtc | frame 1
-    PBs assigned for demo/md.xtc | frame 2
-    PBs assigned for demo/md.xtc | frame 3
-    PBs assigned for demo/md.xtc | frame 4
-    ...
-    PBs assigned for demo/md.xtc | frame 198
-    PBs assigned for demo/md.xtc | frame 199
-    PBs assigned for demo/md.xtc | frame 200
-    PBs assigned for demo/md.xtc | frame 201
-    wrote md_traj_4.PB.fasta
+    
+    $ wget https://zenodo.org/record/259751/files/psi_md_traj.gro
+    $ wget https://zenodo.org/record/259751/files/psi_md_traj.xtc
+    $ PBassign -x psi_md_traj.xtc -g psi_md_traj.gro -o psi_md_traj
+    wrote psi_md_traj.PB.fasta
 
 
 Tips'n tricks
 -------------
 
-To flatten the PB sequences obtained in FASTA format, i.e. get PB sequences in a sigle lin each, one solution could be:
+To flatten the PB sequences obtained in FASTA format, i.e. get PB sequences in a single line each, one solution could be:
 
 .. code-block:: bash
 
-    $ cat `PBdata`/1AY7.PB.fasta | sed "s/^>.*/\t/" | tr -d "\n" | tr "\t" "\n" > 1AY7.PB.flat
+    $ cat 1AY7.PB.fasta | sed "s/^>.*/\t/" | tr -d "\n" | tr "\t" "\n" > 1AY7.PB.flat
 
 Content of `1AY7.PB.flat` : ::
 
