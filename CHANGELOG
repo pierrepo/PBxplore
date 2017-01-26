@@ -1,4 +1,5 @@
 **Dev**
+- add a progress bar during PB assignment of a trajectory (#150)
 - fix visualization functions when the index of first residue is different of 1 (#148)
 - update documentation
 

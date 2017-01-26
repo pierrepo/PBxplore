@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function
+import sys
 
 # Local module
 from .structure import Chain, Atom
@@ -43,6 +44,11 @@ def chains_from_trajectory(trajectory, topology):
         # append structure with atom
         structure.add_atom(atom)
 
+    nb_frames = len(universe.trajectory)
+
+    # Print the first frame
+    print("Frame {}/{}.".format(1, nb_frames), file=sys.stderr)
+
     for ts in universe.trajectory:
         #Update only with new coordinates
         structure.set_coordinates(selection.positions)
@@ -50,3 +56,11 @@ def chains_from_trajectory(trajectory, topology):
         # define structure comment
         comment = "%s | frame %s" % (trajectory, ts.frame)
         yield comment, structure
+
+        # Progress bar
+        # Print one frame every 100.
+        if ((ts.frame + 1) % 100 == 0):
+            print("Frame {}/{}.".format(ts.frame + 1, nb_frames), file=sys.stderr)
+
+    # Print the last frame
+    print("Frame {}/{}.".format(nb_frames, nb_frames), file=sys.stderr)
