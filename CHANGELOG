@@ -1,5 +1,6 @@
 **Dev**
 - fix visualization functions when the index of first residue is different of 1 (#148)
+- update documentation
 
 **1.3.3**
 - update RELEASE doc (PyPI url)
