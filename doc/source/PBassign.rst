@@ -21,7 +21,7 @@ Then perform PBs assignment:
 
 .. code-block:: bash
 
-    $ PBassign -p 3ICH.pdb -o 
+    $ PBassign -p 3ICH.pdb -o 3ICH
     1 PDB file(s) to process
     Read 1 chain(s) in 3ICH.pdb
     wrote 3ICH.PB.fasta
