@@ -32,6 +32,8 @@ def chains_from_files(path_list):
                 comment += " | chain %s" % (chain.name)
             yield comment, chain
 
+        print("Read {0} chain(s) in {1}".format(pdb.nb_chains, pdb_name), file=sys.stderr)
+
 
 def chains_from_trajectory(trajectory, topology):
     universe = MDAnalysis.Universe(topology, trajectory)

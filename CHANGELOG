@@ -1,4 +1,6 @@
 **Dev**
+- Move print statement of PDBs read from PDB class to the loader module
+- add a property in PDB class to get the number of chains
 - add a progress bar during PB assignment of a trajectory (#150)
 - fix visualization functions when the index of first residue is different of 1 (#148)
 - update documentation

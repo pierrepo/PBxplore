@@ -75,8 +75,6 @@ class PDB:
         if chain.size() != 0:
             self.chains.append(chain)
         f_in.close()
-        print("Read {0} chain(s) in {1}"
-              .format(len(self.chains), self.filename))
 
     def __read_PDBx(self):
         """
@@ -115,7 +113,6 @@ class PDB:
                 # store model number only if there is more than one model
                 if chain.model == atom.model:
                     chain.set_model("")
-                print(chain)
                 self.chains.append(chain)
                 chain = Chain()
             # store current chain when model number changed
@@ -139,3 +136,10 @@ class PDB:
         """
         for chain in self.chains:
             yield chain
+
+    @property
+    def nb_chains(self):
+        """
+        Give the number of chains
+        """
+        return len(self.chains)
