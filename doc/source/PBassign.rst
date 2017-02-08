@@ -138,6 +138,8 @@ To flatten the PB sequences obtained in FASTA format, i.e. get PB sequences in a
 
 .. code-block:: bash
 
+    $ wget https://files.rcsb.org/view/1AY7.pdb
+    $ PBassign -p 1AY7.pdb -o 1AY7
     $ cat 1AY7.PB.fasta | sed "s/^>.*/\t/" | tr -d "\n" | tr "\t" "\n" > 1AY7.PB.flat
 
 Content of `1AY7.PB.flat` : ::

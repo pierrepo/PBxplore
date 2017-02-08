@@ -1,13 +1,37 @@
-PBstat
+  PBstat
 ======
 
 ``PBstat`` generates frequency and logo plots, and estimates something similar
 to entropy called the equivalent number of PBs (:ref:`Neq <Neq>`).
 
-.. note:: The following examples use ``PBdata`` and the demo files.
-          See :ref:`Demo files <demo>` for more information.
+.. note:: 
 
-.. warning:: To generate map or *Neq* plot, `Matplotlib <http://matplotlib.org/>`_ is required.
+    The following examples require ``psi_md_traj_all.PB.count`` obtained with PBassign and then PBcount:
+          
+    .. code-block:: bash
+
+        $ wget https://zenodo.org/record/259751/files/psi_md_traj_1.gro
+        $ wget https://zenodo.org/record/259751/files/psi_md_traj_1.xtc
+        $ PBassign -x psi_md_traj_1.xtc -g psi_md_traj_1.gro -o psi_md_traj_1
+        Frame 1/225.
+        Frame 100/225.
+        Frame 200/225.
+        Frame 225/225.
+        wrote psi_md_traj_1.PB.fasta
+
+        $ wget https://zenodo.org/record/259751/files/psi_md_traj_2.gro
+        $ wget https://zenodo.org/record/259751/files/psi_md_traj_2.xtc
+        $ PBassign -x psi_md_traj_2.xtc -g psi_md_traj_2.gro -o psi_md_traj_2
+        Frame 1/225.
+        Frame 100/225.
+        Frame 200/225.
+        Frame 225/225.
+        wrote psi_md_traj_2.PB.fasta
+
+        $ PBcount -f psi_md_traj_1.PB.fasta -f psi_md_traj_2.PB.fasta -o psi_md_traj_all
+        read 225 sequences in psi_md_traj_1.PB.fasta
+        read 225 sequences in psi_md_traj_2.PB.fasta
+        wrote psi_md_traj_all.PB.count
 
 .. warning:: To generate Weblogo-like representations,
              `Weblogo3 <http://weblogo.threeplusone.com/>`_ is required.
@@ -19,8 +43,9 @@ Example
 
 .. code-block:: bash
 
-    $ PBstat -f `PBdata`/psi_md_traj_all.PB.count --map --neq --logo -o psi_md_traj_all
-    Index of first residue is: 1
+    $ PBstat -f psi_md_traj_all.PB.count --map --neq --logo -o psi_md_traj_all
+    Index of first residue in psi_md_traj_all.PB.count is 1
+    First residue in the output file(s) is 1
     wrote psi_md_traj_all.PB.map.png
     wrote psi_md_traj_all.PB.Neq
     wrote psi_md_traj_all.PB.Neq.png
@@ -61,12 +86,11 @@ Here’s the ``PBstat`` help text. ::
 
 generates map of the distribution of PBs along protein sequence.
 
-.. warning:: This option requires `Matplotlib <http://matplotlib.org/>`_.
-
 .. code-block:: bash
 
-    $ PBstat -f `PBdata`/psi_md_traj_all.PB.count --map -o psi_md_traj_all
-    Index of first residue is: 1
+    $ PBstat -f psi_md_traj_all.PB.count --map -o psi_md_traj_all
+    Index of first residue in psi_md_traj_all.PB.count is 1
+    First residue in the output file(s) is 1
     wrote psi_md_traj_all.PB.map.png
 
 
@@ -89,21 +113,23 @@ computes *Neq* and generates *Neq* plot along protein sequence.
 
 .. code-block:: bash
 
-    $ PBstat -f `PBdata`/psi_md_traj_all.PB.count --neq -o psi_md_traj_all
-    Index of first residue is: 1
+    $ PBstat -f psi_md_traj_all.PB.count --neq -o psi_md_traj_all
+    Index of first residue in psi_md_traj_all.PB.count is 1
+    First residue in the output file(s) is 1
     wrote psi_md_traj_all.PB.Neq
     wrote psi_md_traj_all.PB.Neq.png
 
 
+
 Content of `psi_md_traj_all.PB.Neq`: ::
 
-    resid       Neq
-    1          1.00
-    2          1.00
-    3          2.03
-    4          1.92
-    5          3.12
-    6          2.14
+    resid       Neq 
+    1          1.00 
+    2          1.00 
+    3          1.90 
+    4          1.91 
+    5          2.87 
+    6          2.30 
     [snip]
 
 
@@ -122,7 +148,7 @@ generates WebLogo-like representation of PBs frequency along protein sequence.
 
 .. code-block:: bash
 
-    $ PBstat -f `PBdata`/psi_md_traj_all.PB.count --logo -o psi_md_traj_all
+    $ PBstat -f psi_md_traj_all.PB.count --logo -o psi_md_traj_all
     Index of first residue is: 1
     wrote psi_md_traj_all.PB.logo.png
 
@@ -141,8 +167,9 @@ These options define the lower and upper bound of residue frame.
 
 .. code-block:: bash
 
-    $ PBstat -f `PBdata`/psi_md_traj_all.PB.count --map --neq --logo -o psi_md_traj_all_frame --residue-min 15 --residue-max 42
-    Index of first residue is: 1
+    $ PBstat -f psi_md_traj_all.PB.count --map --neq --logo -o psi_md_traj_all_frame --residue-min 15 --residue-max 42
+    Index of first residue in psi_md_traj_all.PB.count is 1
+    First residue in the output file(s) is 15
     wrote psi_md_traj_all_frame.PB.map.15-42.png
     wrote psi_md_traj_all_frame.PB.Neq.15-42
     wrote psi_md_traj_all_frame.PB.Neq.15-42.png
