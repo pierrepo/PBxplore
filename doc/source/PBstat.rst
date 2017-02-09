@@ -1,4 +1,4 @@
-  PBstat
+PBstat
 ======
 
 ``PBstat`` generates frequency and logo plots, and estimates something similar
