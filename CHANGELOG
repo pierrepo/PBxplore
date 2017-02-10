@@ -1,4 +1,5 @@
 **Dev**
+- Fix encoding issue with weblogo file (#152)
 - Move print statement of PDBs read from PDB class to the loader module
 - add a property in PDB class to get the number of chains
 - add a progress bar during PB assignment of a trajectory (#150)
