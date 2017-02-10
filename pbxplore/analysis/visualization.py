@@ -253,5 +253,5 @@ def generate_weblogo(fname, count_mat, idx_first_residue=1, residue_min=1, resid
     image = formatter(data, logo)
 
     # Write it
-    with open(fname, "w") as f:
-        print(image, file=f)
+    with open(fname, "wb") as f:
+        f.write(image)
