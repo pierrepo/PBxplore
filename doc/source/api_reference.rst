@@ -12,5 +12,4 @@ This page provides the documentation generated from the source files.
    ./pages/assign
    ./pages/io
    ./pages/analysis
-   ./pages/demo
    ./pages/pbxplore

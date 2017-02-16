@@ -4,10 +4,10 @@ PBstat
 ``PBstat`` generates frequency and logo plots, and estimates something similar
 to entropy called the equivalent number of PBs (:ref:`Neq <Neq>`).
 
-.. note:: 
+.. note::
 
     The following examples require ``psi_md_traj_all.PB.count`` obtained with PBassign and then PBcount:
-          
+
     .. code-block:: bash
 
         $ wget https://zenodo.org/record/259751/files/psi_md_traj_1.gro
@@ -109,8 +109,6 @@ red corresponds to a frequency of 1 (meaning the particular PB is always found a
 
 computes *Neq* and generates *Neq* plot along protein sequence.
 
-.. warning:: This option requires `Matplotlib <http://matplotlib.org/>`_.
-
 .. code-block:: bash
 
     $ PBstat -f psi_md_traj_all.PB.count --neq -o psi_md_traj_all
@@ -123,13 +121,13 @@ computes *Neq* and generates *Neq* plot along protein sequence.
 
 Content of `psi_md_traj_all.PB.Neq`: ::
 
-    resid       Neq 
-    1          1.00 
-    2          1.00 
-    3          1.90 
-    4          1.91 
-    5          2.87 
-    6          2.30 
+    resid       Neq
+    1          1.00
+    2          1.00
+    3          1.90
+    4          1.91
+    5          2.87
+    6          2.30
     [snip]
 
 
