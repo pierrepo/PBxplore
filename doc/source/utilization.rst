@@ -24,19 +24,3 @@ API
 
 PBxplore is also a python library and provides an API to interfacing with Python applications.
 You will find :doc:`here <api_cookbook>` a list of notebooks to help you use the API.
-
-
-.. _demo:
-
-Demo files
-----------
-
-PBxplore provides scripts to demonstrate its functionalities. These scripts
-guide the user through the different command line tools of PBxplore.
-
-2 demonstration scripts are available:
-
-* `run_demo1_assignation.sh` demonstrates the how to use ``PBassign`` to assign
-  Protein Block sequences to protein structures;
-* `run_demo2_statistics.sh` demonstrates how to analyse protein dynamics using
-  PBxplore.

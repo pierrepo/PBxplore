@@ -60,8 +60,6 @@ install:
 # command to run tests
 script:
     - if [[ $SETUP == 'test' ]]; then nosetests -v pbxplore/tests; fi
-    - if [[ $SETUP == 'test' ]]; then yes | ./run_demo1_assignation.sh; fi
-    - if [[ $SETUP == 'test' ]]; then yes | ./run_demo2_statistics.sh; fi
     - if [[ $SETUP == 'doc' ]]; then cd doc; sphinx-build -W -b html source build/html; fi
 
 #after_success:
