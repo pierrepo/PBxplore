@@ -3,9 +3,6 @@ PBassign
 
 ``PBassign`` assigns a PB sequence to a protein structure.
 
-.. note:: The following examples use ``PBdata`` and the demo files.
-          See :ref:`Demo files <demo>` for more information.
-
 
 Example
 -------
@@ -99,7 +96,7 @@ One can also use the ``-p`` option to provide a directory containing PDB files a
 ``PBassign`` will process all PDB files located in the `PBdata` directory:
 
 .. code-block:: bash
-    
+
     $ wget https://files.rcsb.org/view/1AY7.pdb -P demo
     $ wget https://files.rcsb.org/view/2LFU.pdb -P demo
     $ wget https://files.rcsb.org/view/3ICH.pdb -P demo
@@ -124,7 +121,7 @@ For this, you have to specify a '.xtc' file with the ``-x`` option and a '.gro' 
 
 .. code-block:: bash
 
-    
+
     $ wget https://zenodo.org/record/259751/files/psi_md_traj.gro
     $ wget https://zenodo.org/record/259751/files/psi_md_traj.xtc
     $ PBassign -x psi_md_traj.xtc -g psi_md_traj.gro -o psi_md_traj
