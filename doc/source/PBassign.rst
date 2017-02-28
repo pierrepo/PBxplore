@@ -121,11 +121,16 @@ For this, you have to specify a '.xtc' file with the ``-x`` option and a '.gro' 
 
 .. code-block:: bash
 
-
-    $ wget https://zenodo.org/record/259751/files/psi_md_traj.gro
-    $ wget https://zenodo.org/record/259751/files/psi_md_traj.xtc
+    $ wget https://raw.githubusercontent.com/pierrepo/PBxplore/master/demo_doc/psi_md_traj.gro
+    $ wget https://raw.githubusercontent.com/pierrepo/PBxplore/master/demo_doc/psi_md_traj.xtc
     $ PBassign -x psi_md_traj.xtc -g psi_md_traj.gro -o psi_md_traj
+    Frame 1/225.
+    Frame 100/225.
+    Frame 200/225.
+    Frame 225/225.
     wrote psi_md_traj.PB.fasta
+
+If needed, you can download ``psi_md_traj.PB.fasta`` [here](https://raw.githubusercontent.com/pierrepo/PBxplore/master/demo_doc/psi_md_traj.PB.fasta).
 
 
 Tips'n tricks

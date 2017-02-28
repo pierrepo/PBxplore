@@ -10,8 +10,8 @@ to entropy called the equivalent number of PBs (:ref:`Neq <Neq>`).
 
     .. code-block:: bash
 
-        $ wget https://zenodo.org/record/259751/files/psi_md_traj_1.gro
-        $ wget https://zenodo.org/record/259751/files/psi_md_traj_1.xtc
+        $ wget https://raw.githubusercontent.com/pierrepo/PBxplore/master/demo_doc/psi_md_traj_1.gro
+        $ wget https://raw.githubusercontent.com/pierrepo/PBxplore/master/demo_doc/psi_md_traj_1.xtc
         $ PBassign -x psi_md_traj_1.xtc -g psi_md_traj_1.gro -o psi_md_traj_1
         Frame 1/225.
         Frame 100/225.
@@ -19,8 +19,8 @@ to entropy called the equivalent number of PBs (:ref:`Neq <Neq>`).
         Frame 225/225.
         wrote psi_md_traj_1.PB.fasta
 
-        $ wget https://zenodo.org/record/259751/files/psi_md_traj_2.gro
-        $ wget https://zenodo.org/record/259751/files/psi_md_traj_2.xtc
+        $ wget https://raw.githubusercontent.com/pierrepo/PBxplore/master/demo_doc/psi_md_traj_2.gro
+        $ wget https://raw.githubusercontent.com/pierrepo/PBxplore/master/demo_doc/psi_md_traj_2.xtc
         $ PBassign -x psi_md_traj_2.xtc -g psi_md_traj_2.gro -o psi_md_traj_2
         Frame 1/225.
         Frame 100/225.
@@ -36,6 +36,8 @@ to entropy called the equivalent number of PBs (:ref:`Neq <Neq>`).
 .. warning:: To generate Weblogo-like representations,
              `Weblogo3 <http://weblogo.threeplusone.com/>`_ is required.
 
+
+If needed, you can download [psi_md_traj_all.PB.count](https://raw.githubusercontent.com/pierrepo/PBxplore/master/demo_doc/psi_md_traj_all.PB.count).
 
 
 Example
