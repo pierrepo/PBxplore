@@ -6,6 +6,7 @@ python:
   - "2.7"
   - "3.4"
   - "3.5"
+  - "3.6"
 
 # Travis build the doc in a separate job, because building the doc is a
 # rater long process. To separate the job, we use a test matrix that
