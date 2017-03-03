@@ -6,12 +6,12 @@ PBcount
 .. note:: 
 
     The following examples require ``psi_md_traj.PB.fasta`` and 
-          ``psi_md_traj2.PB.fasta`` obtained with PBassign:
+          ``psi_md_traj2.PB.fasta`` obtained with ``PBassign``:
           
     .. code-block:: bash
 
-        $ wget https://zenodo.org/record/259751/files/psi_md_traj_1.gro
-        $ wget https://zenodo.org/record/259751/files/psi_md_traj_1.xtc
+        $ wget https://raw.githubusercontent.com/pierrepo/PBxplore/master/demo_doc/psi_md_traj_1.gro
+        $ wget https://raw.githubusercontent.com/pierrepo/PBxplore/master/demo_doc/psi_md_traj_1.xtc
         $ PBassign -x psi_md_traj_1.xtc -g psi_md_traj_1.gro -o psi_md_traj_1
         Frame 1/225.
         Frame 100/225.
@@ -19,8 +19,8 @@ PBcount
         Frame 225/225.
         wrote psi_md_traj_1.PB.fasta
 
-        $ wget https://zenodo.org/record/259751/files/psi_md_traj_2.gro
-        $ wget https://zenodo.org/record/259751/files/psi_md_traj_2.xtc
+        $ wget https://raw.githubusercontent.com/pierrepo/PBxplore/master/demo_doc/psi_md_traj_2.gro
+        $ wget https://raw.githubusercontent.com/pierrepo/PBxplore/master/demo_doc/psi_md_traj_2.xtc
         $ PBassign -x psi_md_traj_2.xtc -g psi_md_traj_2.gro -o psi_md_traj_2
         Frame 1/225.
         Frame 100/225.
@@ -28,6 +28,7 @@ PBcount
         Frame 225/225.
         wrote psi_md_traj_2.PB.fasta
 
+If needed, you can download [psi_md_traj_1.PB.fasta](https://raw.githubusercontent.com/pierrepo/PBxplore/master/demo_doc/psi_md_traj_1.PB.fasta) and [psi_md_traj_2.PB.fasta](https://raw.githubusercontent.com/pierrepo/PBxplore/master/demo_doc/psi_md_traj_2.PB.fasta).
 
           
 Example
@@ -36,7 +37,7 @@ Example
 .. code-block:: bash
 
     $ PBcount -f psi_md_traj_1.PB.fasta -o psi_md_traj_1
-    read 90 sequences in psi_md_traj_1.PB.fasta
+    read 225 sequences in psi_md_traj_1.PB.fasta
     wrote psi_md_traj_1.PB.count
 
 Content of `psi_md_traj_1.PB.count`: ::
@@ -56,6 +57,9 @@ Content of `psi_md_traj_1.PB.count`: ::
 
 Note that residues 1, 2, 55 and 56 have a null count of all PBs.
 These residues are the first and last residues of the structure and no PB can be assigned to them.
+
+If needed, you can download [psi_md_traj_1.PB.count](https://raw.githubusercontent.com/pierrepo/PBxplore/master/demo_doc/psi_md_traj_1.PB.count).
+
 
 Usage
 -----
@@ -86,6 +90,7 @@ can be used several times:
     read 225 sequences in psi_md_traj_2.PB.fasta
     wrote psi_md_traj_all.PB.count
 
+If needed, you can download [psi_md_traj_all.PB.count](https://raw.githubusercontent.com/pierrepo/PBxplore/master/demo_doc/psi_md_traj_all.PB.count).
 
 `--first-residue` option
 ````````````````````````
@@ -110,3 +115,6 @@ Content of `psi_md_traj_1_shifted.PB.count`: ::
     9        0   222     0     0     0     0     0     0     0     0     0     3     0     0     0     0
     10       6     0   201     0     0     5     0     0     0     0     0     0    12     0     1     0
     [snip]
+
+If needed, you can download [psi_md_traj_1_shifted.PB.count](https://raw.githubusercontent.com/pierrepo/PBxplore/master/demo_doc/psi_md_traj_1_shifted.PB.count).
+
