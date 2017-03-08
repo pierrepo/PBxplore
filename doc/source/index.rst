@@ -9,7 +9,7 @@ Welcome to PBxplore's documentation!
 **PBxplore is a suite of tools dedicated to Protein Block analysis.**
 
 Protein Blocks (PBs) are structural prototypes defined by
-`de Brevern <http://www.dsimb.inserm.fr/~debrevern/index.php>`_ *et al* in 2000 [#]_.
+`de Brevern <http://www.dsimb.inserm.fr/~debrevern/index.php>`_ *et al* [#]_.
 The 3-dimensional local structure of a protein backbone can be modelized as an 1-dimensional
 sequence of PBs.
 In principle, any conformation of any amino acid could be represented
@@ -24,7 +24,7 @@ by one of the sixteen available Protein Blocks.
 
 
 
-PBxplore provides both a python library and command-line tools (:doc:`Utilization <utilization>`).
+PBxplore provides both a Python library and command-line tools (:doc:`Utilization <utilization>`).
 For some features (reading trajectory, plots), PBxplore requires
 some optional dependencies (:doc:`Installation <installation>`).
 Basically, PBxplore can:
@@ -60,13 +60,13 @@ Contact & Support
 
 PBxplore is a research software and has been developped by:
 
-* Pierre Poulain, DSIMB, Ets Poulain, Pointe-Noire, Congo
+* Pierre Poulain, `DSIMB <http://www.dsimb.inserm.fr/>`_, Ets Poulain, Pointe-Noire, Congo
 * Jonathan Barnoud, University of Groningen, Groningen, The Netherlands
-* Hubert Santuz, DSIMB, Paris, France
-* Alexandre G. de Brevern, DSIMB, Paris, France
+* Hubert Santuz, `DSIMB <http://www.dsimb.inserm.fr/>`_, Paris, France
+* Alexandre G. de Brevern, `DSIMB <http://www.dsimb.inserm.fr/>`_, Paris, France
 
-If you want to report a bug, request a feature,
-use the `GitHub issue system <https://github.com/pierrepo/PBxplore/issues>`_.
+If you want to report a bug or request a feature,
+please use the `GitHub issue system <https://github.com/pierrepo/PBxplore/issues>`_.
 
 
 Licence

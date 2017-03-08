@@ -14,8 +14,6 @@ at the package level.
 
 Look at the notebook  :doc:`PB assignation <./notebooks/Assignement>` for further information.
 
-.. note:: `chain_from_trajectory()` requires the installation of python library `MDAnalysis <http://www.mdanalysis.org/>`_
-
 
 PBxplore.io
 -----------
@@ -40,8 +38,6 @@ You can:
 Look at the notebook :doc:`Visualize protein deformability <./notebooks/Deformability>`
 for further information.
 
-
-.. note:: Plotting functions require `Matplotlib <http://matplotlib.org/>`_.
 
 .. note:: `generate_weblogo()` requires `Weblogo3 <http://weblogo.threeplusone.com/>`_.
 

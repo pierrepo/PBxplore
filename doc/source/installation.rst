@@ -7,7 +7,7 @@ we try in this document to provide few guidelines regarding PBxplore setup.
 Supported Platforms
 -------------------
 
-Currently, `PBxplore` run with Python 2.7, 3.3 and 3.4 on Linux and Mac OS X.
+Currently, `PBxplore` run with Python 2.7, 3.4, 3.5 and 3.6 on Linux and Mac OS X.
 
 
 Dependencies
@@ -19,7 +19,7 @@ To use `PBxplore`, the following libraries have to be installed.
         NumPy is the base package for numerical computing in python.
 
     `matplotlib <http://matplotlib.org/>`_ [#]_ >= 1.4.0
-        All ploting functions use `matplotlib` package.
+        All ploting functions use the `matplotlib` package.
 
     `MDAnalysis <http://www.mdanalysis.org/>`_ [#]_ >= 0.11
         We use MDAnalysis to read Gromacs molecular dynamics trajectories.
@@ -58,18 +58,7 @@ Testing PBxplore
 ----------------
 
 `PBxplore` comes with unit tests and regression tests. It requires the package
-`nose <https://nose.readthedocs.io/en/latest/>`_. You have several options to run the tests:
-
-.. code-block:: bash
-
-    $ nosetests -v pbxplore/tests
-
-.. code-block:: bash
-
-    $ python setup.py nosetests
-
-
-Or from the `PBxplore` module:
+`nose <https://nose.readthedocs.io/en/latest/>`_. You can run the tests within Python:
 
 .. code-block:: python
 
@@ -85,6 +74,45 @@ Run the simple command:
 .. code-block:: bash
 
     $ pip uninstall pbxplore
+
+
+
+PBxplore for advance users
+--------------------------
+
+You can clone PBxplore from GitHub:
+
+.. code-block:: bash
+
+    $ git --depth 1 clone https://github.com/pierrepo/PBxplore.git
+
+Once in the ``PBxplore`` directory, we advise you to create a virtual environment:
+
+.. code-block:: bash
+
+    $ pip3 install --user virtualenv
+    $ virtualenv -p python3 pbxplore-py3
+    $ source venv/bin/activate
+
+You can then install the latest version of PBxplore as a Python module:
+
+.. code-block:: bash
+
+    $ pip install -e .
+
+You can also run unit tests and regression tests:
+
+.. code-block:: bash
+
+    $ pip install nose
+    $ nosetests -v pbxplore/tests
+
+or
+
+.. code-block:: bash
+
+    $ pip install nose
+    $ python setup.py nosetests
 
 
 .. [#] J. D. Hunter.
