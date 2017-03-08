@@ -18,7 +18,7 @@ across different files:
 
 #### Publish on PyPI
 
-Initial setup
+Initial setup:
 
 - Create an account on PyPI and create a projet (here [pbxplore](https://pypi.python.org/pypi/pbxplore)).
 
@@ -37,14 +37,19 @@ Initial setup
 
         python setup.py register -r pypi
 
+Build package:
 
+    python setup.py sdist
 
-Build and upload package to PyPI:
+Upload package to PyPI:
 
     twine upload dist/*
 
 Enter your password when required.
 
+Clean local package:
+
+    rm -f dist/*.tar.gz
 
 Doc:
 
