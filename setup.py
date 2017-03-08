@@ -50,6 +50,7 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
     ],
 
     install_requires=['numpy', 'MDAnalysis>=0.11', 'matplotlib'],
@@ -61,7 +62,7 @@ setup(
 
     packages=find_packages(exclude=['test']),
     include_package_data=True,
-    package_data={'pbxplore':['demo/*']},
+    package_data={'pbxplore': ['demo/*']},
 
     entry_points={
         'console_scripts': [
