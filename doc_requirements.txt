@@ -8,3 +8,4 @@ nbconvert==4.1.0
 ipython
 matplotlib
 weblogo
+nbsphinx

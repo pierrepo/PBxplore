@@ -15,9 +15,9 @@ test_tmp/
 # ignore macos files
 .DS_Store
 # ignore API doc generated files
-doc-api/build/*
-doc-api/source/notebooks/*.rst
-doc-api/source/notebooks/*_files
+doc/build/*
+doc/source/notebooks/*
+!doc/source/notebooks/*.ipynb
 .ipynb_checkpoints
 #Packaging
 *.egg
