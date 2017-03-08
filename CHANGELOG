@@ -1,4 +1,5 @@
 **Dev**
+**1.3.4**
 - Remove demonstration scripts
 - Fix encoding issue with weblogo file (#152)
 - Move print statement of PDBs read from PDB class to the loader module
