@@ -1,5 +1,7 @@
 **Dev**
 - Update documentation
+- Notebooks doc are now Python3
+- Use nbsphinx for notebooks conversion
 
 **1.3.4**
 - Remove demonstration scripts
