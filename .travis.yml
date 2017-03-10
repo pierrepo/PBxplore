@@ -17,13 +17,15 @@ env:
   - SETUP=test
   - SETUP=doc
 
-# Keep it commented
-# matrix:
-#     exclude:
-#         - env: SETUP=doc
-#           python: "3.4"
-#         - env: SETUP=doc
-#           python: "3.5"
+
+matrix:
+    exclude:
+        - env: SETUP=doc
+          python: "2.7"
+        - env: SETUP=doc
+          python: "3.4"
+        - env: SETUP=doc
+          python: "3.6"
 
 
 # command to install dependencies
@@ -57,7 +59,6 @@ install:
     - pip install "mdanalysis>=0.11" --cache-dir $HOME/.cache/pip
     - pip install -e .
     - if [[ $SETUP == 'doc' ]]; then pip install -r doc_requirements.txt --cache-dir $HOME/.cache/pip; fi
-    - if [[ $SETUP == 'doc' ]] && [[ $TRAVIS_PYTHON_VERSION != 2.7 ]]; then python2 -m pip install ipykernel; python2 -m ipykernel install --user; fi
 
 
 # command to run tests
