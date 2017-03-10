@@ -20,7 +20,7 @@ extras = {
 # Version number must be in sync with the one in pbxplore/__init__.py
 setup(
     name='pbxplore',
-    version='1.3.4',
+    version='1.3.5',
 
     description="PBxplore is a suite of tools dedicated to Protein Block analysis.",
     long_description=readme,

@@ -1,4 +1,5 @@
 **Dev**
+**1.3.5**
 - Update documentation
 - Notebooks doc are now Python3
 - Use nbsphinx for notebooks conversion
