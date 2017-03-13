@@ -40,18 +40,31 @@ The most straightforward way is to use `pip`:
 
 .. code-block:: bash
 
-    $ pip install pbxplore
-
-
-PBxplore can also be installed for the current user only:
-
-.. code-block:: bash
-
     $ pip install --user pbxplore
+
+
+.. note::
+
+    Do not forget to update your $PATH to make all PBxplore tools accessible:
+
+    .. code-block:: bash
+
+        $ export PATH=$PATH:$HOME/.local/bin
 
 
 See the documentation of `pip <https://pip.pypa.io/en/stable/>`_ for more information.
 You may also want to look at `virtualenv <https://virtualenv.readthedocs.org/en/latest/>`_.
+
+
+
+Upgrading PBxplore
+---------------------
+
+Be sure to always have the latest version of PBxplore with:
+
+.. code-block:: bash
+
+    $ pip install --user --upgrade pbxplore
 
 
 Testing PBxplore
