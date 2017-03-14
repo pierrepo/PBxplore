@@ -76,6 +76,7 @@ Here’s the ``PBcount`` help text. ::
       -o O                  name for results
       --first-residue FIRST_RESIDUE
                             define first residue number (1 by default)
+      -v, --version         show program's version number and exit
 
 
 `-f` option

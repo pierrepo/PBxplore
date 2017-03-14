@@ -55,7 +55,7 @@ def user_inputs():
                        help="name of gro file (Gromacs)")
 
     parser.add_argument('-v', '--version', action='version',
-                        version='%(prog)s 1.0')
+                        version='%(prog)s {}'.format(pbx.__version__))
     # get all arguments
     options = parser.parse_args()
 

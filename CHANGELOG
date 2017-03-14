@@ -1,6 +1,6 @@
 **Dev**
+- Add a version option for scripts (based on pbxplore.__version__)
 - update doc for installation and configuration
-
 
 **1.3.5**
 - Update documentation
