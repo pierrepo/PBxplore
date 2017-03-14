@@ -45,11 +45,20 @@ The most straightforward way is to use `pip`:
 
 .. note::
 
-    Do not forget to update your $PATH to make all PBxplore tools accessible:
+    The former command with install PBxplore in:
+
+    - ``$HOME/.local/bin`` on Linux.
+    - ``~/Library/Python/X.Y/bin`` on Mac OSX, where ``X.Y`` stands for the Python version (for instance ``2.7`` for Python 2.7 and ``3.5`` for Python 3.5).
+
+    Do not forget to update your $PATH to make all PBxplore tools accessible. As an example, with the Bash shell, this gives:
 
     .. code-block:: bash
 
+        $ # for Linux 
         $ export PATH=$PATH:$HOME/.local/bin
+
+        $ # for Mac OSX
+        $ export PATH=$PATH:~/Library/Python/X.Y/bin
 
 
 See the documentation of `pip <https://pip.pypa.io/en/stable/>`_ for more information.
