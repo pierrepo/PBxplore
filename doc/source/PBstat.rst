@@ -81,6 +81,7 @@ Here’s the ``PBstat`` help text. ::
                             defines lower bound of residue frame
       --residue-max RESIDUE_MAX
                             defines upper bound of residue frame
+      -v, --version         show program's version number and exit
 
 
 `--map` option

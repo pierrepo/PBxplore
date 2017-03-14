@@ -53,6 +53,9 @@ def user_input():
                         dest="first_residue",
                         help="define first residue number (1 by default)")
 
+    parser.add_argument('-v', '--version', action='version',
+                        version='%(prog)s {}'.format(pbx.__version__))
+
     # parse the arguments
     options = parser.parse_args()
 

@@ -82,6 +82,9 @@ def user_inputs():
     parser.add_argument("--residue-max", action="store", type=int,
                         dest="residue_max", help="defines upper bound of residue frame")
 
+    parser.add_argument('-v', '--version', action='version',
+                        version='%(prog)s {}'.format(pbx.__version__))
+
     # get all parameters
     options = parser.parse_args()
 
