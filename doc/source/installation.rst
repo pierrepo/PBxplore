@@ -13,7 +13,7 @@ Currently, `PBxplore` run with Python 2.7, 3.4, 3.5 and 3.6 on Linux and Mac OS 
 Dependencies
 ------------
 
-To use `PBxplore`, the following libraries have to be installed.
+`PBxplore` requires the following libraries (which will be installed through ` pip`).
 
     `NumPy <http://numpy.scipy.org/>`_ >= 1.6.0
         NumPy is the base package for numerical computing in python.
@@ -23,35 +23,57 @@ To use `PBxplore`, the following libraries have to be installed.
 
     `MDAnalysis <http://www.mdanalysis.org/>`_ [#]_ >= 0.11
         We use MDAnalysis to read Gromacs molecular dynamics trajectories.
-        Many other trajectory files are also supported, see list 
+        Many other trajectory files are also supported, see list
         `here <https://pythonhosted.org/MDAnalysis/documentation_pages/coordinates/init.html#id1>`_.
 
 
 Optionally, `PBxplore` can use the following packages:
 
     `Weblogo3 <http://weblogo.threeplusone.com/>`_ [#]_
-        `Weblogo3` is required to create logo from PB sequences.
+        `Weblogo3` is required to create logo from PB sequences. It has to be installed by the user.
 
 
 Installing PBxplore
 -------------------
 
-The most straightforward way is to use `pip`:
-
-.. code-block:: bash
-
-    $ pip install pbxplore
-
-
-PBxplore can also be installed for the current user only:
+The most straightforward way is to use `pip`. It will also install the required dependencies:
 
 .. code-block:: bash
 
     $ pip install --user pbxplore
 
 
+.. note::
+
+    The former command will install the PBxplore command-line scripts in:
+
+    - ``$HOME/.local/bin`` on Linux.
+    - ``~/Library/Python/X.Y/bin`` on Mac OSX, where ``X.Y`` stands for the Python version (for instance ``2.7`` for Python 2.7 and ``3.5`` for Python 3.5).
+
+    Do not forget to update your $PATH to make all PBxplore tools accessible. As an example, with the Bash shell, this gives:
+
+    .. code-block:: bash
+
+        $ # for Linux
+        $ export PATH=$PATH:$HOME/.local/bin
+
+        $ # for Mac OSX
+        $ export PATH=$PATH:~/Library/Python/X.Y/bin
+
+
 See the documentation of `pip <https://pip.pypa.io/en/stable/>`_ for more information.
 You may also want to look at `virtualenv <https://virtualenv.readthedocs.org/en/latest/>`_.
+
+
+
+Upgrading PBxplore
+---------------------
+
+Be sure to always have the latest version of PBxplore with:
+
+.. code-block:: bash
+
+    $ pip install --user --upgrade pbxplore
 
 
 Testing PBxplore
