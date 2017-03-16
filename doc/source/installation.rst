@@ -43,14 +43,14 @@ The most straightforward way is to use `pip`. It will also install the required 
     $ pip install --user pbxplore
 
 
-.. note::
+.. note:: 
 
     The former command will install the PBxplore command-line scripts in:
 
     - ``$HOME/.local/bin`` on Linux.
     - ``~/Library/Python/X.Y/bin`` on Mac OSX, where ``X.Y`` stands for the Python version (for instance ``2.7`` for Python 2.7 and ``3.5`` for Python 3.5).
 
-    Do not forget to update your $PATH to make all PBxplore tools accessible. As an example, with the Bash shell, this gives:
+    Do not forget to update your ``$PATH`` environment variable to make all PBxplore tools accessible. As an example, with the Bash shell, this gives:
 
     .. code-block:: bash
 
