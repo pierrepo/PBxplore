@@ -100,7 +100,7 @@ Run the simple command:
 
 
 PBxplore for advanced users
---------------------------
+---------------------------
 
 You can clone PBxplore from GitHub:
 
