@@ -99,14 +99,14 @@ Run the simple command:
 
 
 
-PBxplore for advance users
+PBxplore for advanced users
 --------------------------
 
 You can clone PBxplore from GitHub:
 
 .. code-block:: bash
 
-    $ git --depth 1 clone https://github.com/pierrepo/PBxplore.git
+    $ git clone --depth 1 https://github.com/pierrepo/PBxplore.git
 
 Once in the ``PBxplore`` directory, we advise you to create a virtual environment:
 
