@@ -50,9 +50,9 @@ def user_inputs():
     group = parser.add_argument_group(
         title='other options to handle molecular dynamics trajectories')
     group.add_argument("-x", action="store",
-                       help="name of xtc file (Gromacs)")
+                       help="name of the topology file")
     group.add_argument("-g", action="store",
-                       help="name of gro file (Gromacs)")
+                       help="name of the trajectory file")
 
     parser.add_argument('-v', '--version', action='version',
                         version='%(prog)s {}'.format(pbx.__version__))

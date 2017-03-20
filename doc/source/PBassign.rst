@@ -44,15 +44,16 @@ Here’s the ``PBassign`` help text. ::
 
     Usage: PBassign [options] -p file.pdb|dir [-p file2.pdb] -o output_root_name -g gro_file -x xtc_file
 
-    Options:
-      --version   show program's version number and exit
-      -h, --help  show this help message and exit
+    optional arguments:
+      -h, --help     show this help message and exit
+      -p P           name of a pdb file or name of a directory containing pdb
+                     files
+      -o O           name for results
+      -v, --version  show program's version number and exit
 
-      Mandatory arguments:
-        -p P      name of pdb file or directory containing pdb files
-        -o O      root name for results
-        -x X      name of xtc file (Gromacs)
-        -g G      name of gro file (Gromacs)
+    other options to handle molecular dynamics trajectories:
+      -x X           name of the topology file
+      -g G           name of the trajectory file
 
 
 ``-p`` option
@@ -115,9 +116,10 @@ One can also use the ``-p`` option to provide a directory containing PDB files a
 
 .. warning:: These options use the `MDAnalysis <http://www.mdanalysis.org/>`_ library which is installed by PBxplore.
 
-Instead using the ``-p`` option, protein structures could come
-from a Gromacs molecular dynamics simulation trajectory file.
-For this, you have to specify a '.xtc' file with the ``-x`` option and a '.gro' file with the ``-g`` option.
+Instead using the ``-p`` option, protein structures could come from a molecular dynamics simulation trajectory file.
+For this, you have to specify a trajectory file with the ``-x`` option and a topology file with the ``-g`` option.
+It will accept any trajectory file format handled by the MDAnalysis library. See their [table of supported formats](https://pythonhosted.org/MDAnalysis/documentation_pages/coordinates/init.html#id1) for the full list.
+Here an example with GROMACS files.
 
 .. code-block:: bash
 
