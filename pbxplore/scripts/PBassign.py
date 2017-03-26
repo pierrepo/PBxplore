@@ -49,10 +49,10 @@ def user_inputs():
     # arguments for MDanalysis
     group = parser.add_argument_group(
         title='other options to handle molecular dynamics trajectories')
-    group.add_argument("-x", action="store",
-                       help="name of the topology file")
-    group.add_argument("-g", action="store",
+    group.add_argument("-x", action="store", metavar='TRAJECTORY',
                        help="name of the trajectory file")
+    group.add_argument("-g", action="store", metavar='TOPOLOGY',
+                       help="name of the topology file")
 
     parser.add_argument('-v', '--version', action='version',
                         version='%(prog)s {}'.format(pbx.__version__))
