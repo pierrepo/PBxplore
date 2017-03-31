@@ -21,7 +21,7 @@ try:
     # it is 'SymbolColor'. Here, we change to always have 'ColorGroup'.
     try:
         ColorGroup = weblogolib.SymbolColor
-    except NameError:
+    except AttributeError:
         ColorGroup = weblogolib.ColorGroup
 except ImportError:
     IS_WEBLOGO = False
