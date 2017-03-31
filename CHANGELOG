@@ -1,6 +1,8 @@
 **Dev**
 - Add a version option for scripts (based on pbxplore.__version__)
 - update doc for installation and configuration
+- Fix weblogo compatibility
+- Update conda procedure
 
 **1.3.5**
 - Update documentation
