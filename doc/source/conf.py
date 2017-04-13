@@ -15,8 +15,8 @@
 import sys
 import os
 
-AUTHORS = [u'Pierre Poulain', u'Jonathan Barnoud',
-           u'Hubert Santuz', u'Alexandre G. deBrevern']
+AUTHORS = [u'Jonathan Barnoud', u'Hubert Santuz',
+           u'Alexandre G. de Brevern', u'Pierre Poulain']
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -53,7 +53,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'PBxplore'
-copyright = u'2015, Pierre Poulain, and Alexandre G. deBrevern'
+copyright = u'2017, Jonathan Barnoud, Hubert Santuz, Alexandre G. de Brevern, and Pierre Poulain'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
