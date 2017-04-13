@@ -1,4 +1,5 @@
 **Dev**
+**1.3.6**
 - Add a version option for scripts (based on pbxplore.__version__)
 - update doc for installation and configuration
 - Fix weblogo compatibility
