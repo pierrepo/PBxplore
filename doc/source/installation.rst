@@ -43,7 +43,9 @@ The most straightforward way is to use `pip`. It will also install the required 
     $ pip install --user pbxplore
 
 
-.. note:: 
+If none of the dependencies were previously installed, the installation process can take up to several minutes.
+
+.. note::
 
     The former command will install the PBxplore command-line scripts in:
 
