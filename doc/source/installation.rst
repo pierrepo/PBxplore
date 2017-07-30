@@ -82,7 +82,7 @@ Testing PBxplore
 ----------------
 
 `PBxplore` comes with unit tests and regression tests. It requires the package
-`nose <https://nose.readthedocs.io/en/latest/>`_. You can run the tests within Python:
+`pytest <https://docs.pytest.org>`_. You can run the tests within Python:
 
 .. code-block:: python
 
@@ -128,15 +128,15 @@ You can also run unit tests and regression tests:
 
 .. code-block:: bash
 
-    $ pip install nose
-    $ nosetests -v pbxplore/tests
+    $ pip install pytest
+    $ pytest -v pbxplore/tests
 
 or
 
 .. code-block:: bash
 
-    $ pip install nose
-    $ python setup.py nosetests
+    $ pip install pytest
+    $ python setup.py test
 
 
 .. [#] J. D. Hunter.

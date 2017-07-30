@@ -4,18 +4,12 @@
 """
 Regression tests for PBxplore.
 
-This script run the various PBxplore programs with various argument, and makes
-sure the output is the expected one. The aim is to check that the programs are
-not broken during development.
+This test suite run the various PBxplore programs with various argument, and
+makes sure the output is the expected one. The aim is to check that the
+programs are not broken during development.
 
-Be careful this script does not test that the output is right. It just test
-that the output is the expected one based on a previous version.
-
-To run this test suite, you can either run this script without arguments or use
-the nose [1]_ package. The latter option gives a more readable output, as
-stdout is captured, and is displayed only if a test fails.
-
-.. [1] https://nose.readthedocs.org
+Be careful this test suite does not test that the output is right. It just
+test that the output is the expected one based on a previous version.
 """
 
 # Use print as a function like in python 3
@@ -568,7 +562,3 @@ def _assert_identical_files(file_a, file_b, comment_char=">"):
     """
     assert _same_file_content(file_a, file_b), '{0} and {1} are not identical'\
                                                .format(file_a, file_b)
-
-
-if __name__ == '__main__':
-    unittest.main()
