@@ -32,8 +32,7 @@ matrix:
 addons:
     apt:
         packages:
-            - ghc
-            - cabal-install
+            - ghostscript
 
 before_install:
     # Tricks to avoid matplotlib error about X11:
