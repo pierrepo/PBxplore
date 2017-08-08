@@ -46,7 +46,7 @@ test:
 
   requires:
     - coverage
-    - nose
+    - pytest
 
 about:
   home: https://github.com/pierrepo/PBxplore

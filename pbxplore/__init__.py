@@ -29,9 +29,9 @@ def test():
     import os
 
     try:
-        import nose
+        import pytest
     except ImportError:
-        raise ImportError("Nose have to be installed for tests")
+        raise ImportError("Pytest have to be installed for tests")
 
     # find the directory where the test package lives
     from . import tests
@@ -40,10 +40,10 @@ def test():
 
     #Get informations about system
     tests.system_info()
-    print("nose version {}".format(nose.__version__))
+    print("pytest version {}".format(pytest.__version__))
 
-    # run nose
+    # run pytest
     try:
-        return nose.main(defaultTest=argv)
+        return pytest.main(argv)
     except SystemExit as e:
         return e.code
