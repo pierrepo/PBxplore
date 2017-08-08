@@ -1,5 +1,6 @@
 **Dev**
 - Update test engine from nose to pytest
+- Add metadata for Zenodo integration
 
 **1.3.6**
 - Add a version option for scripts (based on pbxplore.__version__)

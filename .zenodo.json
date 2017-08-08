@@ -1,0 +1,28 @@
+{
+    "title": "PBxplore: A program to explore protein structures with Protein Blocks",
+    "creators": [{
+        "name": "Barnoud, Jonathan"
+    }, 
+    {
+        "name": "Santuz, Hubert"
+    }, 
+    {
+        "name": "de Brevern, Alexandre G."
+    },
+    {
+        "name": "Poulain, Pierre",
+        "orcid": "0000-0003-4177-3619"
+    }],
+    "description": "This repository contains the archived release for the software PBxplore",
+    "access_right": "open",
+    "license": "mit-license",
+    "keywords": [
+        "Python",
+        "Protein Blocks",
+        "Proteins",
+        "Structure",
+        "Flexibility",
+        "Deformability"
+    ],
+    "upload_type": "software"
+}
