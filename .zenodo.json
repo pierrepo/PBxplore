@@ -1,13 +1,16 @@
 {
     "title": "PBxplore: A program to explore protein structures with Protein Blocks",
     "creators": [{
-        "name": "Barnoud, Jonathan"
+        "name": "Barnoud, Jonathan",
+        "orcid": "0000-0003-0343-7796"
     }, 
     {
-        "name": "Santuz, Hubert"
+        "name": "Santuz, Hubert",
+        "orcid": "0000-0001-6149-9480"
     }, 
     {
-        "name": "de Brevern, Alexandre G."
+        "name": "de Brevern, Alexandre G.",
+        "orcid": "0000-0001-7112-5626"
     },
     {
         "name": "Poulain, Pierre",
