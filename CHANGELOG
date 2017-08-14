@@ -1,4 +1,6 @@
 **Dev**
+- Add and update version number in zenodo config file
+
 **1.3.7**
 - Update test engine from nose to pytest
 - Add metadata for Zenodo integration

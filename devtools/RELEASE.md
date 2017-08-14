@@ -56,7 +56,29 @@ Doc:
 - https://packaging.python.org/distributing/#uploading-your-project-to-pypi
 
 
+### Add new release on GitHub
+
+On [GitHub release page](https://github.com/pierrepo/PBxplore/releases) :
+
+- Click the *Draft a release* button.
+- Select the latest version as *tag version*.
+- Add release version as *Release title* (e.g.: v1.3.7).
+- Copy and paste the content of the CHANGELOG in the *Describe this release* field.
+- Hit the *Publish Release* button.
+
+
+### Publish in Zenodo 
+
+- Login on Zenodo: <https://zenodo.org/login>
+- Check new PBxplore version coming from GitHub: <https://zenodo.org/deposit?page=1&size=20>
+
+
 #### Publish Documentation
+
+Documentation is automatically retrieved and build by ReadTheDocs.
+
+Just check revision at the page footer corresponds to the last commit: 
+<https://pbxplore.readthedocs.io/en/latest/index.html>
 
 
 #### Publish on Conda
