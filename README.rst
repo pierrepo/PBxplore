@@ -81,7 +81,7 @@ PBxplore is a research software and has been developped by:
 
 * Pierre Poulain, DSIMB, Ets Poulain, Pointe-Noire, Congo
 * Jonathan Barnoud, University of Groningen, Groningen, The Netherlands
-* Hubert Santuz, DSIMB, Paris, France
+* Hubert Santuz, LBT, Paris, France
 * Alexandre G. de Brevern, DSIMB, Paris, France
 
 If you want to report a bug, request a feature,
