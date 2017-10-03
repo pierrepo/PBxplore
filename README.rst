@@ -13,7 +13,7 @@ PBxplore
     :alt: Travis CI build status
     :target: https://travis-ci.org/pierrepo/PBxplore
 
-.. image:: https://readthedocs.org/projects/pip/badge/?version=latest
+.. image:: https://readthedocs.org/projects/pbxplore/badge/?version=latest
     :alt: PBxplore documentation
     :target: https://pbxplore.readthedocs.org/en/latest/
 
