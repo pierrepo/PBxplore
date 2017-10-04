@@ -79,7 +79,7 @@ Contact & Support
 
 PBxplore is a research software and has been developped by:
 
-* Pierre Poulain, Mitochondria, Metals and Oxidative Stress Group, Institut Jacques Monod, UMR 7592, Univ. Paris Diderot, CNRS, Sorbonne Paris Cité, France.
+* Pierre Poulain, "Mitochondria, Metals and Oxidative Stress" group, Institut Jacques Monod, UMR 7592, Univ. Paris Diderot, CNRS, Sorbonne Paris Cité, France.
 * Jonathan Barnoud, University of Groningen, Groningen, The Netherlands.
 * Hubert Santuz, Laboratoire de Biochimie Théorique, CNRS UPR 9080, Institut de Biologie Physico-Chimique, Paris, France.
 * Alexandre G. de Brevern, DSIMB, INSERM, U 1134, INTS, Paris, France.
