@@ -79,10 +79,10 @@ Contact & Support
 
 PBxplore is a research software and has been developped by:
 
-* Pierre Poulain, DSIMB, Ets Poulain, Pointe-Noire, Congo
-* Jonathan Barnoud, University of Groningen, Groningen, The Netherlands
-* Hubert Santuz, LBT, Paris, France
-* Alexandre G. de Brevern, DSIMB, Paris, France
+* Pierre Poulain, Mitochondria, Metals and Oxidative Stress Group, Institut Jacques Monod, UMR 7592, Univ. Paris Diderot, CNRS, Sorbonne Paris Cité, France.
+* Jonathan Barnoud, University of Groningen, Groningen, The Netherlands.
+* Hubert Santuz, Laboratoire de Biochimie Théorique, CNRS UPR 9080, Institut de Biologie Physico-Chimique, Paris, France.
+* Alexandre G. de Brevern, DSIMB, INSERM, U 1134, INTS, Paris, France.
 
 If you want to report a bug, request a feature,
 use the `GitHub issue system <https://github.com/pierrepo/PBxplore/issues>`_.
