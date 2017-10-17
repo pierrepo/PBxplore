@@ -33,4 +33,6 @@ eggs
 nosetests.xml
 # conda
 devtools/conda/*.json
+# python virtual environment
+venv
 
