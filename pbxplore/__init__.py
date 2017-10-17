@@ -15,7 +15,7 @@
    See :func:`pbxplore.assignment.assign`
 """
 
-__version__ = "1.3.7"
+__version__ = "1.3.8"
 
 from .structure.loader import *
 from .assignment import assign
