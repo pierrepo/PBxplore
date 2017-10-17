@@ -115,7 +115,7 @@ Once in the ``PBxplore`` directory, we advise you to create a virtual environmen
 .. code-block:: bash
 
     $ pip3 install --user virtualenv
-    $ virtualenv -p python3 pbxplore-py3
+    $ virtualenv -p python3 venv
     $ source venv/bin/activate
 
 You can then install the latest version of PBxplore as a Python module:
