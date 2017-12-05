@@ -55,15 +55,25 @@ Basically, PBxplore can:
    </div>
 
 
+Citation
+--------
+
+If you use PBxplore, please cite this tool as:
+
+| Barnoud J, Santuz H, Craveur P, Joseph AP, Jallu V, de Brevern AG, Poulain P,
+| PBxplore: a tool to analyze local protein structure and deformability with Protein Blocks
+| *PeerJ*  5:e4013 `<https://doi.org/10.7717/peerj.4013>`_ (2017).
+
+
 Contact & Support
 -----------------
 
 PBxplore is a research software and has been developped by:
 
-* Pierre Poulain, `DSIMB <http://www.dsimb.inserm.fr/>`_, Ets Poulain, Pointe-Noire, Congo
-* Jonathan Barnoud, University of Groningen, Groningen, The Netherlands
-* Hubert Santuz, `DSIMB <http://www.dsimb.inserm.fr/>`_, Paris, France
-* Alexandre G. de Brevern, `DSIMB <http://www.dsimb.inserm.fr/>`_, Paris, France
+* Pierre Poulain, "Mitochondria, Metals and Oxidative Stress" group, Institut Jacques Monod, UMR 7592, Univ. Paris Diderot, CNRS, Sorbonne Paris Cité, France.
+* Jonathan Barnoud, University of Groningen, Groningen, The Netherlands.
+* Hubert Santuz, Laboratoire de Biochimie Théorique, CNRS UPR 9080, Institut de Biologie Physico-Chimique, Paris, France.
+* Alexandre G. de Brevern, DSIMB, INSERM, U 1134, INTS, Paris, France.
 
 If you want to report a bug or request a feature,
 please use the `GitHub issue system <https://github.com/pierrepo/PBxplore/issues>`_.
