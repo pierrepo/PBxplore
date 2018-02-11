@@ -21,7 +21,7 @@ Dependencies
     `matplotlib <http://matplotlib.org/>`_ [#]_ >= 1.4.0
         All ploting functions use the `matplotlib` package.
 
-    `MDAnalysis <http://www.mdanalysis.org/>`_ [#]_ >= 0.11
+    `MDAnalysis <http://www.mdanalysis.org/>`_ [#]_ >= 0.16
         We use MDAnalysis to read Gromacs molecular dynamics trajectories.
         Many other trajectory files are also supported, see list
         `here <https://pythonhosted.org/MDAnalysis/documentation_pages/coordinates/init.html#id1>`_.

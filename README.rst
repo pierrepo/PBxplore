@@ -45,7 +45,7 @@ Requirements
 PBxplore requires:
 
 * Python 2.7 or Python 3.x (>= 3.4)
-* Python modules: `NumPy <http://numpy.scipy.org/>`_, `Matplotlib <http://matplotlib.org/>`_, `MDAnalysis <https://code.google.com/p/mdanalysis/>`_ (version >= 0.11).
+* Python modules: `NumPy <http://numpy.scipy.org/>`_, `Matplotlib <http://matplotlib.org/>`_, `MDAnalysis <https://code.google.com/p/mdanalysis/>`_ (version >= 0.16).
 
 Optionally, PBxplore can use:
 

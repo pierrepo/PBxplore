@@ -55,7 +55,7 @@ install:
     - pip install --upgrade pip
     - pip install -r dev_requirements.txt --cache-dir $HOME/.cache/pip
     - pip install matplotlib weblogo --cache-dir $HOME/.cache/pip
-    - pip install "mdanalysis>=0.11" --cache-dir $HOME/.cache/pip
+    - pip install "mdanalysis>=0.16" --cache-dir $HOME/.cache/pip
     - pip install .
     - if [[ $SETUP == 'doc' ]]; then pip install -r doc_requirements.txt --cache-dir $HOME/.cache/pip; fi
 

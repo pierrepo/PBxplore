@@ -20,14 +20,14 @@ requirements:
     - numpy
     - matplotlib
     - python-weblogo
-    - mdanalysis >=0.11
+    - mdanalysis >=0.16
 
   run:
     - python
     - numpy
     - matplotlib
     - python-weblogo
-    - mdanalysis >=0.11
+    - mdanalysis >=0.16
 
 test:
   imports:

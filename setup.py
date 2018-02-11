@@ -54,7 +54,7 @@ setup(
     ],
 
     setup_requires=['pytest-runner'],
-    install_requires=['numpy', 'MDAnalysis>=0.11', 'matplotlib'],
+    install_requires=['numpy', 'MDAnalysis>=0.16', 'matplotlib'],
     tests_require=['pytest', 'pytest-raises', 'coverage'],
     # List additional groups of dependencies here
     # To install, use
