@@ -1,0 +1,9 @@
+>test_data/barstar_md_traj.xtc | frame 7
+ZZdddfklpcbfklmmmmmmmmnopafkbghiaklmmmmmmmmpccddddddehklmmmm
+mbghklmmmmmmmmmmmmnopacddddZZ
+>test_data/barstar_md_traj.xtc | frame 8
+ZZdddfklpgbfklmmmmmmmmnopafklgoiaklmmmmmmmmpccddddddehkllmmm
+mbghklmmmmmmmmmmmmnopacddddZZ
+>test_data/barstar_md_traj.xtc | frame 9
+ZZdddfklpcbfklmmmmmmmmnopafklgoiaklmmmmmmmmpccddddddehklmmmm
+npghklmmmmmmmmmmmmnopacddddZZ

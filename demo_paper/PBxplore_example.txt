@@ -1,0 +1,12 @@
+
+PBassign -p beta3.pdb -o beta3
+
+PBcount -f beta3.PB.fasta -o beta3
+
+PBstat -f beta3.PB.count -o beta3 --map
+PBstat -f beta3.PB.count -o beta3 --map --residue-min 1 --residue-max 56
+
+
+PBstat -f beta3.PB.count -o beta3 --neq
+
+

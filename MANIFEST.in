@@ -1,0 +1,6 @@
+include README.rst
+include CHANGELOG
+include LICENSE
+recursive-include doc *
+recursive-include pbxplore *.dat
+recursive-include pbxplore/tests/test_data *

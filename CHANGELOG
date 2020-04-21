@@ -1,0 +1,71 @@
+**Dev**
+**1.3.8**
+- Add and update version number in zenodo config file
+- Update authors affiliations in README
+- Fix typo in documentation
+- Add example of RMSD and Neq in documentation
+
+**1.3.7**
+- Update test engine from nose to pytest
+- Add metadata for Zenodo integration
+
+**1.3.6**
+- Add a version option for scripts (based on pbxplore.__version__)
+- update doc for installation and configuration
+- Fix weblogo compatibility
+- Update conda procedure
+- Update authors list in documentation
+
+
+**1.3.5**
+- Update documentation
+- Notebooks doc are now Python3
+- Use nbsphinx for notebooks conversion
+
+**1.3.4**
+- Remove demonstration scripts
+- Fix encoding issue with weblogo file (#152)
+- Move print statement of PDBs read from PDB class to the loader module
+- add a property in PDB class to get the number of chains
+- add a progress bar during PB assignment of a trajectory (#150)
+- fix visualization functions when the index of first residue is different of 1 (#148)
+- update documentation
+- update example files for documentation (and related doc)
+- update Travis with Python 3.6
+- PBxplore is now fully compliant with Python 3.6
+
+**1.3.3**
+- update RELEASE doc (PyPI url)
+- remove support for Python 2.6 and 3.3
+- update README for Python and module support
+- update README with Read The Docs badge
+- update documentation
+- handle production of NaN during angle calculations
+- fix bug with PBs frequency map generation for < 20 residues
+
+
+**1.3.2**
+- add some unit tests
+- add a function test() within the root path of PBxplore
+- add a Release file
+- Use of bumpversion to sync version across files
+- Add MDAnalysis as a mandatory module
+- Add matplotlib as a mandatory module
+- Fix weblogo weblogolib.SymbolColor/ColorGroup import
+- Remove R clustering (now in branch clust_R)
+
+**1.3.1**
+- remove pbxplore import from setup.py and add version number
+
+**1.3**
+- remove --flat and --phipsi from PBassign (and related functions in the api)
+- improve documentation to produce results similar to what --flat and --phipsi options used to produced
+- many performance improvements in the assignment of PBs
+
+**1.2**
+- PBxplore is installable via pypi
+- api documentation
+- PBXplore is installable with setup.py
+
+
+

@@ -1,0 +1,25 @@
+>test_data/1BTA.cif.gz | model 1 | chain A
+ZZdddfklonbfklmmmmmmmmnopafklnoiaklmmmmmnoopacddddddehkllmmm
+mngoilmmmmmmmmmmmmnopacdcddZZ
+>test_data/1AY7.cif.gz | chain A
+ZZbjadfklmcfklmmmmmmmmnnpaafbfkgopacehlnomaccddehjaccdddddeh
+klpnbjadcdddfbehiacddfegolaccdddfkZZ
+>test_data/1AY7.cif.gz | model 1 | chain B
+ZZcddfklpcbfklmmmmmmmmnopafklgoiaklmmmmmmmmpacddddddehkllmmm
+mnnommmmmmmmmmmmmmnopacddddZZ
+>test_data/2LFU.cif.gz | model 1 | chain A
+ZZbghiacfkbccdddddehiadddddddddddfklggcdddddddddddddehifbdcd
+dddddddddfklopadddddfhpamlnopcddddddehjadddddehjacbddddddddf
+klmaccddddddfbgniaghiapaddddddfklnoambZZ
+>test_data/2LFU.cif.gz | model 2 | chain A
+ZZpcfblcffbccdddddeehjacdddddddddfklggcddddddddddddddfblghia
+dddddddddfklopadddddehpmmmnopcddddddeehiacdddfblopadcddddddf
+klpaccdddddfklmlmgcdehiaddddddfklmmgopZZ
+>test_data/2LFU.cif.gz | model 3 | chain A
+ZZmgghiafbbccdddddehjbdcdddddddddfklggcddddddddddddddfbfghpa
+cddddddddfklopadddddehiaklmmmgcdddddeehiaddddfkbgciacdddddef
+klpaccddddddfkgojbdfehpaddddddfkbccfbgZZ
+>test_data/3ICH.cif.gz | model 1 | chain A
+ZZccdfbdcdddddehjbdebjcdddddfklmmmlmmmmmmmmnopnopajeopacfbdc
+ehibacehiamnonopgocdfkbjbdcdfblmbccfbghiacdddebehiafkbccddfb
+dcfklgokaccfbdcfbhklmmmmmmmpccdfkopafbacddfbgcddddfbacddddZZ

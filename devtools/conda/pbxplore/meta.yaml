@@ -1,0 +1,59 @@
+package:
+  name: pbxplore
+  version: "1.3.8"
+
+source:
+  git_url: https://github.com/pierrepo/PBxplore.git
+  git_rev: v1.3.8
+
+build:
+  entry_points:
+    - PBassign = pbxplore.scripts.PBassign:pbassign_cli
+    - PBcount  = pbxplore.scripts.PBcount:pbcount_cli
+    - PBstat   = pbxplore.scripts.PBstat:pbstat_cli
+
+
+requirements:
+  build:
+    - python
+    - setuptools
+    - numpy
+    - matplotlib
+    - python-weblogo
+    - mdanalysis >=0.11
+
+  run:
+    - python
+    - numpy
+    - matplotlib
+    - python-weblogo
+    - mdanalysis >=0.11
+
+test:
+  imports:
+    - pbxplore
+    - pbxplore.analysis
+    - pbxplore.io
+    - pbxplore.structure
+    - pbxplore.tests
+
+  commands:
+    - PBassign --help
+    - PBcount --help
+    - PBstat --help
+    - python -c 'import pbxplore; pbxplore.test()'
+
+
+  requires:
+    - coverage
+    - pytest
+
+about:
+  home: https://github.com/pierrepo/PBxplore
+  license: MIT License
+  license_file: LICENSE
+  summary: 'PBxplore is a suite of tools dedicated to Protein Block analysis.'
+
+# See
+# http://docs.continuum.io/conda/build.html for
+# more information about meta.yaml
