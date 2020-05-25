@@ -40,7 +40,7 @@ def test():
 
     #Get informations about system
     tests.system_info()
-    print("pytest version {}".format(pytest.__version__))
+    print(("pytest version {}".format(pytest.__version__)))
 
     # run pytest
     try:

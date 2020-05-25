@@ -8,7 +8,7 @@ Protrein Block assignation --- :mod:`pbxplore.assignment`
 .. autofunction:: assign
 """
 
-from __future__ import print_function, absolute_import
+
 
 # Third-party module
 import numpy

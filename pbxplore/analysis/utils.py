@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function, absolute_import
+
 
 
 # Local module
@@ -60,7 +60,7 @@ def _slice_matrix(mat, idx_first_residue=1, residue_min=1, residue_max=None):
     # Take in account the optional offset (idx_first_residue)
 
     # range of indexes of the matrix
-    residues_idx = range(idx_first_residue, mat.shape[0] + idx_first_residue)
+    residues_idx = list(range(idx_first_residue, mat.shape[0] + idx_first_residue))
 
     if residue_min not in residues_idx or residue_max not in residues_idx:
         raise IndexError("Index out of range")
