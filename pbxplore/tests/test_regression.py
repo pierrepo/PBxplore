@@ -31,7 +31,7 @@ import matplotlib
 
 
 try:
-    import weblogolib
+    import weblogo
     IS_WEBLOGO = True
 except ImportError:
     IS_WEBLOGO = False

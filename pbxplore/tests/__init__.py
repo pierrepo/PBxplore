@@ -37,7 +37,7 @@ def system_info():
     module_info("numpy")
     module_info("MDAnalysis")
     module_info("matplotlib")
-    module_info("weblogolib")
+    module_info("weblogo")
 
     py_version = sys.version.replace('\n', '')
     print("Python version {0}".format(py_version))
