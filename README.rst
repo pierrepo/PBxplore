@@ -1,7 +1,7 @@
 PBxplore
 ========
 
-.. image:: https://img.shields.io/badge/Python-2.7%203.4%203.5%203.6-brightgreen.svg
+.. image:: https://img.shields.io/badge/Python-3.4%203.5%203.6%203.8-brightgreen.svg
     :alt: Python version
     :target: https://pypi.python.org/pypi/pbxplore
 
@@ -44,7 +44,7 @@ Requirements
 
 PBxplore requires:
 
-* Python 2.7 or Python 3.x (>= 3.4)
+* Python 3.x (>= 3.4)
 * Python modules: `NumPy <http://numpy.scipy.org/>`_, `Matplotlib <http://matplotlib.org/>`_, `MDAnalysis <https://code.google.com/p/mdanalysis/>`_ (version >= 0.11).
 
 Optionally, PBxplore can use:
@@ -90,10 +90,10 @@ Contact & Support
 
 PBxplore is a research software and has been developped by:
 
-* Pierre Poulain, "Mitochondria, Metals and Oxidative Stress" group, Institut Jacques Monod, UMR 7592, Univ. Paris Diderot, CNRS, Sorbonne Paris Cité, France.
+* Pierre Poulain, "Mitochondria, Metals and Oxidative Stress" group, Institut Jacques Monod, UMR 7592, Univ. Paris, CNRS, France.
 * Jonathan Barnoud, University of Groningen, Groningen, The Netherlands.
 * Hubert Santuz, Laboratoire de Biochimie Théorique, CNRS UPR 9080, Institut de Biologie Physico-Chimique, Paris, France.
-* Alexandre G. de Brevern, DSIMB, INSERM, U 1134, INTS, Paris, France.
+* Alexandre G. de Brevern & Gabriel Cretin, DSIMB, INSERM, UMR_S 1134, INTS, Univ Paris, Paris, France.
 
 If you want to report a bug, request a feature,
 use the `GitHub issue system <https://github.com/pierrepo/PBxplore/issues>`_.
