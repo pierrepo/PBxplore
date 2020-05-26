@@ -20,11 +20,11 @@ def module_info(module_name):
     try:
         module = importlib.import_module(module_name)
         if hasattr(module, '__version__'):
-            print("{0} version {1}".format(module_name, module.__version__))
+            print(("{0} version {1}".format(module_name, module.__version__)))
         module_dir = os.path.dirname(module.__file__)
-        print("{0} is installed in {1}".format(module_name, module_dir))
+        print(("{0} is installed in {1}".format(module_name, module_dir)))
     except:
-        print("{0} is not installed".format(module_name))
+        print(("{0} is not installed".format(module_name)))
 
 
 def system_info():
@@ -32,7 +32,7 @@ def system_info():
     Print information regarding the dependencies of PBxplore and Python version
     """
 
-    print("PBxplore version {}".format(__version__))
+    print(("PBxplore version {}".format(__version__)))
 
     module_info("numpy")
     module_info("MDAnalysis")
@@ -40,4 +40,4 @@ def system_info():
     module_info("weblogolib")
 
     py_version = sys.version.replace('\n', '')
-    print("Python version {0}".format(py_version))
+    print(("Python version {0}".format(py_version)))

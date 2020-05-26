@@ -13,7 +13,7 @@ Compute Neq, PBs distribution and draw logo representation of PBs.
 # Modules
 # ============================================================================
 # Use print as a function for python 3 compatibility
-from __future__ import print_function
+
 
 # Standard modules
 import os
