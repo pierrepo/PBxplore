@@ -25,7 +25,7 @@ import pbxplore as pbx
 
 # Weblogolib is an optional requirement
 try:
-    import weblogolib
+    import weblogo
 except:
     IS_WEBLOGO = False
 else:
