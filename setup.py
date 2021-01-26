@@ -13,8 +13,8 @@ with open(os.path.join(here, 'README.rst')) as f:
 
 # Extras requirements for optional dependencies
 extras = {
-    'analysis': ['weblogo'],
-    'all': ['weblogo']
+    'analysis': ['weblogo>=3.7'],
+    'all': ['weblogo>=3.7']
 }
 
 # Version number must be in sync with the one in pbxplore/__init__.py
