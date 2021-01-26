@@ -96,7 +96,7 @@ class Atom:
         http://mmcif.wwpdb.org/docs/tutorials/content/atomic-description.html
         """
         try:
-            dic = dict(list(zip(fields, line.split())))
+            dic = dict(zip(fields, line.split()))
         except:
             raise AtomError("Something went wrong in reading\n{0}".format(line))
         try:
