@@ -162,7 +162,7 @@ def plot_map(fname, count_mat, idx_first_residue=1, residue_min=1, residue_max=N
     # add ticks and labels
     ax2.set_xticks(xticks - numpy.min(xticks))
     ax2.set_xticklabels(xticks)
-    ax2.set_yticks(list(range(len(yticks))))
+    ax2.set_yticks(range(len(yticks)))
     ax2.set_yticklabels(yticks, style='italic', weight='bold')
     ax2.set_xlabel("Residue number", weight="bold")
 
