@@ -1,7 +1,7 @@
 PBxplore
 ========
 
-.. image:: https://img.shields.io/badge/Python-3.4%203.5%203.6%203.8-brightgreen.svg
+.. image:: https://img.shields.io/badge/Python-3.6%203.8-brightgreen.svg
     :alt: Python version
     :target: https://pypi.python.org/pypi/pbxplore
 
@@ -44,7 +44,7 @@ Requirements
 
 PBxplore requires:
 
-* Python 3.x (>= 3.4)
+* Python 3.x (>= 3.6)
 * Python modules: `NumPy <http://numpy.scipy.org/>`_, `Matplotlib <http://matplotlib.org/>`_, `MDAnalysis <https://code.google.com/p/mdanalysis/>`_ (version >= 0.11).
 
 Optionally, PBxplore can use:
