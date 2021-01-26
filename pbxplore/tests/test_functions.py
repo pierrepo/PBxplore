@@ -252,7 +252,10 @@ class TestChainClass(object):
         Tests for get_phi_psi_angles()
         """
         phi_psi = chain.get_phi_psi_angles()
-        assert (angles["phi"] is None and phi_psi[resid]["phi"] is None) or angles["phi"] == pytest.approx(phi_psi[resid]["phi"])
+        assert (
+            (angles["phi"] is None and phi_psi[resid]["phi"] is None)
+            or angles["phi"] == pytest.approx(phi_psi[resid]["phi"])
+        )
 
     def test_set_coordinates(self, chain):
         """
