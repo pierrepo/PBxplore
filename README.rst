@@ -9,9 +9,13 @@ PBxplore
     :alt: PyPI PBxplore version
     :target: https://pypi.python.org/pypi/pbxplore
 
-.. image:: https://travis-ci.org/pierrepo/PBxplore.svg?branch=master
-    :alt: Travis CI build status
-    :target: https://travis-ci.org/pierrepo/PBxplore
+.. image:: https://github.com/pierrepo/PBxplore/workflows/PBxplore/badge.svg
+    :alt: GitHub Actions build status
+    :target: https://github.com/pierrepo/PBxplore/actions?query=workflow%3APBxplore
+
+.. image:: https://github.com/pierrepo/PBxplore/workflows/PBxplore's%20Documentation/badge.svg
+    :alt: GitHub Actions build documentation status
+    :target: https://github.com/pierrepo/PBxplore/actions?query=workflow%3A%22PBxplore%27s+Documentation%22
 
 .. image:: https://readthedocs.org/projects/pbxplore/badge/?version=latest
     :alt: PBxplore documentation
