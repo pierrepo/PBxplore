@@ -17,6 +17,10 @@ PBxplore
     :alt: PBxplore documentation
     :target: https://pbxplore.readthedocs.org/en/latest/
 
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.598132.svg
+   :alt: Zenodo badge
+   :target: https://doi.org/10.5281/zenodo.598132
+
 
 **PBxplore** is a suite of tools dedicated to Protein Block (PB) analysis.
 Protein Blocks are structural prototypes defined by
