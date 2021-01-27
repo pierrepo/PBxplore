@@ -1,4 +1,4 @@
-name: PBxplore's Documentation
+name: GitHub CI doc
 
 on: [push, pull_request]
 

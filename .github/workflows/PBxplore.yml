@@ -1,4 +1,4 @@
-name: PBxplore
+name: GitHub CI code
 
 on: [push, pull_request]
 
