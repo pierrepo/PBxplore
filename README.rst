@@ -95,11 +95,13 @@ If you use PBxplore, please cite this tool as:
 The published version (1.3.8) is archived in 
 
 Zenodo
+
 .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.1016257.svg
    :alt: Zenodo badge
    :target: https://doi.org/10.5281/zenodo.1016257
 
 and Software Heritage
+
 .. image:: https://archive.softwareheritage.org/badge/swh:1:dir:4260527877ab457f65eb1299437cf022301a4788/
     :alt: Software Heritage badge
     :target: https://archive.softwareheritage.org/swh:1:dir:4260527877ab457f65eb1299437cf022301a4788;origin=https://github.com/pierrepo/PBxplore;visit=swh:1:snp:fb4066f408260c44decc7cac3624b56747a3de69;anchor=swh:1:rev:ba1290912cd65c86a01f70716e1d3133778bba75/
