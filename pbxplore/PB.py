@@ -31,7 +31,7 @@ Exceptions
 .. autoexception:: InvalidBlockError
 """
 
-from __future__ import print_function, absolute_import
+
 
 # Standard modules
 import os

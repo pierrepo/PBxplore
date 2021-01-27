@@ -7,7 +7,7 @@ we try in this document to provide few guidelines regarding PBxplore setup.
 Supported Platforms
 -------------------
 
-Currently, `PBxplore` run with Python 2.7, 3.4, 3.5 and 3.6 on Linux and Mac OS X.
+Currently, `PBxplore` run with Python >=3.6 on Linux and Mac OS X.
 
 
 Dependencies
@@ -50,7 +50,7 @@ If none of the dependencies were previously installed, the installation process 
     The former command will install the PBxplore command-line scripts in:
 
     - ``$HOME/.local/bin`` on Linux.
-    - ``~/Library/Python/X.Y/bin`` on Mac OSX, where ``X.Y`` stands for the Python version (for instance ``2.7`` for Python 2.7 and ``3.5`` for Python 3.5).
+    - ``~/Library/Python/X.Y/bin`` on Mac OSX, where ``X.Y`` stands for the Python version (for instance ``3.8`` for Python 3.8).
 
     Do not forget to update your ``$PATH`` environment variable to make all PBxplore tools accessible. As an example, with the Bash shell, this gives:
 

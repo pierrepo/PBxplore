@@ -13,7 +13,7 @@ test that the output is the expected one based on a previous version.
 """
 
 # Use print as a function like in python 3
-from __future__ import print_function
+
 
 from os import path
 from uuid import uuid1
@@ -31,7 +31,7 @@ import matplotlib
 
 
 try:
-    import weblogolib
+    import weblogo
     IS_WEBLOGO = True
 except ImportError:
     IS_WEBLOGO = False

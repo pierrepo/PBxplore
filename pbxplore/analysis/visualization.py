@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function, absolute_import
+
 
 # Standard modules
 import os
@@ -15,14 +15,14 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 import matplotlib.pyplot as plt
 
 try:
-    import weblogolib
+    import weblogo
     # Weblogo compatibility
     # With version < 3.5, the color class is 'ColorGroup'. In version >= 3.5,
     # it is 'SymbolColor'. Here, we change to always have 'ColorGroup'.
     try:
-        ColorGroup = weblogolib.SymbolColor
+        ColorGroup = weblogo.SymbolColor
     except AttributeError:
-        ColorGroup = weblogolib.ColorGroup
+        ColorGroup = weblogo.ColorGroup
 except ImportError:
     IS_WEBLOGO = False
 else:
@@ -221,22 +221,22 @@ def generate_weblogo(fname, count_mat, idx_first_residue=1, residue_min=1, resid
     count = utils._slice_matrix(count_mat, idx_first_residue, residue_min, residue_max)
 
     # Create a custom color scheme for PB
-    colors = weblogolib.ColorScheme([ColorGroup("d", "#1240AB", "strand main"),
+    colors = weblogo.ColorScheme([ColorGroup("d", "#1240AB", "strand main"),
                                      ColorGroup("abcdef", "#1240AB", "strand others"),
                                      ColorGroup("ghij", "#0BD500", "coil"),
                                      ColorGroup("m", "#FD0006", "helix main"),
                                      ColorGroup("klnop", "#FD0006", "helix others")])
 
     # Load data from an occurence matrix
-    data = weblogolib.LogoData.from_counts(PB.NAMES, count)
+    data = weblogo.LogoData.from_counts(PB.NAMES, count)
 
     # Create options
-    options = weblogolib.LogoOptions(fineprint=False, logo_title=title, color_scheme=colors,
-                                     stack_width=weblogolib.std_sizes["large"],
+    options = weblogo.LogoOptions(fineprint=False, logo_title=title, color_scheme=colors,
+                                     stack_width=weblogo.std_sizes["large"],
                                      first_residue=residue_min)
 
     # Generate weblogo
-    logo = weblogolib.LogoFormat(data, options)
+    logo = weblogo.LogoFormat(data, options)
 
     # Retrieve image format
     image_format = os.path.splitext(fname)[1][1:]
@@ -245,7 +245,7 @@ def generate_weblogo(fname, count_mat, idx_first_residue=1, residue_min=1, resid
     try:
         if image_format == 'jpg':
             image_format = 'jpeg'
-        formatter = weblogolib.formatters[image_format]
+        formatter = weblogo.formatters[image_format]
     except KeyError:
         raise ValueError("Invalid format image '{0}'."
                          " Valid ones are : eps, png, pdf, jpg/jpeg, svg".format(image_format))

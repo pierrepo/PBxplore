@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function, absolute_import
+
 from setuptools import setup, find_packages
 import os
 
@@ -13,14 +13,14 @@ with open(os.path.join(here, 'README.rst')) as f:
 
 # Extras requirements for optional dependencies
 extras = {
-    'analysis': ['weblogo'],
-    'all': ['weblogo']
+    'analysis': ['weblogo>=3.7'],
+    'all': ['weblogo>=3.7']
 }
 
 # Version number must be in sync with the one in pbxplore/__init__.py
 setup(
     name='pbxplore',
-    version='1.3.8',
+    version='1.4.0',
 
     description="PBxplore is a suite of tools dedicated to Protein Block analysis.",
     long_description=readme,
@@ -45,15 +45,13 @@ setup(
 
         'License :: OSI Approved :: MIT License',
 
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
     ],
 
     setup_requires=['pytest-runner'],
+    python_requires='>=3.6',
     install_requires=['numpy', 'MDAnalysis>=0.11', 'matplotlib'],
     tests_require=['pytest', 'pytest-raises', 'coverage'],
     # List additional groups of dependencies here

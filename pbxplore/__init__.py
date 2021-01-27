@@ -15,7 +15,7 @@
    See :func:`pbxplore.assignment.assign`
 """
 
-__version__ = "1.3.8"
+__version__ = "1.4.0"
 
 from .structure.loader import *
 from .assignment import assign
@@ -40,7 +40,7 @@ def test():
 
     #Get informations about system
     tests.system_info()
-    print("pytest version {}".format(pytest.__version__))
+    print(("pytest version {}".format(pytest.__version__)))
 
     # run pytest
     try:
